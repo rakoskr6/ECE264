@@ -107,7 +107,7 @@ void test_arrayIsIncreasing(int * array, int len, int expected)
 
 void test_02_arrayIsIncreasing()
 {
-    printf("Testing arrayCountNegative(...)\n");
+    printf("Testing arrayIsIncreasing(...)\n");
 
     int array1[] = { 1, 4, -5, 4 };
     int len1 = 4;
