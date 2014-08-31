@@ -58,6 +58,7 @@ int arrayIndexRFind(int needle, const int * haystack, int len)
   int index = 0;
   int NeedleIndex = -1;
 
+
   for (index = 0; index < len; index++)
     {
       if (haystack[index] == needle)

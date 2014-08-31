@@ -131,6 +131,46 @@ void test_02_arrayIsIncreasing()
     printf("\n");
 }
 
+void test_arrayindexRFind(int needle, int * haystack, int len, int expected)
+{
+    printArray(haystack, len);
+    int needleind  = arrayIndexRFind(needle, haystack, len); 
+    printf(". Location = %d, expected = %d.", needleind, expected);
+    if(needleind != expected)
+	printf(" FAIL");
+    printf("\n");
+}
+
+void test_03_arrayindexRFind()
+{
+    printf("Testing Find Index(...)\n");
+
+    int haystack1[] = { 1, 4, -5, 4 };
+    int len1 = 4;
+    int needle1 = 4;
+    test_arrayindexRFind (needle1, haystack1, len1, 3);
+
+    int haystack2[] = {};
+    int len2 = 0;
+    int needle2 = 4;
+    test_arrayindexRFind (needle2, haystack2, len2, -1);
+
+     int haystack3[] = { 0, 1, 2, 3, 4 };
+    int len3 = 5;
+    int needle3 = -2;
+    test_arrayindexRFind (needle3, haystack3, len3, -1);
+
+    int haystack4[] = { -1, -2, -3, -1 };
+    int len4 = 4;
+    int needle4 = -1;
+    test_arrayindexRFind (needle4, haystack4, len4, 3);
+
+    // You can add more test-cases here
+    // ...
+
+    printf("\n");
+}
+
 
 
 int main(int argc, char * * argv)
@@ -143,6 +183,8 @@ int main(int argc, char * * argv)
     test_00_arraySum();
     test_01_arrayCountNegative();
     test_02_arrayIsIncreasing();
+    test_03_arrayindexRFind();
+
 
     return EXIT_SUCCESS;
 }
