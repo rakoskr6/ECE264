@@ -103,7 +103,7 @@ int main(int argc, char * * argv)
 
 
     test_00_arraySum();
-    //test_01_arrayCountNegative();
+    test_01_arrayCountNegative();
 
     return EXIT_SUCCESS;
 }
