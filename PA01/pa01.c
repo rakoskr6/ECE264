@@ -171,6 +171,42 @@ void test_03_arrayindexRFind()
     printf("\n");
 }
 
+void test_arrayFindSmallest(int * haystack, int len, int expected)
+{
+    printArray(haystack, len);
+    int needleind  = arrayFindSmallest(haystack, len); 
+    printf(". Smallest = %d, expected = %d.", needleind, expected);
+    if(needleind != expected)
+	printf(" FAIL");
+    printf("\n");
+}
+
+void test_04_arrayFindSmallest()
+{
+    printf("Testing Find Smallest(...)\n");
+
+    int haystack1[] = { 1, 4, -5, 4 };
+    int len1 = 4;
+    test_arrayFindSmallest (haystack1, len1, 2);
+
+    int haystack2[] = {};
+    int len2 = 0;
+    test_arrayFindSmallest (haystack2, len2, 0);
+
+     int haystack3[] = { 0, 1, 2, 3, 4 };
+    int len3 = 5;
+    test_arrayFindSmallest (haystack3, len3, 0);
+
+    int haystack4[] = { -9, -2, -3, -9 };
+    int len4 = 4;
+    test_arrayFindSmallest (haystack4, len4, 0);
+
+    // You can add more test-cases here
+    // ...
+
+    printf("\n");
+}
+
 
 
 int main(int argc, char * * argv)
@@ -184,6 +220,7 @@ int main(int argc, char * * argv)
     test_01_arrayCountNegative();
     test_02_arrayIsIncreasing();
     test_03_arrayindexRFind();
+    test_04_arrayFindSmallest();
 
 
     return EXIT_SUCCESS;
