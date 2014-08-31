@@ -72,5 +72,25 @@ int arrayIndexRFind(int needle, const int * haystack, int len)
 
 int arrayFindSmallest(int * array, int len)
 {
-    return 0;
+  int index = len;
+  int smallest;
+  int smallestindex;
+
+  if (len <= 0)
+    {
+      return 0;
+    }
+
+  smallest = array[len];
+
+  for (index = len; index >= 0; index--)
+    {
+      if (array[index] <= smallest)
+	{
+	  smallestindex = index;
+	  array[index] = smallest;
+	}
+    }
+
+    return smallestindex;
 }
