@@ -50,8 +50,11 @@ void test_00_arraySum()
     int expected2 = 0;
     test_arraySum(array2, len2, expected2);
 
-    // You can add more test-cases here
-    // ...
+    // Test cases with decimals
+    int array3[5] = {3.2,5.4,3.2};
+    int len3 = 3;
+    int expected3 = 11.8;
+    test_arraySum(array3, len3, expected3);
 
     printf("\n"); // Tidy output is easier to use
 }
@@ -97,7 +100,9 @@ int main(int argc, char * * argv)
     printf("Welcome to ECE264, we are working on PA01.\n\n");
 
     // Uncomment to run two example (incomplete) testcases.
-    //test_00_arraySum();
+
+
+    test_00_arraySum();
     //test_01_arrayCountNegative();
 
     return EXIT_SUCCESS;
