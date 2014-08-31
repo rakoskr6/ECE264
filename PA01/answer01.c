@@ -32,10 +32,10 @@ int arrayIsIncreasing(int * array, int len)
 {    
   int index = 0;
   int indexminus = 0; // Numer before the current index
-  int Increase = 1;
+ 
 
   // Itterates over entire array
-  for (index = 0; index < len; index++
+  for (index = 0; index < len; index++)
     {
       indexminus = index - 1;
 

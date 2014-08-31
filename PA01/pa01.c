@@ -98,32 +98,32 @@ void test_01_arrayCountNegative()
 void test_arrayIsIncreasing(int * array, int len, int expected)
 {
     printArray(array, len);
-    int count = arrayCountNegative(array,len); 
-    printf(". count = %d, expected = %d.", count, expected);
-    if(count != expected)
+    int increase  = arrayIsIncreasing(array,len); 
+    printf(". Increasing = %d, expected = %d.", increase, expected);
+    if(increase != expected)
 	printf(" FAIL");
     printf("\n");
 }
 
-void test_01_arrayIsIncreasing()
+void test_02_arrayIsIncreasing()
 {
     printf("Testing arrayCountNegative(...)\n");
 
     int array1[] = { 1, 4, -5, 4 };
     int len1 = 4;
-    test_arrayCountNegative(array1, len1, 1);
+    test_arrayIsIncreasing(array1, len1, 0);
 
     int array2[] = {};
     int len2 = 0;
-    test_arrayCountNegative(array2, len2, 0);
+    test_arrayIsIncreasing(array2, len2, 1);
 
     int array3[] = { 0, 1, 2, 3, 4 };
     int len3 = 5;
-    test_arrayCountNegative(array3, len3, 0);
+    test_arrayIsIncreasing(array3, len3, 1);
 
     int array4[] = { -1, -2, -3, -4 };
     int len4 = 4;
-    test_arrayCountNegative(array4, len4, 4);
+    test_arrayIsIncreasing(array4, len4, 0);
 
     // You can add more test-cases here
     // ...
@@ -142,6 +142,7 @@ int main(int argc, char * * argv)
 
     test_00_arraySum();
     test_01_arrayCountNegative();
+    test_02_arrayIsIncreasing();
 
     return EXIT_SUCCESS;
 }
