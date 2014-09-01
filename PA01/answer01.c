@@ -45,7 +45,7 @@ int arrayIsIncreasing(int * array, int len)
 	  indexminus = index;
 	}      
 
-      if (array[index] < array [index - 1])
+      if (array[index] < array [indexminus])
 	{
 	  return 0;
 	}
@@ -81,14 +81,14 @@ int arrayFindSmallest(int * array, int len)
       return 0;
     }
 
-  smallest = array[len];
+  smallest = array[len-1];
 
-  for (index = len; index >= 0; index--)
+  for (index = len - 1; index >= 0; index--)
     {
       if (array[index] <= smallest)
 	{
 	  smallestindex = index;
-	  array[index] = smallest;
+	  smallest = array[index];
 	}
     }
 
