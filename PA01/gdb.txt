@@ -1,0 +1,29 @@
+Breakpoint 1 at 0x400ce5: file pa01.c, line 186.
+Starting program: /home/kyle/Documents/ECE264/solutions/ECE264/PA01/pa01 
+
+Breakpoint 1, test_04_arrayFindSmallest () at pa01.c:186
+186	    printf("Testing Find Smallest(...)\n");
+188	    int haystack1[] = { 1, 4, -5, 4 };
+189	    int len1 = 4;
+190	    test_arrayFindSmallest (haystack1, len1, 2);
+test_arrayFindSmallest (haystack=0x7fffffffde30, len=4, expected=2) at pa01.c:176
+176	    printArray(haystack, len);
+177	    int needleind  = arrayFindSmallest(haystack, len); 
+arrayFindSmallest (array=0x7fffffffde30, len=4) at answer01.c:75
+75	  int index = len;
+79	  if (len <= 0)
+84	  smallest = array[len-1];
+$1 = 4
+86	  for (index = len - 1; index >= 0; index--)
+$2 = 4
+88	      if (array[index] <= smallest)
+90		  smallestindex = index;
+91		  smallest = array[index];
+86	  for (index = len - 1; index >= 0; index--)
+88	      if (array[index] <= smallest)
+90		  smallestindex = index;
+91		  smallest = array[index];
+86	  for (index = len - 1; index >= 0; index--)
+88	      if (array[index] <= smallest)
+Continuing.
+[Inferior 1 (process 6926) exited normally]
