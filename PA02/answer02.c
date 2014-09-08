@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include "answer02.h"
-size_t my_strlen(const char * str) ;
+
 
 int main (void)
 {
 char * str = "hello!";
-printf("%i\n",my_countchar(str, 'k'));
+printf("%p\n",my_strchr(str, 'x'));
 return 0;
 }
 
@@ -37,4 +37,22 @@ int my_countchar(const char * str, char ch)
 	}
 	
 	return Occurances;
+}
+
+char * my_strchr(const char * str, int ch)
+{
+	int index = 0;
+	do
+	{
+		index++;
+		if (str[index] == ch)
+		{
+			return (char *) &str[index];
+		}
+		
+
+
+	} while (str[index] != '\0');
+
+	return NULL;
 }
