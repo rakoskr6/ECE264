@@ -84,7 +84,7 @@ char * my_strrchr(const char * str, int ch)
 }
 
 
-// Still needs fixing
+
 // Must point to valid strings, cannot be null strings
 char * my_strstr(const char * haystack, const char * needle)
 {
@@ -104,7 +104,7 @@ char * my_strstr(const char * haystack, const char * needle)
 
 	if (NeedSize == 0)
 	{
-		return haystack;
+		return ((char *)haystack);
 	}
 		
 	for (HayIndex = 0; HayIndex <= HaySize; HayIndex++)
@@ -132,18 +132,19 @@ char * my_strstr(const char * haystack, const char * needle)
 	
 }
 
-// Still needs fixing
+
 // Must point to valid strings, cannot be null strings
 char * my_strcpy(char * dest, const char * src)
 {
 	int index = 0;
 	
-	do 
+	while (src[index] != '\0') 
 	{
 		// For loop runs until end of string is found.
 		dest[index] = src[index];
 		index++;
-	} while (src[index] != '\0');
+	}
+	dest[index] = '\0';
 	
 	return dest;
 }
@@ -151,18 +152,23 @@ char * my_strcpy(char * dest, const char * src)
 // Still needs fixing
 char * my_strcat(char * dest, const char * src)
 {
-	int index = -1;
+	int DestIndex = 0;
+	int SrcIndex = 0;
 	
-
-	
-	do 
+	for (DestIndex = 0; dest[DestIndex] != '\0'; DestIndex++)
 	{
-
-		index++;
-		dest[index] = src[index];
-		
-	} while (src[index] != '\0');
+		// For loop runs until end of string is found. No need
+		// for anything in the loop since function returns index.
+	}
 	
+	while (src[SrcIndex] != '\0') 
+	{
+		// For loop runs until end of string is found.
+		dest[DestIndex] = src[SrcIndex];
+		DestIndex++;
+		SrcIndex++;
+	}
+	dest[DestIndex] = '\0';
 	
 	return dest;
 }
