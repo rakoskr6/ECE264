@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include "answer02.h"
 
-
+/*
 int main (void)
 {
 char * str = "Hello World";
 printf("%p\n",my_strstr(str, "ello"));
 return 0;
 }
-
+*/
 
 // Must point to valid string, cannot be a null string
 size_t my_strlen(const char * str) //size_t is unsigned integer
@@ -42,17 +42,17 @@ int my_countchar(const char * str, char ch)
 // Must point to valid string, cannot be a null string
 char * my_strchr(const char * str, int ch)
 {
-	int index = 0;
+	int index = -1; // explain
 	do
 	{
 		index++;
+		
 		if (str[index] == ch)
 		{
 			return (char *) &str[index];
 		}
 		
-
-
+	
 	} while (str[index] != '\0');
 
 	return NULL;
@@ -60,7 +60,9 @@ char * my_strchr(const char * str, int ch)
 
 char * my_strrchr(const char * str, int ch)
 {
-	int index = 0;
+	int index = -1;
+	
+	index--;
 	
 	for (index = 0; str[index] != '\0'; index++)
 	{
@@ -75,9 +77,8 @@ char * my_strrchr(const char * str, int ch)
 			return (char *) &str[index];
 		}
 		
-	index--;
 
-	} while (str[index] != str[0]);
+	} while (index > 0);
 
 	return NULL;
 }
@@ -108,7 +109,7 @@ char * my_strstr(const char * haystack, const char * needle)
 			
 			if (CharEqual == NeedSize)
 			{
-				return (char *) &haystack[HayIndex];
+				return ((char *) &haystack[HayIndex]) - NeedSize; //explan minus
 			}
 		}
 		else
@@ -125,23 +126,47 @@ char * my_strstr(const char * haystack, const char * needle)
 
 char * my_strcpy(char * dest, const char * src)
 {
+	int index = 0;
 	
+	do 
+	{
+		// For loop runs until end of string is found.
+		dest[index] = src[index];
+		index++;
+	} while (src[index] != '\0');
+	
+	return dest;
 }
 
 char * my_strcat(char * dest, const char * src)
 {
+	int index = 0;
 	
+		for (index = 0; src[index] != '\0'; index++)
+	{
+		// For loop runs until end of string is found.
+	}
+	
+	do 
+	{
+		// For loop runs until end of string is found.
+		dest[index] = src[index];
+		index++;
+	} while (src[index] != '\0');
+	
+	
+	return dest;
 }
 
 
 int my_isspace(int ch)
 {
-	
+	return 0;
 }
 
 int my_atoi(const char * str)
 {
-	
+	return 0;
 }
 
 
