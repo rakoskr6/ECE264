@@ -4,8 +4,8 @@
 
 int main (void)
 {
-char * str = "hello!";
-printf("%p\n",my_strchr(str, 'x'));
+char * str = "Hello World";
+printf("%p\n",my_strstr(str, "ello"));
 return 0;
 }
 
@@ -23,7 +23,7 @@ size_t my_strlen(const char * str) //size_t is unsigned integer
 	return index;
 }
 
-
+// Must point to valid string, cannot be a null string
 int my_countchar(const char * str, char ch)
 {
 	int index = 0, Occurances = 0;
@@ -39,6 +39,7 @@ int my_countchar(const char * str, char ch)
 	return Occurances;
 }
 
+// Must point to valid string, cannot be a null string
 char * my_strchr(const char * str, int ch)
 {
 	int index = 0;
@@ -56,3 +57,96 @@ char * my_strchr(const char * str, int ch)
 
 	return NULL;
 }
+
+char * my_strrchr(const char * str, int ch)
+{
+	int index = 0;
+	
+	for (index = 0; str[index] != '\0'; index++)
+	{
+		// For loop runs until end of string is found.
+	}
+	
+	do
+	{
+		
+		if (str[index] == ch)
+		{
+			return (char *) &str[index];
+		}
+		
+	index--;
+
+	} while (str[index] != str[0]);
+
+	return NULL;
+}
+
+char * my_strstr(const char * haystack, const char * needle)
+{
+	int HaySize = 0, NeedSize = 0;
+	int HayIndex = 0;
+	int CharEqual = 0;
+	int NeedIndex = 0;
+	
+		for (HaySize = 0; haystack[HaySize] != '\0'; HaySize++)
+	{
+		// For loop runs until end of string is found.
+	}
+	
+		for (NeedSize = 0; needle[NeedSize] != '\0'; NeedSize++)
+	{
+		// For loop runs until end of string is found.
+	}
+		
+	for (HayIndex = 0; HayIndex <= HaySize; HayIndex++)
+	{
+		if (needle[NeedIndex] == haystack[HayIndex])
+		{
+			CharEqual++;
+			NeedIndex++;
+			
+			if (CharEqual == NeedSize)
+			{
+				return (char *) &haystack[HayIndex];
+			}
+		}
+		else
+		{
+			NeedIndex = 0;
+			CharEqual = 0;
+		}
+	}
+	
+	return (char *) haystack;
+	
+}
+
+
+char * my_strcpy(char * dest, const char * src)
+{
+	
+}
+
+char * my_strcat(char * dest, const char * src)
+{
+	
+}
+
+
+int my_isspace(int ch)
+{
+	
+}
+
+int my_atoi(const char * str)
+{
+	
+}
+
+
+
+
+
+
+
