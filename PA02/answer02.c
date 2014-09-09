@@ -102,6 +102,10 @@ char * my_strstr(const char * haystack, const char * needle)
 		// For loop runs until end of string is found.
 	}
 
+	if (NeedSize == 0)
+	{
+		return haystack;
+	}
 		
 	for (HayIndex = 0; HayIndex <= HaySize; HayIndex++)
 	{
@@ -111,9 +115,9 @@ char * my_strstr(const char * haystack, const char * needle)
 			CharEqual++; // To show how many characters are equal
 			NeedIndex++; // To view the next value of needle
 			
-			if (CharEqual == NeedSize - 1) // true if needle is in haystack
+			if (CharEqual == NeedSize) // true if needle is in haystack
 			{
-				return ((char *) &haystack[HayIndex]) - NeedSize + 1; //explan minus
+				return ((char *) &haystack[HayIndex - NeedSize +1]); //explan minus
 			}
 		}
 		else
