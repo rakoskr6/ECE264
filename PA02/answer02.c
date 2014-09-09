@@ -62,16 +62,16 @@ char * my_strrchr(const char * str, int ch)
 {
 	int index = -1;
 	
-	index--;
+	
 	
 	for (index = 0; str[index] != '\0'; index++)
 	{
 		// For loop runs until end of string is found.
 	}
-	
+	index++; // explain
 	do
 	{
-		
+		index--;
 		if (str[index] == ch)
 		{
 			return (char *) &str[index];
@@ -86,19 +86,19 @@ char * my_strrchr(const char * str, int ch)
 char * my_strstr(const char * haystack, const char * needle)
 {
 	int HaySize = 0, NeedSize = 0;
-	int HayIndex = 0;
+	int HayIndex = 0, NeedIndex = 0;
 	int CharEqual = 0;
-	int NeedIndex = 0;
-	
-		for (HaySize = 0; haystack[HaySize] != '\0'; HaySize++)
+
+	for (HaySize = 0; haystack[HaySize] != '\0'; HaySize++)
 	{
 		// For loop runs until end of string is found.
 	}
-	
-		for (NeedSize = 0; needle[NeedSize] != '\0'; NeedSize++)
+
+	for (NeedSize = 0; needle[NeedSize] != '\0'; NeedSize++)
 	{
 		// For loop runs until end of string is found.
 	}
+
 		
 	for (HayIndex = 0; HayIndex <= HaySize; HayIndex++)
 	{
@@ -107,9 +107,9 @@ char * my_strstr(const char * haystack, const char * needle)
 			CharEqual++;
 			NeedIndex++;
 			
-			if (CharEqual == NeedSize)
+			if (CharEqual == NeedSize - 1)
 			{
-				return ((char *) &haystack[HayIndex]) - NeedSize; //explan minus
+				return ((char *) &haystack[HayIndex]) - NeedSize + 1; //explan minus
 			}
 		}
 		else
@@ -161,7 +161,13 @@ char * my_strcat(char * dest, const char * src)
 
 int my_isspace(int ch)
 {
+	if (ch == ' ' || ch == '\f' || ch == '\n' || ch == '\r' || ch == '\t' || ch == '\v')
+	{
+		return 1;
+	}
+
 	return 0;
+	
 }
 
 int my_atoi(const char * str)
