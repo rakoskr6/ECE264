@@ -29,24 +29,20 @@ int main(int argc, char * * argv)
     printf("my_strlen(\"%s\") = %d\n", s2, (int) my_strlen(s2));
     printf("my_strlen(\"%s\") = %d\n", s3, (int) my_strlen(s3));
     printf("\n");
-    printf("\n");
-    printf("\n");
 
     // -- my_countchar, should be: 3, 0, and 2
     printf("my_countchar(\"%s\", 'l') = %d\n", s1, (int) my_countchar(s1, 'l'));
     printf("my_countchar(\"%s\", 'o') = %d\n", s2, (int) my_countchar(s2, 'o'));
     printf("my_countchar(\"%s\", 'o') = %d\n", s3, (int) my_countchar(s3, 'o'));
     printf("\n");
-    printf("\n");
-    printf("\n");
+
 
     // -- my_strchr, should be: "llo World!", "(null)", and ""
     printf("my_strchr(\"%s\", 'l') = %s\n", s1, my_strchr(s1, 'l'));
     printf("my_strchr(\"%s\", 'o') = %s\n", s2, my_strchr(s2, 'o'));
     printf("my_strchr(\"%s\", '\\0') = %s\n", s3, my_strchr(s3, '\0'));
     printf("\n");
-    printf("\n");
-    printf("\n");
+
 
     // -- my_strrchr, should be: "llo World!", "(null)", and ""
     printf("my_strrchr(\"%s\", 'l') = %s\n", s1, my_strrchr(s1, 'l'));
@@ -54,8 +50,7 @@ int main(int argc, char * * argv)
     printf("my_strrchr(\"%s\", '\\0') = %s\n", s3, my_strrchr(s3, '\0'));
     printf("\n");
     printf("\n");
-    printf("\n");
-    printf("\n");
+
 
     // -- my_strstr, should be: "World!", "Hello World!", "(null)"
     printf("my_strstr(\"%s\", \"World\") = %s\n", s1, my_strstr(s1, "World"));
@@ -64,8 +59,7 @@ int main(int argc, char * * argv)
     printf("my_strstr(\"%s\", \"\") = %s\n", s1, my_strstr(s1, ""));
     printf("my_strstr(\"%s\", \"!\") = %s\n", s1, my_strstr(s1, "!"));
     printf("\n");
-    printf("\n");
-    printf("\n");
+
 
     // -- my_strcpy. For this function you need a buffer where you
     // copy the string to. 
@@ -77,8 +71,7 @@ int main(int argc, char * * argv)
     my_strcpy(buffer, s3);
     printf("my_strcpy(buffer, \"%s\"), buffer = \"%s\"\n", s3, buffer);
     printf("\n");
-    printf("\n");
-    printf("\n");
+
 
     // -- my_strcat.
     char buffer1[BUFFER_LEN] = "Meh ";
@@ -91,7 +84,6 @@ int main(int argc, char * * argv)
     printf("my_strcat(buffer, \"%s\"), buffer = \"%s\"\n", s2, buffer2);
     my_strcat(buffer3, s3);
     printf("my_strcat(buffer, \"%s\"), buffer = \"%s\"\n", s3, buffer3);
-    printf("\n");
     printf("\n");
 
     // -- my_isspace. You will have to do this for yourself.

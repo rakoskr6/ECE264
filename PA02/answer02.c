@@ -15,6 +15,8 @@ size_t my_strlen(const char * str)
 	return index;
 }
 
+
+
 // Must point to valid strings, cannot be null strings
 int my_countchar(const char * str, char ch)
 {
@@ -32,7 +34,10 @@ int my_countchar(const char * str, char ch)
 	return Occurances;
 }
 
+
+
 // Must point to valid string/character, cannot be null
+// If ch isn't found returns null
 char * my_strchr(const char * str, int ch)
 {
 	int index = -1; // Starts at -1 since index will be incremented before using and
@@ -53,7 +58,10 @@ char * my_strchr(const char * str, int ch)
 	return NULL;
 }
 
+
+
 // Must point to valid string/character, cannot be null
+// If ch isn't found returns null
 char * my_strrchr(const char * str, int ch)
 {
 	int index = -1; // Starts at -1 since index will be incremented before
@@ -71,7 +79,7 @@ char * my_strrchr(const char * str, int ch)
 	{
 		index--;
 		
-// Returns string index as soon as ch is found
+		// Returns string index as soon as ch is found
 		if (str[index] == ch)
 		{
 			return (char *) &str[index];
@@ -86,22 +94,20 @@ char * my_strrchr(const char * str, int ch)
 
 
 // Must point to valid strings, cannot be null strings
+// If needle is blank will return haystack, if not in haystack returns null
 char * my_strstr(const char * haystack, const char * needle)
 {
 	int HaySize = 0, NeedSize = 0; // To store haystack and needle size
 	int HayIndex = 0, NeedIndex = 0; // Indicies to iterate through haystack and needle
 	int CharEqual = 0; // How many characters are equal between haystack and needle
 
-// Following for loops detect string sizes
+	// Following for loops detect string sizes
 	for (HaySize = 0; haystack[HaySize] != '\0'; HaySize++)
-	{
-		// For loop runs until end of string is found.
-	}
+	{	}
 	for (NeedSize = 0; needle[NeedSize] != '\0'; NeedSize++)
-	{
-		// For loop runs until end of string is found.
-	}
+	{	}
 
+	// Returns the haystack if the needle size is 0 (blank)
 	if (NeedSize == 0)
 	{
 		return ((char *)haystack);
@@ -117,12 +123,15 @@ char * my_strstr(const char * haystack, const char * needle)
 			
 			if (CharEqual == NeedSize) // true if needle is in haystack
 			{
-				return ((char *) &haystack[HayIndex - NeedSize +1]); //explan minus
+				return ((char *) &haystack[HayIndex - NeedSize +1]); // add needsize + 1 to ensure
+																	 // returned pointer is where index
+																	 // is first found
 			}
 		}
 		else
 		{
-			// Resets values if needle isn't in haystack (at this point)
+			// Resets values if needle isn't in haystack (at this point in string)
+			// so it has a chance to find it in the rest of the string
 			NeedIndex = 0;
 			CharEqual = 0;
 		}
@@ -140,7 +149,7 @@ char * my_strcpy(char * dest, const char * src)
 	
 	while (src[index] != '\0') 
 	{
-		// For loop runs until end of string is found.
+		// While loop runs until finished copying
 		dest[index] = src[index];
 		index++;
 	}
@@ -149,7 +158,7 @@ char * my_strcpy(char * dest, const char * src)
 	return dest;
 }
 
-// Still needs fixing
+// Must point to valid string, cannot be a null string
 char * my_strcat(char * dest, const char * src)
 {
 	int DestIndex = 0;
@@ -163,8 +172,11 @@ char * my_strcat(char * dest, const char * src)
 	
 	while (src[SrcIndex] != '\0') 
 	{
-		// For loop runs until end of string is found.
+		// While loop runs until string finishes writing
 		dest[DestIndex] = src[SrcIndex];
+		
+		// Indicies incremented seperatly to keep track of the different
+		// places in dest and src
 		DestIndex++;
 		SrcIndex++;
 	}
@@ -173,7 +185,7 @@ char * my_strcat(char * dest, const char * src)
 	return dest;
 }
 
-
+// Must point to valid character. If character return 1 else 0
 int my_isspace(int ch)
 {
 	if (ch == ' ' || ch == '\f' || ch == '\n' || ch == '\r' || ch == '\t' || ch == '\v')
@@ -185,7 +197,7 @@ int my_isspace(int ch)
 	
 }
 
-
+// Must point to valid string, cannot be a null string
 int my_atoi(const char * str)
 {
 	int index = 0; // Index to itterate through array
@@ -200,10 +212,13 @@ int my_atoi(const char * str)
 			Negative = 1;
 		}
 		
+		
 		if (str[index] == '0' || str[index] == '1' || str[index] == '2' || str[index] == '3' || str[index] == '4' || str[index] == '5' || str[index] == '6' || str[index] == '7' || str[index] == '8' || str[index] == '9') 
 		{
-			Number = Number * Place + (str[index] - '0');
-			Place = Place * 10;
+			// Multiply the previous number by place and add the new number to the 1's place.
+			// Also subtract by ASCII value '0' since str[index] - '0' will be the number of str[index].
+			Number = Number * Place + str[index] - '0';
+			Place = Place * 10; // Increment the place of the number by a factor of 10
 		}
 	
 	
