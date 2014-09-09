@@ -129,6 +129,7 @@ char * my_strstr(const char * haystack, const char * needle)
 }
 
 // Still needs fixing
+// Must point to valid strings, cannot be null strings
 char * my_strcpy(char * dest, const char * src)
 {
 	int index = 0;

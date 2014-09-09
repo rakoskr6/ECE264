@@ -14,6 +14,11 @@
  */
 size_t my_strlen(const char * str);
 
+
+
+
+
+
 /**
  * Count the number of occurrences of character 'ch' in C string 'str'
  *
@@ -21,6 +26,11 @@ size_t my_strlen(const char * str);
  * my_countchar("foo", 'o'); // 2
  */
 int my_countchar(const char * str, char ch);
+
+
+
+
+
 
 /**
  * Return a pointer to the first occurrence of character 'ch' in C string 'str'
@@ -41,6 +51,14 @@ int my_countchar(const char * str, char ch);
  */
 char * my_strchr(const char * str, int ch);
 
+
+
+
+
+
+
+
+
 /** 
  * Same as my_strchr(...), except it searches from the right-hand-side 
  *
@@ -52,6 +70,12 @@ char * my_strchr(const char * str, int ch);
  * printf("'%s'\n", my_strrchr(str, '\0')); // prints "''\n" *
  */
 char * my_strrchr(const char * str, int ch);
+
+
+
+
+
+
 
 /** Finds the first occurrence of C-string 'needle' in C-string 'haystack'
  * Return 'haystack' when 'needle' is the empty string (ie, "").
@@ -65,6 +89,9 @@ char * my_strrchr(const char * str, int ch);
  *                                      // i.e., my_strstr(str, "hello") == NULL
  */
 char * my_strstr(const char * haystack, const char * needle);
+
+
+
 
 /**
  * Copies C-string 'src' (including the null-byte terminator) into the memory 
@@ -83,6 +110,14 @@ char * my_strstr(const char * haystack, const char * needle);
  */
 char * my_strcpy(char * dest, const char * src);
 
+
+
+
+
+
+
+
+
 /**
  * Append C-string 'src' to C-string 'dest'. A precondition is 'dest' must be 
  * large enough to contain both 'dest' and 'src', *including* the terminating
@@ -96,6 +131,16 @@ char * my_strcpy(char * dest, const char * src);
  * printf("%s\n", my_strcat(buffer, "Zippy!")); // prints "Hello Zippy!"
  */
 char * my_strcat(char * dest, const char * src);
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Returns 1 when 'ch' is a whitespace character, and 0 otherwise.
@@ -117,6 +162,13 @@ char * my_strcat(char * dest, const char * src);
  *    my_isspace(ch); // always 0
  */
 int my_isspace(int ch);
+
+
+
+
+
+
+
 
 /**
  * Converts (only) the initial portion of 'str' to an integer.
