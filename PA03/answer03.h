@@ -37,7 +37,7 @@ char * * explode(const char * str, const char * delims, int * arrLen);
 /**
  * Takes a string and splits it into an array of strings according to delimiter.
  * The memory location '*arrLen' is initialized to the length of the returned
- * array.`
+ * array.
  *
  * str: A string to split
  * delims: a string that contains a set of delimiter characters. explode(...) 

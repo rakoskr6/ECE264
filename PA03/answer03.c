@@ -9,6 +9,7 @@ char * strcat_ex(char * * dest, int * n, const char * src) // Append src to dest
 
 	DestLength = strlen(*dest);
 	SrcLength = strlen(src);
+	printf("Dest %i, Src %i\n",DestLength,SrcLength);
 
 
 
@@ -19,7 +20,7 @@ char * strcat_ex(char * * dest, int * n, const char * src) // Append src to dest
 		printf("Malloc time\n");
 		Increase = SrcLength + DestLength - *n;
 		printf("Increase %i\n",Increase);
-		dest = malloc(Increase * sizeof(char));
+		*dest = malloc(Increase * sizeof(char));
 	}	
 		
 		
