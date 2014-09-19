@@ -2,7 +2,10 @@
 #define PA03_H 
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
+char * strcat_ex(char * * dest, int * n, const char * src);
 /**
  * Append the C-string 'src' to the end of the C-string '*dest'.
  *
@@ -27,12 +30,14 @@
  * Hint: These <string.h> functions will help: strcat, strcpy, strlen.
  * Hint: Leak no memory.
  */
-char * strcat_ex(char * * dest, int * n, const char * src);
 
+
+
+char * * explode(const char * str, const char * delims, int * arrLen);
 /**
  * Takes a string and splits it into an array of strings according to delimiter.
  * The memory location '*arrLen' is initialized to the length of the returned
- * array.
+ * array.`
  *
  * str: A string to split
  * delims: a string that contains a set of delimiter characters. explode(...) 
@@ -51,8 +56,10 @@ char * strcat_ex(char * * dest, int * n, const char * src);
  * Hint: this question is hard; it will help to draw out your algorithm.
  * Hint: read the FAQ...
  */
-char * * explode(const char * str, const char * delims, int * arrLen);
 
+
+
+char * implode(char * * strArr, int len, const char * glue);
 /**
  * Takes an array of strings, and concatenates the elements into a single
  * string, placing 'glue' between each successive element.
@@ -69,8 +76,10 @@ char * * explode(const char * str, const char * delims, int * arrLen);
  *
  * Hint: use strcat_ex in a for loop.
  */
-char * implode(char * * strArr, int len, const char * glue);
 
+
+
+void sortStringArray(char * * arrString, int len);
 /**
  * Takes an array of C-strings, and sorts them alphabetically, ascending.
  *
@@ -87,8 +96,9 @@ char * implode(char * * strArr, int len, const char * glue);
  * Hint: use the <stdlib.h> function "qsort"
  * Hint: you must _clearly_ understand the typecasts.
  */
-void sortStringArray(char * * arrString, int len);
 
+
+void sortStringCharacters(char * str);
 /**
  * Sorts the characters in a string.
  *
@@ -102,8 +112,10 @@ void sortStringArray(char * * arrString, int len);
  * Hint: use the <stdlib.h> function "qsort"
  * Hint: you must _clearly_  understand the typecasts.
  */
-void sortStringCharacters(char * str);
 
+
+
+void destroyStringArray(char * * strArr, int len);
 /**
  * Safely frees all memory associated with strArr, and then strArr itself.
  * Passing NULL as the first parameter has no effect.
@@ -118,6 +130,6 @@ void sortStringCharacters(char * str);
  * destroyStringArray(strArr, len); // cleans memory -- no memory leaks
  * destroyStringArray(NULL, 0); // does nothing, does not crash.
  */
-void destroyStringArray(char * * strArr, int len);
+
 
 #endif
