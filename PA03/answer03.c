@@ -2,46 +2,29 @@
 char * strcat_ex(char * * dest, int * n, const char * src) // Append src to dest
 {
 	int DestLength = 0, SrcLength = 0;
-	int SrcIndex = 0;
-	int DestIndex = 0;
+	//int SrcIndex = 0;
+	//int DestIndex = 0;
 	int Increase = 0;
-	
-	printf("%p ",*dest);
+	char * dest2;
 
-		
+	
 	DestLength = strlen(*dest);
 	SrcLength = strlen(src);
-	printf("Dest %i, Src %i\n",DestLength,SrcLength);
-
-
-
-	printf("Done with beginning\n\n");
+	printf("Dest %i, Src %i\n\n",DestLength,SrcLength);
 	
-	if( (*dest == NULL) || (SrcLength + DestLength + 1 > *n) ) // dest is large enough - regular append
+	if( (*dest == NULL) || (SrcLength + DestLength + 1 > *n) ) // dest is not large enough - malloc
 	{
-		printf("Malloc time\n");
-		Increase = SrcLength + DestLength - *n;
-		printf("Increase %i\n\n",Increase);
-		*dest = malloc(Increase * sizeof(char));
-	}	
+		printf("Going to use malloc\n\n");
+		Increase = SrcLength + DestLength + 1;
+		dest2 = malloc(Increase * sizeof(char));
+		strcpy(dest2,*dest);
+		free(*dest);
+		printf("%s\n\n",dest2);
+	    *dest = dest2;
+	    strcpy(*dest + DestLength,src);
 
+}
 		
-	while (src[SrcIndex] != '\0') 
-	{
-		printf("While loop %i\n",SrcIndex);
-		// While loop runs until string finishes writing
-		*dest[DestIndex + DestLength] = src[SrcIndex];
-		
-		// Indicies incremented seperatly to keep track of the different
-		// places in dest and src
-		DestIndex++;
-		SrcIndex++;
-		printf("Dest %i, Src %i\n",DestIndex + DestLength, SrcIndex);
-			
-	}
-		
-	dest[DestIndex] = '\0';
-	//free(dest);
 	
 	
 
