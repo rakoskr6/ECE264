@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+
 
 char * strcat_ex(char * * dest, int * n, const char * src);
 /**

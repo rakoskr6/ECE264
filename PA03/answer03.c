@@ -1,4 +1,5 @@
 #include "answer03.h"
+#include <string.h>
 char * strcat_ex(char * * dest, int * n, const char * src) // Append src to dest
 {
 	int DestLength = 0, SrcLength = 0;
@@ -53,7 +54,7 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 	
 	
 	
-	StrLength = strlen(str);
+	StrLength = strlen(str); 
 	DelimsLength = strlen(delims);
 	
 	// Computes number of rows (arrLen) and columns (MaxSize)
@@ -63,17 +64,16 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 		{
 			if (str[StrIndex] == delims[DelimsIndex])
 			{
-				*arrLen++;
-				if (MaxSize < (PrevDelim - StrIndex))
+				*arrLen = *arrLen + 1;
+				if (MaxSize < (StrIndex - PrevDelim))
 				{	
-					MaxSize = PrevDelim - StrIndex;
+					MaxSize = StrIndex - PrevDelim;
 				}
 				PrevDelim = StrIndex;
 			}
 		}
 	}
-	printf("MaxSize: %i\n",MaxSize);
-	printf("ArrLen: %i\n",*arrLen);
+
 	
 	// Creates 2D array of appropriate length
 	StrArr = malloc(*arrLen * sizeof(char*));
@@ -90,30 +90,50 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 		for (DelimsIndex = 0; DelimsIndex < DelimsLength; DelimsIndex++)
 		{
 			
-			if (str[StrIndex] == delims[DelimsIndex])
+			if ((str[StrIndex] == delims[DelimsIndex]) || (str[StrIndex] == '\0'))
 			{
-				for (PrevDelimIndex = 0; PrevDelimIndex <= CurrentSize; PrevDelimIndex++)
+				// This is where the new string is actually createdc
+				CurrentSize = StrIndex - PrevDelim;
+				
+				for (PrevDelimIndex = 0; PrevDelimIndex < CurrentSize; PrevDelimIndex++)
 				{
+					
 					StrArr[StrNumber][PrevDelimIndex] = str[PrevDelim + PrevDelimIndex];
 					
 				}
-				PrevDelim = StrIndex;
+				PrevDelim = StrIndex + 1; // +1 so the same value isn't repeated
 				StrNumber++;
 			}
 		
 		}
 	}
 		
-	printf("arrLen: %i\n",*arrLen);
-	printf("StrArr: %s\n",*StrArr);
+
 	
 	return StrArr;
 }
 
 
 
-char * implode(char * * strArr, int len, const char * glue)
+char * implode(char * * strArr, int len, const char * glue) // Combines elements of strArr (length len) into one array with glue b/t
 {
+	char *strArrTemp;
+	int LenIndex = 0;
+	int n = 0;
+	
+	printf("strArr[0] = %s\n",strArr[0]);
+	printf("strArr[1] = %s\n",strArr[1]);
+	printf("strArr[2] = %s\n",strArr[2]);
+	printf("strArr[3] = %s\n\n",strArr[3]);
+	
+	
+	for (LenIndex = 0; LenIndex < len; LenIndex++)
+	{
+		printf("strArr[%i] = %s\n", LenIndex, strArr[LenIndex]);
+		strArrTemp = strcat_ex(&strArrTemp, &n, strArr[LenIndex]); // Append src to dest
+	}
+	
+	*strArr = strArrTemp;
 	
 	return *strArr;
 }
