@@ -1,5 +1,7 @@
 #include "answer03.h"
 #include <string.h>
+
+
 char * strcat_ex(char * * dest, int * n, const char * src) // Append src to dest
 {
 	int DestLength = 0, SrcLength = 0;
@@ -121,17 +123,11 @@ char * implode(char * * strArr, int len, const char * glue) // Combines elements
 	int LenIndex = 0;
 	int n = 0;
 	
-	printf("strArr[0] = %s\n",strArr[0]);
-	printf("strArr[1] = %s\n",strArr[1]);
-	printf("strArr[2] = %s\n",strArr[2]);
-	printf("strArr[3] = %s\n\n",strArr[3]);
 	
 	strArrTemp = malloc(len * sizeof(char));
 	
-	printf("len is %i",len);
 	for (LenIndex = 0; LenIndex <= len; LenIndex++)
 	{
-		printf("strArr[%i] = %s\n", LenIndex, strArr[LenIndex]);
 		strArrTemp = strcat_ex(&strArrTemp, &n, strArr[LenIndex]); // Append src to dest
 		if (LenIndex != len) // Done to ensure glue isn't added to end of array
 		{
@@ -144,24 +140,36 @@ char * implode(char * * strArr, int len, const char * glue) // Combines elements
 	return *strArr;
 }
 
+int compar (const void *a, const void*b)
+{
+	return (*(int*)a - *(int*)b);
+}
 
 
 void sortStringArray(char * * arrString, int len)
 {
-	
+	qsort(*arrString, len, sizeof(char), compar);
 }
 
+
+int compar2 (const void *a, const void *b)
+{
+	return (*(int*)a - *(int*)b);
+}
 
 
 void sortStringCharacters(char * str)
 {
-	
+	qsort(str, strlen(str), sizeof(char), compar2);
 }
 
 
 
 void destroyStringArray(char * * strArr, int len)
 {
-	
+	if (strArr != NULL)
+	{
+		free(strArr);
+	}
 }
 
