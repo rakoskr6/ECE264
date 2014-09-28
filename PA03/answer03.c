@@ -51,7 +51,7 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 	int StrArrIndex = 0;
 	
 	int PrevDelimIndex = 0, CurrentSize = 0, StrNumber = 0;
-	
+	*arrLen = 0;
 	
 	
 	StrLength = strlen(str); 
@@ -126,11 +126,17 @@ char * implode(char * * strArr, int len, const char * glue) // Combines elements
 	printf("strArr[2] = %s\n",strArr[2]);
 	printf("strArr[3] = %s\n\n",strArr[3]);
 	
+	strArrTemp = malloc(len * sizeof(char));
 	
-	for (LenIndex = 0; LenIndex < len; LenIndex++)
+	printf("len is %i",len);
+	for (LenIndex = 0; LenIndex <= len; LenIndex++)
 	{
 		printf("strArr[%i] = %s\n", LenIndex, strArr[LenIndex]);
 		strArrTemp = strcat_ex(&strArrTemp, &n, strArr[LenIndex]); // Append src to dest
+		if (LenIndex != len) // Done to ensure glue isn't added to end of array
+		{
+			strArrTemp = strcat_ex(&strArrTemp, &n, glue);
+		}
 	}
 	
 	*strArr = strArrTemp;
