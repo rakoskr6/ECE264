@@ -69,12 +69,13 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 				*arrLen = *arrLen + 1;
 				if (MaxSize < (StrIndex - PrevDelim))
 				{	
-					MaxSize = StrIndex - PrevDelim;
+					MaxSize = StrIndex - PrevDelim; // Perhaps -1
 				}
 				PrevDelim = StrIndex;
 			}
 		}
 	}
+	
 	
 	// Creates 2D array of appropriate length
 	StrArr = malloc((*arrLen + 1) * sizeof(char*));  // Plus 1
@@ -93,14 +94,19 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 			
 			if ((str[StrIndex] == delims[DelimsIndex]) || (str[StrIndex] == '\0'))
 			{
-				// This is where the new string is actually createdc
+				// This is where the new string is actually created
 				CurrentSize = StrIndex - PrevDelim;
 				
-				for (PrevDelimIndex = 0; PrevDelimIndex < CurrentSize; PrevDelimIndex++)
+				for (PrevDelimIndex = 0; PrevDelimIndex <= CurrentSize; PrevDelimIndex++)
 				{
-					
-					StrArr[StrNumber][PrevDelimIndex] = str[PrevDelim + PrevDelimIndex];
-					
+					if (PrevDelimIndex != CurrentSize)
+					{
+						StrArr[StrNumber][PrevDelimIndex] = str[PrevDelim + PrevDelimIndex];
+					}
+					if (PrevDelimIndex == CurrentSize)
+					{
+						StrArr[StrNumber][PrevDelimIndex] = '\0'; // Add end of string character after finsihed
+					}
 				}
 				PrevDelim = StrIndex + 1; // +1 so the same value isn't repeated
 				StrNumber++;
