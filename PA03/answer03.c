@@ -77,7 +77,7 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 	}
 	
 	// Creates 2D array of appropriate length
-	StrArr = malloc(*arrLen * sizeof(char*));
+	StrArr = malloc((*arrLen + 1) * sizeof(char*));  // Plus 1
 	for (StrArrIndex = 0; StrArrIndex <= *arrLen; StrArrIndex++)
 	{
 		StrArr[StrArrIndex] = malloc(MaxSize * sizeof(char));
