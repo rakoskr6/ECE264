@@ -14,7 +14,8 @@ char * strcat_ex(char * * dest, int * n, const char * src) // Append src to dest
 	{
 		DestLength = 0;
 		*n = SrcLength + DestLength + 1;
-		dest2 = malloc(*n * sizeof(char));
+		dest2 = malloc(1 + 2 * (DestLength + SrcLength));
+		
 	    *dest = dest2;
 	    strcpy(*dest + DestLength,src);
 	    return *dest;
@@ -27,7 +28,7 @@ char * strcat_ex(char * * dest, int * n, const char * src) // Append src to dest
 	if((SrcLength + DestLength + 1) > *n) // dest is not large enough - malloc
 	{
 		*n = SrcLength + DestLength + 1;
-		dest2 = malloc(*n * sizeof(char));
+		dest2 = malloc(1 + 2 * (DestLength+ SrcLength));
 		strcpy(dest2,*dest);
 		free(*dest);
 	    *dest = dest2;
