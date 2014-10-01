@@ -116,7 +116,7 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 		}
 	}
 		
-
+	*arrLen = *arrLen + 1;
 	
 	return StrArr;
 }
@@ -179,8 +179,13 @@ void sortStringCharacters(char * str)
 
 void destroyStringArray(char * * strArr, int len)
 {
+	int n = 0;
 	if (strArr != NULL)
 	{
+		for (n = 0; n < (strlen(*strArr)); n++)
+		{
+			free(strArr[n]);
+		}
 		free(strArr);
 	}
 }
