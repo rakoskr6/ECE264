@@ -151,7 +151,7 @@ char * implode(char * * strArr, int len, const char * glue) // Combines elements
 
 int compar (const void *a, const void*b)
 {
-	return (*(int**)a - *(int**)b);
+	return strcmp(*(char**)a,*(char**)b);
 }
 
 
@@ -163,13 +163,15 @@ void sortStringArray(char * * arrString, int len)
 
 int compar2 (const void *a, const void *b)
 {
-	return (*(int*)a - *(int*)b);
+	return (*(char*)a - *(char*)b);
 }
 
 
 void sortStringCharacters(char * str)
 {
+	//printf("%s\n",str);
 	qsort(str, strlen(str), sizeof(char), compar2);
+	//printf("%s\n",str);
 }
 
 
