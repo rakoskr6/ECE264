@@ -59,7 +59,7 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 	
 	StrLength = strlen(str); 
 	DelimsLength = strlen(delims);
-	
+
 	// Computes number of rows (arrLen) and columns (MaxSize)
 	for (StrIndex = 0; StrIndex <= StrLength; StrIndex++)
 	{
@@ -83,6 +83,13 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 	for (StrArrIndex = 0; StrArrIndex <= *arrLen; StrArrIndex++)
 	{
 		StrArr[StrArrIndex] = malloc(MaxSize * sizeof(char));
+	}
+	
+	
+		if (*delims == "")
+	{
+		strcpy(StrArr[0],str);
+		return StrArr;
 	}
 	
 	
@@ -182,7 +189,7 @@ void destroyStringArray(char * * strArr, int len)
 	int n = 0;
 	if (strArr != NULL)
 	{
-		for (n = 0; n < (strlen(*strArr)); n++)
+		for (n = 0; (strArr[n] != NULL); n++)
 		{
 			free(strArr[n]);
 		}
