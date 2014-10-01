@@ -124,36 +124,40 @@ char * * explode(const char * str, const char * delims, int * arrLen) // split s
 
 char * implode(char * * strArr, int len, const char * glue) // Combines elements of strArr (length len) into one array with glue b/t
 {
-	char *strArrTemp;
+	char *strArrNew = NULL;
 	int LenIndex = 0;
 	int n = 0;
 	
 	
-	strArrTemp = malloc(len * sizeof(char));
+	//strArrNew= malloc(len * sizeof(char));
 	
 	for (LenIndex = 0; LenIndex <= len; LenIndex++)
 	{
-		strArrTemp = strcat_ex(&strArrTemp, &n, strArr[LenIndex]); // Append src to dest
+		strArrNew = strcat_ex(&strArrNew, &n, strArr[LenIndex]); // Append src to dest
 		if (LenIndex != len) // Done to ensure glue isn't added to end of array
 		{
-			strArrTemp = strcat_ex(&strArrTemp, &n, glue);
+			strArrNew= strcat_ex(&strArrNew, &n, glue);
 		}
 	}
 	
-	*strArr = strArrTemp;
+	for (n = 0; n <= len; n++)
+	{
+		free(strArr[n]); // Improper free
+	}
+	free(strArr);
 	
-	return *strArr;
+	return strArrNew;
 }
 
 int compar (const void *a, const void*b)
 {
-	return (*(int*)a - *(int*)b);
+	return (*(int**)a - *(int**)b);
 }
 
 
 void sortStringArray(char * * arrString, int len)
 {
-	qsort(*arrString, len, sizeof(char), compar);
+	qsort(arrString, len, sizeof(arrString[0]), compar);
 }
 
 
