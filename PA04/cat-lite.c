@@ -9,7 +9,8 @@ int main(int argc, char * * argv)
 {
 
 int ind = 1; // skip 0, which is the program path
-//FILE *FilePtr;
+FILE *FilePtr;
+char Charct;
 
 // First loop checks to see if help flag is present
 for( ; ind < argc; ++ind) 
@@ -37,7 +38,7 @@ for(ind = 1; ind < argc; ++ind)
 // Third loop opens and prints files or uses stdin
 for(ind = 1; ind < argc; ++ind) 
 {		
-	//FilePtr = fopen(argv[ind],"r");
+	FilePtr = fopen(argv[ind],"r");
 	
 	if(strcmp(argv[ind], "-") == 0) // What to do if -
 	{
@@ -47,7 +48,12 @@ for(ind = 1; ind < argc; ++ind)
 
 	else
 	{
-		
+		Charct = fgetc(FilePtr);
+		while (!feof(FilePtr))
+		{
+			fprintf(stdout,"%c",Charct);
+			Charct = fgetc(FilePtr);
+		}
 		
 	}
 		
