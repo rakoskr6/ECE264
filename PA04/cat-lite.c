@@ -42,8 +42,12 @@ for(ind = 1; ind < argc; ++ind)
 	
 	if(strcmp(argv[ind], "-") == 0) // What to do if -
 	{
-		
-		
+		while (Charct != '\n')
+		{
+			Charct = fgetc(stdin);
+			fprintf(stdout,"%c",Charct);
+			
+		}
 	}
 
 	else
