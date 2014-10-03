@@ -14,6 +14,7 @@ char String[2000][2000];
 int IntLine = 0;
 int Invert = FALSE, LineNum = FALSE, Quiet = FALSE;
 int PatterNum = 1; // Point in array where the pattern is located
+int ReturnValue = 1;
 
 // First loop checks to see if help flag is present or if other flags exist
 for( ; ind < argc; ++ind) 
@@ -71,6 +72,7 @@ while (fgets(String[IntLine],2000,stdin) != NULL)
 
 
 
+
 // Fourth loop searches for pattern in the string
 if (Quiet == TRUE)
 {
@@ -91,17 +93,33 @@ else if (LineNum == TRUE)
 
 else if (Invert == TRUE)
 {
-	return 0; //match
+	for (ind = 0; ind < IntLine; ind++)
+	{
+		if (strstr(String[ind],Pattern) != NULL)
+		{
+			ReturnValue = 0;
+		}
+		else
+		{
+			printf("%s",String[ind]);
+		}
+	}
+
 }
 
 else
 {
-
-	
-	return 0; //match
+	for (ind = 0; ind < IntLine; ind++)
+	{
+		if (strstr(String[ind],Pattern) != NULL)
+		{
+			printf("%s",String[ind]);
+			ReturnValue = 0;
+		}
+	}
 }
 
 
 
-	return 2; //error
+	return ReturnValue;
 }
