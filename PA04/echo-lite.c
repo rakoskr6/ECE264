@@ -4,18 +4,15 @@
 
 int main(int argc, char * * argv)
 {
-
 int ind = 1; // Skip 0,the program path
    
    // Loop through arguments to print
    
-   for( ; ind < argc; ++ind) 
-   {
-     
+for( ; ind < argc; ++ind) 
+{   
 	fprintf(stdout, "%s ", argv[ind]);
-   }
-   fprintf(stdout, "\n"); // Add newline after complete
-	
+}
+fprintf(stdout, "\n"); // Add newline after complete
 	
 	return EXIT_SUCCESS;
 }

@@ -11,7 +11,7 @@ int main(int argc, char * * argv)
 int ind = 1; // skip 0, which is the program path
 int Opened = FALSE;
 FILE *FilePtr;
-char Charct = 'a';
+char Charct = 'a'; // Assign constant that's not '\n' so it can enter initial while loop
 
 // First loop checks to see if help flag is present
 for( ; ind < argc; ++ind) 
@@ -51,9 +51,8 @@ for(ind = 1; ind < argc; ++ind)
 		while (Charct != '\n')
 		{
 			Charct = fgetc(stdin);
-			fprintf(stdout,"%c",Charct);
+			fprintf(stdout,"%c",Charct); // Print character by character
 		}
-	
 	}
 
 	else
@@ -61,7 +60,7 @@ for(ind = 1; ind < argc; ++ind)
 		Charct = fgetc(FilePtr);
 		while (!feof(FilePtr))
 		{
-			fprintf(stdout,"%c",Charct);
+			fprintf(stdout,"%c",Charct); // Prints character by character
 			Charct = fgetc(FilePtr);
 		}
 		fclose(FilePtr);
@@ -69,7 +68,7 @@ for(ind = 1; ind < argc; ++ind)
 	Opened = TRUE;
 }
 
-// Added so leaving arguments blank is same as -
+// If argument was left blank, do the same as -
 if (!Opened)
 {
 	while (Charct != '\n')

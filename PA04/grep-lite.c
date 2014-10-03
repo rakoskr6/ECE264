@@ -9,17 +9,17 @@ int main(int argc, char * * argv)
 {
 
 int ind = 1; // skip 0, which is the program path
-char Pattern[100];
-char String[1000][1000];
+char Pattern[100]; // Alocate enough room for pattern
+char String[500][500]; // Alocate enough room for files
 int IntLine = 0;
 int Invert = FALSE, LineNum = FALSE, Quiet = FALSE;
 int PatterNum = 1; // Point in array where the pattern is located
-int ReturnValue = 1;
+int ReturnValue = 1; // Value to return function (if not 0)
 
 // First loop checks to see if help flag is present or if other flags exist
 for( ; ind < argc; ++ind) 
 {
-	   // If --help is passed, show help and end
+	// If --help is passed, show help and end. Otherwise record other arguments
 	if(strcmp(argv[ind], "--help") == 0) // Shows help if true
 	{
 		printf("<help-message>\n"
@@ -52,7 +52,7 @@ for( ; ind < argc; ++ind)
 }
 
 
-// Second part stores the pattern string if it exists
+// Second part. Stores the pattern string if it exists
 
 if (PatterNum == (argc - 1)) 
 {
@@ -73,7 +73,7 @@ while (fgets(String[IntLine],2000,stdin) != NULL)
 
 
 
-// Fourth loop searches for pattern in the string
+// Fourth loop searches for pattern in the string. Different cases for each argument
 if (Quiet == TRUE)
 {
 		for (ind = 0; ind < IntLine; ind++)
@@ -143,5 +143,5 @@ else
 
 
 
-	return ReturnValue;
+	return ReturnValue; // Return value defined above
 }
