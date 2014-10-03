@@ -9,10 +9,13 @@ int main(int argc, char * * argv)
 {
 
 int ind = 1; // skip 0, which is the program path
-//FILE *FilePtr;
-//char Charct;
+char Pattern[1000];
+char String[2000][2000];
+int IntLine = 0;
+int Invert = FALSE, LineNum = FALSE, Quiet = FALSE;
+int PatterNum = 1; // Point in array where the pattern is located
 
-// First loop checks to see if help flag is present
+// First loop checks to see if help flag is present or if other flags exist
 for( ; ind < argc; ++ind) 
 {
 	   // If --help is passed, show help and end
@@ -27,22 +30,78 @@ for( ; ind < argc; ++ind)
 				"  -v, --invert-match     print non-matching lines\n"
 				"  -n, --line-number      print line numbers with output\n"
 				"  -q, --quiet            suppress all output\n");
-		return EXIT_SUCCESS;
+		return 1;
 	}
-}
-
-// Second loop checks to ensure no bogus arguments
-for(ind = 1; ind < argc; ++ind) 
-{		
-	if (((fopen(argv[ind],"r")) == NULL) && ((strcmp(argv[ind],"-")) != 0 )) //update
+	else if (strcmp(argv[ind], "--invert-match") == 0)
 	{
-		fprintf(stderr,"cat cannot open %s\n",argv[ind]);
-		return EXIT_FAILURE;
-	}		
-}
+		Invert = TRUE;
+		PatterNum++;
+	}
+	else if (strcmp(argv[ind], "--line-number") == 0)
+	{
+		LineNum = TRUE;
+		PatterNum++;
+	}
+	else if (strcmp(argv[ind], "--quiet") == 0)
+	{
+		Quiet = TRUE;
+		PatterNum++;
+	}
 	
-// Third loop executes grep-lite arguments
+}
 
 
-	return EXIT_SUCCESS;
+// Second part stores the pattern string if it exists
+
+if (PatterNum == (argc - 1)) 
+{
+	strcpy(Pattern,argv[PatterNum]);
+}		
+else
+{
+	return 2;
+}
+
+	
+// Third loop takes the stdin and stores it into String array
+while (fgets(String[IntLine],2000,stdin) != NULL)
+{
+		IntLine++;
+}
+
+
+
+// Fourth loop searches for pattern in the string
+if (Quiet == TRUE)
+{
+	
+	return 0; //match
+}
+
+else if ((LineNum == TRUE) && (Invert == TRUE))
+{
+	
+	return 0; //match
+}
+
+else if (LineNum == TRUE)
+{
+	return 0; //match
+}
+
+else if (Invert == TRUE)
+{
+	return 0; //match
+}
+
+else
+{
+
+	
+	return 0; //match
+}
+
+
+
+	return 2; //error
 }
