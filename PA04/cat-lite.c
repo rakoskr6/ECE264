@@ -9,6 +9,7 @@ int main(int argc, char * * argv)
 {
 
 int ind = 1; // skip 0, which is the program path
+int Opened = FALSE;
 FILE *FilePtr;
 char Charct = 'a';
 
@@ -52,7 +53,7 @@ for(ind = 1; ind < argc; ++ind)
 			Charct = fgetc(stdin);
 			fprintf(stdout,"%c",Charct);
 		}
-		return EXIT_SUCCESS;
+	
 	}
 
 	else
@@ -65,16 +66,18 @@ for(ind = 1; ind < argc; ++ind)
 		}
 		fclose(FilePtr);
 	}
-	return EXIT_SUCCESS;
-		
+	Opened = TRUE;
 }
 
 // Added so leaving arguments blank is same as -
-while (Charct != '\n')
-	{
-		Charct = fgetc(stdin);
-		fprintf(stdout,"%c",Charct);
-	}
-		
-	return EXIT_SUCCESS;
+if (!Opened)
+{
+	while (Charct != '\n')
+		{
+			Charct = fgetc(stdin);
+			fprintf(stdout,"%c",Charct);
+		}
+}
+	
+return EXIT_SUCCESS;
 }
