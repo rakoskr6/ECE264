@@ -9,8 +9,8 @@ int main(int argc, char * * argv)
 {
 
 int ind = 1; // skip 0, which is the program path
-char Pattern[1000];
-char String[2000][2000];
+char Pattern[100];
+char String[1000][1000];
 int IntLine = 0;
 int Invert = FALSE, LineNum = FALSE, Quiet = FALSE;
 int PatterNum = 1; // Point in array where the pattern is located
@@ -33,17 +33,17 @@ for( ; ind < argc; ++ind)
 				"  -q, --quiet            suppress all output\n");
 		return 1;
 	}
-	else if (strcmp(argv[ind], "--invert-match") == 0)
+	else if ((strcmp(argv[ind], "--invert-match") == 0) || (strcmp(argv[ind], "-v") == 0))
 	{
 		Invert = TRUE;
 		PatterNum++;
 	}
-	else if (strcmp(argv[ind], "--line-number") == 0)
+	else if ((strcmp(argv[ind], "--line-number") == 0) || (strcmp(argv[ind], "-n") == 0))
 	{
 		LineNum = TRUE;
 		PatterNum++;
 	}
-	else if (strcmp(argv[ind], "--quiet") == 0)
+	else if ((strcmp(argv[ind], "--quiet") == 0) || (strcmp(argv[ind], "-q") == 0))
 	{
 		Quiet = TRUE;
 		PatterNum++;
@@ -76,19 +76,41 @@ while (fgets(String[IntLine],2000,stdin) != NULL)
 // Fourth loop searches for pattern in the string
 if (Quiet == TRUE)
 {
-	
-	return 0; //match
+		for (ind = 0; ind < IntLine; ind++)
+	{
+		if (strstr(String[ind],Pattern) != NULL)
+		{
+			ReturnValue = 0;
+		}
+	}
 }
 
 else if ((LineNum == TRUE) && (Invert == TRUE))
 {
 	
-	return 0; //match
+		for (ind = 0; ind < IntLine; ind++)
+	{
+		if (strstr(String[ind],Pattern) != NULL)
+		{
+			ReturnValue = 0;
+		}
+		else
+		{
+			printf("%d:%s",ind + 1,String[ind]);
+		}
+	}
 }
 
 else if (LineNum == TRUE)
 {
-	return 0; //match
+		for (ind = 0; ind < IntLine; ind++)
+	{
+		if (strstr(String[ind],Pattern) != NULL)
+		{
+			printf("%d:%s",ind + 1,String[ind]);
+			ReturnValue = 0;
+		}
+	}
 }
 
 else if (Invert == TRUE)
