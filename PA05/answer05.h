@@ -4,6 +4,8 @@
 #ifndef PA05_H
 #define PA05_H
 
+
+void partitionAll(int value);
 /**
  * Prints all the partitions of a positive integer value.
  *
@@ -17,8 +19,10 @@
  * Note: Order does not matter, and neither does white-space. 
  * Hint: look at file: expected/partitionAll.output
  */
-void partitionAll(int value);
+ 
 
+
+void partitionIncreasing(int value);
 /**
  * Prints all partitions that have strictly increasing values.
  *
@@ -40,8 +44,9 @@ void partitionAll(int value);
  *
  * Hint: look at file: expected/partitionIncreasing.output
  */
-void partitionIncreasing(int value);
+ 
 
+void partitionDecreasing(int value);
 /**
  * Prints all partitions that have strictly decreasing values.
  *
@@ -58,8 +63,10 @@ void partitionIncreasing(int value);
  * See: note on partitionIncreasing(...)
  * Hint: look at file: expected/partitionDecreasing.output
  */
-void partitionDecreasing(int value);
+ 
+ 
 
+void partitionOdd(int value);
 /**
  * Prints all partitions comprised solely of odd numbers.
  *
@@ -75,7 +82,9 @@ void partitionDecreasing(int value);
  * Hint: for odd numbers, (value % 2 != 0)
  * Hint: look at file: expected/partitionOdd.output
  */
-void partitionOdd(int value);
+ 
+ 
+void partitionEven(int value);
 
 /**
  * Prints all partitions comprised solely of even numbers.
@@ -92,8 +101,10 @@ void partitionOdd(int value);
  * Hint: you can never partition an odd number with even numbers alone.
  * Hint: look at file: expected/partitionEven.output
  */
-void partitionEven(int value);
+ 
+ 
 
+void partitionOddAndEven(int value);
 /**
  * Prints all partitions that do not have consecutive odd or even numbers.
  * In other words, it only prints partitions that have alternating odd and 
@@ -111,7 +122,9 @@ void partitionEven(int value);
  * See: note on partitionIncreasing(...)
  * Hint: look at file: expected/partitionOddAndEven.output
  */
-void partitionOddAndEven(int value);
+ 
+ 
+void partitionPrime(int value);
 
 /**
  * Prints all partitions that comprise solely of prime numbers.
@@ -127,5 +140,4 @@ void partitionOddAndEven(int value);
  * Hint: 1 is not a prime number.
  * Hint: look at file: expected/partitionPrime.output
  */
-void partitionPrime(int value);
 #endif
