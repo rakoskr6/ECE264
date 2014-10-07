@@ -15,6 +15,14 @@ int main(void)
 		printf("\n");
 		partitionAll(Num);
 	}
+	Num = 1;
+	while (Num)
+	{
+		printf("Enter a number to partition increasing: ");
+		scanf("%i",&Num);
+		printf("\n");
+		partitionIncreasing(Num);
+	}
 		
 	
 	return (EXIT_SUCCESS);

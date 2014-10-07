@@ -1,4 +1,4 @@
-for n =4:
+for n =4; // number of partititions
 
 sum = 0 + f(4-1)
 	sum1 = 0 + f(3-1)
