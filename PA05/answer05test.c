@@ -32,7 +32,34 @@ int main(void)
 		printf("\n");
 		partitionDecreasing(Num);
 	}
+
+	Num = 1;
+	while (Num)
+	{
+		printf("Enter a number to partition even: ");
+		scanf("%i",&Num);
+		printf("\n");
+		partitionEven(Num);
+	}		
+
+
+	Num = 1;
+	while (Num)
+	{
+		printf("Enter a number to partition Odd: ");
+		scanf("%i",&Num);
+		printf("\n");
+		partitionOdd(Num);
+	}		
+
+	Num = 1;
+	while (Num)
+	{
+		printf("Enter a number to partition even/Odd: ");
+		scanf("%i",&Num);
+		printf("\n");
+		partitionOddAndEven(Num);
+	}		
 		
-	
 	return (EXIT_SUCCESS);
 }
