@@ -87,7 +87,7 @@ void partitionOdd(int value);
 void partitionEven(int value);
 
 /**
- * Prints all partitions comprised solely of even numbers.
+ * Prints all partitions comprised solely of even numbers. 
  *
  * Example:
  * partitionEven(6); // prints the following (line order not important)
