@@ -23,6 +23,15 @@ int main(void)
 		printf("\n");
 		partitionIncreasing(Num);
 	}
+	
+	Num = 1;
+	while (Num)
+	{
+		printf("Enter a number to partition decreasing: ");
+		scanf("%i",&Num);
+		printf("\n");
+		partitionDecreasing(Num);
+	}
 		
 	
 	return (EXIT_SUCCESS);
