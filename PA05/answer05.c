@@ -13,7 +13,7 @@ void PartitionPr(int * PartArr, int ind, int left);
 int isPrime(int Number);
 
 
-void partitionAll(int PartitionNum) // Code used (and modified) from class book
+void partitionAll(int PartitionNum) // Code used (and modified) from class book for PartionAll and Partition
 {
 	int * PartArr;
 	PartArr = malloc(sizeof( int ) * (PartitionNum + 1)); // Added one for null character
@@ -29,7 +29,6 @@ void Partition(int * PartArr, int ind, int left)
 	/* left is how many integer options are left after the first integer is chosen
 	 * val is the value that is part of the partition
 	 * ind is the order in which the previously found val will go */
-	
 	
 	if (left == 0) // Then print array to show partition
 	{
@@ -47,7 +46,6 @@ void Partition(int * PartArr, int ind, int left)
 		Partition(PartArr, ind + 1 , left - val);
 	}
 }
-
 
 
 void partitionIncreasing(int PartitionNum)
@@ -288,9 +286,9 @@ void PartitionPr(int * PartArr, int ind, int left)
 		printf("%d\n",PartArr[ind - 1]); // Out of loop to allow \n
 	}
 	
-	for(val = 1; val <= left; val ++)
+	for(val = 1; val <= left; val++)
 	{
-		if (isPrime(val)) // Ensure current is odd
+		if (isPrime(val)) // Ensure current is prime
 		{
 			PartArr[ind] = val;
 			PartitionPr(PartArr, ind + 1, left - val);
@@ -301,12 +299,18 @@ void PartitionPr(int * PartArr, int ind, int left)
 int isPrime(int Number) // Basic code idea is from stackoverflow
 {
 	int index = 2;
+	
+	if (Number == 1) // Ensures 1 doesn't count as prime
+	{
+		return 0;
+	}
+		
 	for (index = 2; index < Number; index++) // Loops from 2 to number
 	{
-		if (Number % index != 0)
+		if (Number % index == 0)
 		{
-			return 1; //If not divisible by a number, prime
+			return 0; //If divisible by a number and !=1, not prime
 		}
 	}
-	return 0; // Else not prime
+	return 1; // Else prime
 }
