@@ -9,12 +9,14 @@ void PartitionDec(int * PartArr, int ind, int left);
 void PartitionEv(int * PartArr, int ind, int left);
 void PartitionOd(int * PartArr, int ind, int left);
 void PartitionOdEv(int * PartArr, int ind, int left);
+void PartitionPr(int * PartArr, int ind, int left);
+int isPrime(int Number);
 
 
 void partitionAll(int PartitionNum) // Code used (and modified) from class book
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * PartitionNum);
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 10));
 	
 	Partition(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -50,7 +52,7 @@ void Partition(int * PartArr, int ind, int left)
 void partitionIncreasing(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * PartitionNum);
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
 	
 	PartitionIn(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -93,7 +95,7 @@ void PartitionIn(int * PartArr, int ind, int left)
 void partitionDecreasing(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * PartitionNum);
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
 	
 	PartitionDec(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -136,7 +138,7 @@ void PartitionDec(int * PartArr, int ind, int left)
 void partitionEven(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * PartitionNum);
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
 	
 	PartitionEv(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -172,7 +174,7 @@ void PartitionEv(int * PartArr, int ind, int left)
 void partitionOdd(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * PartitionNum);
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
 	
 	PartitionOd(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -203,15 +205,10 @@ void PartitionOd(int * PartArr, int ind, int left)
 }
 
 
-
-
-
-
-
 void partitionOddAndEven(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * PartitionNum);
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
 	
 	PartitionOdEv(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -257,4 +254,52 @@ void PartitionOdEv(int * PartArr, int ind, int left)
 			// Else do nothing
 		}		
 	}	
+}
+
+
+
+void partitionPrime(int PartitionNum)
+{
+	int * PartArr;
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
+	
+	PartitionPr(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
+	
+	free(PartArr);
+}
+
+void PartitionPr(int * PartArr, int ind, int left)
+{
+	int val = 1, PrintInd = 0;
+	
+	if (left == 0) // Then print array to show partition
+	{
+		for (PrintInd = 0; PrintInd < ind - 1; PrintInd++)
+		{
+			printf("%d + ",PartArr[PrintInd]);
+		}
+		printf("%d\n",PartArr[ind - 1]); // Out of loop to allow \n
+	}
+	
+	for(val = 1; val <= left; val ++)
+	{
+		if (isPrime(val)) // Ensure current is odd
+		{
+			PartArr[ind] = val;
+			PartitionPr(PartArr, ind + 1, left - val);
+		}
+	}	
+}
+
+int isPrime(int Number) // Basic code idea from stackoverflow
+{
+	int index = 2;
+	for (index = 2; index < Number; index++)
+	{
+		if (Number % index == 0)
+		{
+			return 0;
+		}
+	}
+	return 1;
 }
