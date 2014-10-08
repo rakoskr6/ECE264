@@ -16,7 +16,7 @@ int isPrime(int Number);
 void partitionAll(int PartitionNum) // Code used (and modified) from class book
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * (PartitionNum + 10));
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1)); // Added one for null character
 	
 	Partition(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -33,6 +33,7 @@ void Partition(int * PartArr, int ind, int left)
 	
 	if (left == 0) // Then print array to show partition
 	{
+		printf("= ");
 		for (PrintInd = 0; PrintInd < ind - 1; PrintInd++)
 		{
 			printf("%d + ",PartArr[PrintInd]);
@@ -52,7 +53,7 @@ void Partition(int * PartArr, int ind, int left)
 void partitionIncreasing(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1)); // Added one for null character
 	
 	PartitionIn(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -65,6 +66,7 @@ void PartitionIn(int * PartArr, int ind, int left)
 	
 	if (left == 0) // Then print array to show partition
 	{
+		printf("= ");
 		for (PrintInd = 0; PrintInd < ind - 1; PrintInd++)
 		{
 			printf("%d + ",PartArr[PrintInd]);
@@ -95,7 +97,7 @@ void PartitionIn(int * PartArr, int ind, int left)
 void partitionDecreasing(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));// Added one for null character
 	
 	PartitionDec(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -108,6 +110,7 @@ void PartitionDec(int * PartArr, int ind, int left)
 	
 	if (left == 0) // Then print array to show partition
 	{
+		printf("= ");
 		for (PrintInd = 0; PrintInd < ind - 1; PrintInd++)
 		{
 			printf("%d + ",PartArr[PrintInd]);
@@ -138,7 +141,7 @@ void PartitionDec(int * PartArr, int ind, int left)
 void partitionEven(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1)); // Added one for null character
 	
 	PartitionEv(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -151,6 +154,7 @@ void PartitionEv(int * PartArr, int ind, int left)
 	
 	if (left == 0) // Then print array to show partition
 	{
+		printf("= ");
 		for (PrintInd = 0; PrintInd < ind - 1; PrintInd++)
 		{
 			printf("%d + ",PartArr[PrintInd]);
@@ -174,7 +178,7 @@ void PartitionEv(int * PartArr, int ind, int left)
 void partitionOdd(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1)); // Added one for null character
 	
 	PartitionOd(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -187,6 +191,7 @@ void PartitionOd(int * PartArr, int ind, int left)
 	
 	if (left == 0) // Then print array to show partition
 	{
+		printf("= ");
 		for (PrintInd = 0; PrintInd < ind - 1; PrintInd++)
 		{
 			printf("%d + ",PartArr[PrintInd]);
@@ -221,6 +226,7 @@ void PartitionOdEv(int * PartArr, int ind, int left)
 	
 	if (left == 0) // Then print array to show partition
 	{
+		printf("= ");
 		for (PrintInd = 0; PrintInd < ind - 1; PrintInd++)
 		{
 			printf("%d + ",PartArr[PrintInd]);
@@ -261,7 +267,7 @@ void PartitionOdEv(int * PartArr, int ind, int left)
 void partitionPrime(int PartitionNum)
 {
 	int * PartArr;
-	PartArr = malloc(sizeof( int ) * (PartitionNum + 1));
+	PartArr = malloc(sizeof( int ) * (PartitionNum + 1)); // Added one for null character
 	
 	PartitionPr(PartArr, 0 , PartitionNum); // Call function which will actually use recursion
 	
@@ -274,6 +280,7 @@ void PartitionPr(int * PartArr, int ind, int left)
 	
 	if (left == 0) // Then print array to show partition
 	{
+		printf("= ");
 		for (PrintInd = 0; PrintInd < ind - 1; PrintInd++)
 		{
 			printf("%d + ",PartArr[PrintInd]);
@@ -291,15 +298,15 @@ void PartitionPr(int * PartArr, int ind, int left)
 	}	
 }
 
-int isPrime(int Number) // Basic code idea from stackoverflow
+int isPrime(int Number) // Basic code idea is from stackoverflow
 {
 	int index = 2;
-	for (index = 2; index < Number; index++)
+	for (index = 2; index < Number; index++) // Loops from 2 to number
 	{
-		if (Number % index == 0)
+		if (Number % index != 0)
 		{
-			return 0;
+			return 1; //If not divisible by a number, prime
 		}
 	}
-	return 1;
+	return 0; // Else not prime
 }
