@@ -98,3 +98,11 @@ As usual, following are strictly required in order to receive credit:
 - Code compiles on ecegrid without any compiler warnings or errors.
 - Code runs with no memory errors (as reported by Valgrind).
 - Code terminates (i.e., no infinite loop, etc.).
+
+
+
+// Personal Notes
+Maze may have 0 - x exits
+Only need to cover every part of the maze- don't need to exit anywhere specific
+Entrance always on the top
+
