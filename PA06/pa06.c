@@ -37,8 +37,8 @@ int main(int argc, char *argv[]) {
 	print_directions(maze, w, h);
 
 	// Uncomment these lines to print the entire maze when it finishes.
-	//printf("\n--------------------------------------\n");
-	//print_maze(maze, w, h);
+	printf("\n--------------------------------------\n");
+	print_maze(maze, w, h);
 
 	// Free the memory on the heap for the maze.
 	free_maze(maze, h);

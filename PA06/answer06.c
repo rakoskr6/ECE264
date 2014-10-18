@@ -1,8 +1,50 @@
 #include "answer06.h"
 #include <stdio.h>
+#define South 1
+#define North 2
+#define West 3
+#define East 4
+void MoveSouth(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH);
+void MoveNorth(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH);
 
 void print_directions(char** maze, int w, int h) 
 
 {
-	/* YOUR CODE HERE */
+	int WIndex;//, HIndex; // Indicies used in while loops
+	int WStart; // width of where to start the maze 
+	
+	printf("\e[1;1H\e[2J"); // Clears screen
+	
+	for (WIndex = 0; WIndex < w; WIndex++)
+	{
+		if (maze[0][WIndex] == ' ')
+		{
+			WStart = WIndex;
+			WIndex = w;
+		}
+	}
+	
+	MoveSouth(maze; WStart, 0, w - 1, h - 1); // subtract 1 since C starts index at 0
+
+	
+}
+
+
+void MoveSouth(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH)
+{
+	if ((HIndex > MaxH) && (maze[HIndex + 1][WIndex] == ' ')) // In range, and not wall
+	{
+		printf("S\n");
+
+	}
+	if (((WIndex < 0) && (maze[HIndex][WIndex - 1] == ' ')) // In range, and not wall to go west
+	{
+		
+	}
+}
+
+
+void MoveNorth(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH)
+{
+	
 }
