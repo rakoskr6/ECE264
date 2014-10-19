@@ -4,6 +4,8 @@
 #define North 2
 #define West 3
 #define East 4
+#define Forward 1
+#define Backward 0
 void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir);
 int CanMove (char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Direction);
 
@@ -24,17 +26,36 @@ void print_directions(char** maze, int w, int h)
 		}
 	}
 	
-	Move(maze; WStart, 0, w - 1, h - 1); // subtract 1 since C starts index at 0
+	Move(maze; WStart, 0, w - 1, h - 1, South, Forward); // subtract 1 since C starts index at 0
 
 	
 }
 
 
-void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
+void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Mode)
 {
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South))
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && (*Mode))
 	{
 		// Go south 
+		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
+	}
+	
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, East) && (Dir != West) && (*Mode))
+	{
+		// Go east 
+		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
+	}
+	
+		if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, North) && (Dir != North) && (*Mode))
+	{
+		// Go north 
+		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
+	}
+	
+		if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && (*Mode))
+	{
+		// Go west 
+		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
 	}
 	
 }
