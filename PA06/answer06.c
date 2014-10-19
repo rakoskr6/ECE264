@@ -44,7 +44,32 @@ void MoveSouth(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH)
 }
 
 
-void MoveNorth(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH)
+int CanMove (char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Direction) // Decides if direction is possible
 {
 	
+	switch (Direction)
+	{
+		case NORTH :
+			WIndex--;
+			break ;
+		case SOUTH :
+			WIndex++;
+			break ;
+		case WEST :
+			HIndex--;
+			break ;
+		case EAST :
+			HIndex++;
+			break ;
+	}
+	
+	if ((maze[WIndex][HIndex] == ’ ’) && (WIndex >= 0) && (WIndex <= MaxW) && (HIndex >= 0) && (HIndex <= MaxH))
+	{ 
+		return 1; // No wall and within range
+	}
+	return 0; //Can't move
 }
+
+
+
+
