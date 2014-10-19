@@ -1,23 +1,23 @@
 #include "answer06.h"
 #include <stdio.h>
+#define None 0
 #define South 1
 #define North 2
 #define West 3
 #define East 4
-#define Forward 1
-#define Backward 0
-void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir);
+void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Total);
 int CanMove (char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Direction);
 
 void print_directions(char** maze, int w, int h) 
 
 {
-	int WIndex;//, HIndex; // Indicies used in while loops
+	int WIndex, HIndex; // Indicies used in while loops
 	int WStart; // width of where to start the maze 
+	int Total = 0; // Number of squares needed to cover
 	
 	printf("\e[1;1H\e[2J"); // Clears screen
 	
-	for (WIndex = 0; WIndex < w; WIndex++)
+	for (WIndex = 0; WIndex < w; WIndex++) // Finds entrance
 	{
 		if (maze[0][WIndex] == ' ')
 		{
@@ -26,15 +26,32 @@ void print_directions(char** maze, int w, int h)
 		}
 	}
 	
-	Move(maze; WStart, 0, w - 1, h - 1, South, Forward); // subtract 1 since C starts index at 0
+	// Figures out how many spaces must be moved through
+	for (WIndex = 0; WIndex < w; WIndex++)
+	{
+		for (HIndex = 0; HIndex < h; HIndex++)
+		{
+			if (maze[HIndex][WIndex] == ' ')
+			{
+				Total++;
+			}
+		} 
+	}
+	
+	// subtract 1 since C starts index at 0
+	w--; 
+	h--;
+	
+	
+	Move(maze; WStart, 0, w, h, South, &Total); 
 
 	
 }
 
 
-void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Mode)
+void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Total)
 {
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && (*Mode))
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North))
 	{
 		// Go south 
 		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
@@ -46,17 +63,18 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
 	}
 	
-		if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, North) && (Dir != North) && (*Mode))
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, North) && (Dir != North) && (*Mode))
 	{
 		// Go north 
 		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
 	}
 	
-		if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && (*Mode))
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && (*Mode))
 	{
 		// Go west 
 		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
 	}
+	Dir = None;
 	
 }
 
