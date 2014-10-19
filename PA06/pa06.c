@@ -52,6 +52,7 @@ void print_maze(char** maze, int w, int h) {
 	for(y=0; y < h; y++) {
 		printf("%s\n", maze[y]);
 	}
+	printf("\n");
 }
 
 void read_and_alloc_maze(char* maze[MAX_H], FILE* input, int* p_w, int* p_h) {
