@@ -4,8 +4,8 @@
 #define North 2
 #define West 3
 #define East 4
-void MoveSouth(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH);
-void MoveNorth(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH);
+void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir);
+int CanMove (char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Direction);
 
 void print_directions(char** maze, int w, int h) 
 
@@ -24,29 +24,24 @@ void print_directions(char** maze, int w, int h)
 		}
 	}
 	
-	MoveSouth(maze; WStart, 0, w - 1, h - 1); // subtract 1 since C starts index at 0
+	Move(maze; WStart, 0, w - 1, h - 1); // subtract 1 since C starts index at 0
 
 	
 }
 
 
-void MoveSouth(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH)
+void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
 {
-	if ((HIndex > MaxH) && (maze[HIndex + 1][WIndex] == ' ')) // In range, and not wall
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South))
 	{
-		printf("S\n");
-
+		// Go south 
 	}
-	if (((WIndex < 0) && (maze[HIndex][WIndex - 1] == ' ')) // In range, and not wall to go west
-	{
-		
-	}
+	
 }
 
 
 int CanMove (char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Direction) // Decides if direction is possible
 {
-	
 	switch (Direction)
 	{
 		case NORTH :
