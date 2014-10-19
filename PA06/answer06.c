@@ -21,7 +21,7 @@ void print_directions(char** maze, int w, int h)
 	int Total = 0; // Number of squares needed to cover
 	int Direction = South;
 	int Mode = Forward;
-	int LastW, LastH;
+	int LastW, LastH; // Location of index in previous stack
 	int LastDir = None;
 	
 	printf("\e[1;1H\e[2J"); // Clears screen
@@ -46,7 +46,7 @@ void print_directions(char** maze, int w, int h)
 			}
 		} 
 	}
-	Total++; //Add 1 so total will run until 0
+	
 	
 	// subtract 1 since C starts index at 0
 	w--; 
@@ -66,19 +66,18 @@ void print_directions(char** maze, int w, int h)
 
 void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Total, int *Mode, int *LastW, int *LastH, int *LastDir)
 {
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South, Total) && (Dir != North) && *Total)
+	if (*Total && CanMove(maze, WIndex, HIndex, MaxW, MaxH, South, Total) && (Dir != North))
 	{
 		// Go south 
 		*Mode = Forward;
 		(HIndex)++;
 		printf("S %i, %i\n",WIndex,HIndex);
-		Dir = South;
 		print_maze2(maze, MaxW, MaxH);
 		// Declares the previously used indicies
 		*LastW = WIndex;
 		*LastH = HIndex;
-		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH, LastDir);
-		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)))
+		Move(maze, WIndex, HIndex, MaxW, MaxH, South, Total, Mode, LastW, LastH, LastDir);
+		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)) && *Total)
 		{
 			BackPrint(*LastDir, WIndex, HIndex);
 		}
@@ -86,57 +85,54 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 	}
 	
 
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, East, Total) && (Dir != West) && *Total)
+	if (*Total && CanMove(maze, WIndex, HIndex, MaxW, MaxH, East, Total) && (Dir != West))
 	{
 		// Go east 
 		*Mode = Forward;
 		(WIndex)++;
 		printf("E %i, %i\n",WIndex,HIndex);
-		Dir = East;
 		print_maze2(maze, MaxW, MaxH);
 		// Declares the previously used indicies
 		*LastW = WIndex;
 		*LastH = HIndex;
-		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH, LastDir);
-		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)))
+		Move(maze, WIndex, HIndex, MaxW, MaxH, East, Total, Mode, LastW, LastH, LastDir);
+		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)) && *Total)
 		{
 			BackPrint(*LastDir, WIndex, HIndex);
 		}
 
 	}
 
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, West, Total) && (Dir != East) && *Total)
+	if (*Total && CanMove(maze, WIndex, HIndex, MaxW, MaxH, West, Total) && (Dir != East))
 	{
 		// Go west 
 		*Mode = Forward;
 		(WIndex)--;
 		printf("W %i, %i\n",WIndex,HIndex);
-		Dir = West;
 		print_maze2(maze, MaxW, MaxH);
 		// Declares the previously used indicies
 		*LastW = WIndex;
 		*LastH = HIndex;
-		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH, LastDir);
-		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)))
+		Move(maze, WIndex, HIndex, MaxW, MaxH, West, Total, Mode, LastW, LastH, LastDir);
+		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)) && *Total)
 		{
 			BackPrint(*LastDir, WIndex, HIndex);
 		}
 	}
 	
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, North, Total) && (Dir != South) && *Total)
+	if (*Total && CanMove(maze, WIndex, HIndex, MaxW, MaxH, North, Total) && (Dir != South))
 	{
 		// Go north 
 		
 		*Mode = Forward;
 		(HIndex)--;
 		printf("N %i, %i\n",WIndex,HIndex);
-		Dir = North;
 		print_maze2(maze, MaxW, MaxH);
 		// Declares the previously used indicies
 		*LastW = WIndex;
 		*LastH = HIndex;
-		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH, LastDir);
-		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)))
+		Move(maze, WIndex, HIndex, MaxW, MaxH, North, Total, Mode, LastW, LastH, LastDir);
+		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)) && *Total)
 		{
 			BackPrint(*LastDir, WIndex, HIndex);
 		}
