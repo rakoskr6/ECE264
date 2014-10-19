@@ -7,6 +7,7 @@
 #define East 4
 void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Total);
 int CanMove (char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Direction);
+void IsNew(char **maze,int WIndex,int HIndex,int *Total);
 
 void print_directions(char** maze, int w, int h) 
 
@@ -43,67 +44,84 @@ void print_directions(char** maze, int w, int h)
 	h--;
 	
 	
-	Move(maze; WStart, 0, w, h, South, &Total); 
-
-	
+	Move(maze, WStart, 0, w, h, South, &Total); 	
 }
 
 
 void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Total)
 {
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North))
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && *Total)
 	{
 		// Go south 
-		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
+		WIndex++;
+		printf("S\n");
+		IsNew(maze,WIndex,HIndex,Total); // Desides if new part in maze and adjusts Total
+		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total);
 	}
 	
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, East) && (Dir != West) && (*Mode))
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && *Total)
 	{
 		// Go east 
-		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
+		HIndex++;
+		printf("E\n");
+		IsNew(maze,WIndex,HIndex,Total); // Desides if new part in maze and adjusts Total
+		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total);
 	}
 	
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, North) && (Dir != North) && (*Mode))
-	{
-		// Go north 
-		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
-	}
-	
-	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && (*Mode))
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && *Total)
 	{
 		// Go west 
-		Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir)
+		HIndex--;
+		printf("W\n");
+		IsNew(maze,WIndex,HIndex,Total); // Desides if new part in maze and adjusts Total
+		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total);
 	}
-	Dir = None;
+	
+	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South) && (Dir != North) && *Total)
+	{
+		// Go north 
+		WIndex--;
+		printf("N\n");
+		IsNew(maze,WIndex,HIndex,Total); // Desides if new part in maze and adjusts Total
+		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total);
+	}
+	Dir = None; // Resets direction to allow to move backwards
 	
 }
 
 
-int CanMove (char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Direction) // Decides if direction is possible
+int CanMove (char **maze, int WIndex, int HIndex, int MaxW, int MaxH, int Direction) // Decides if direction is possible
 {
 	switch (Direction)
 	{
-		case NORTH :
+		case North :
 			WIndex--;
 			break ;
-		case SOUTH :
+		case South :
 			WIndex++;
 			break ;
-		case WEST :
+		case West :
 			HIndex--;
 			break ;
-		case EAST :
+		case East :
 			HIndex++;
 			break ;
 	}
 	
-	if ((maze[WIndex][HIndex] == ’ ’) && (WIndex >= 0) && (WIndex <= MaxW) && (HIndex >= 0) && (HIndex <= MaxH))
+	if ((maze[WIndex][HIndex] != 'X') && (WIndex >= 0) && (WIndex <= MaxW) && (HIndex >= 0) && (HIndex <= MaxH))
 	{ 
 		return 1; // No wall and within range
 	}
 	return 0; //Can't move
 }
 
-
+void IsNew(char **maze,int WIndex,int HIndex,int *Total)
+{
+	if (maze[WIndex][HIndex] == ' ')
+	{
+		(*Total)++;
+		maze[WIndex][HIndex] = '*';
+	}
+}
 
 
