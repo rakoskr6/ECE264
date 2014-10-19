@@ -7,13 +7,14 @@
 #define East 4
 #define Forward  1
 #define Backward 0
-void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Total, int *Mode, int *LastW, int *LastH);
+void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Total, int *Mode, int *LastW, int *LastH, int *LastDir);
 int CanMove (char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Direction, int *Total);
 void IsNew(char **maze,int WIndex,int HIndex,int *Total);
 void print_maze2(char** maze, int w, int h);
+void BackPrint(int LastDir, int WIndex, int HIndex);
+
 
 void print_directions(char** maze, int w, int h) 
-
 {
 	int WIndex, HIndex; // Indicies used in while loops
 	int WStart; // width of where to start the maze 
@@ -21,6 +22,7 @@ void print_directions(char** maze, int w, int h)
 	int Direction = South;
 	int Mode = Forward;
 	int LastW, LastH;
+	int LastDir = None;
 	
 	printf("\e[1;1H\e[2J"); // Clears screen
 	
@@ -58,13 +60,12 @@ void print_directions(char** maze, int w, int h)
 	LastH = HIndex;
 	IsNew(maze,0,WStart,&Total); // Ensures entrance is counted
 	print_maze2(maze, w, h);
-	Move(maze, WIndex, HIndex, w, h, Direction, &Total, &Mode, &LastW, &LastH); 	
+	Move(maze, WIndex, HIndex, w, h, Direction, &Total, &Mode, &LastW, &LastH, &LastDir); 	
 }
 
 
-void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Total, int *Mode, int *LastW, int *LastH)
+void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int *Total, int *Mode, int *LastW, int *LastH, int *LastDir)
 {
-	//printf("W = %i, H = %i, Dir: %i, Total: %i\n",WIndex, HIndex, *Dir, *Total);
 	if (CanMove(maze, WIndex, HIndex, MaxW, MaxH, South, Total) && (Dir != North) && *Total)
 	{
 		// Go south 
@@ -76,10 +77,10 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 		// Declares the previously used indicies
 		*LastW = WIndex;
 		*LastH = HIndex;
-		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH);
+		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH, LastDir);
 		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)))
 		{
-			printf("N %i, %i\n",WIndex,HIndex);
+			BackPrint(*LastDir, WIndex, HIndex);
 		}
 		
 	}
@@ -96,10 +97,10 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 		// Declares the previously used indicies
 		*LastW = WIndex;
 		*LastH = HIndex;
-		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH);
+		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH, LastDir);
 		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)))
 		{
-			printf("W %i, %i\n",WIndex,HIndex);
+			BackPrint(*LastDir, WIndex, HIndex);
 		}
 
 	}
@@ -115,10 +116,10 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 		// Declares the previously used indicies
 		*LastW = WIndex;
 		*LastH = HIndex;
-		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH);
+		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH, LastDir);
 		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)))
 		{
-			printf("E %i, %i\n",WIndex,HIndex);
+			BackPrint(*LastDir, WIndex, HIndex);
 		}
 	}
 	
@@ -134,16 +135,18 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 		// Declares the previously used indicies
 		*LastW = WIndex;
 		*LastH = HIndex;
-		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH);
+		Move(maze, WIndex, HIndex, MaxW, MaxH, Dir, Total, Mode, LastW, LastH, LastDir);
 		if ((*Mode == Backward) &&  ((*LastW != WIndex) || (*LastH != HIndex)))
 		{
-			printf("S %i, %i\n",WIndex,HIndex);
+			BackPrint(*LastDir, WIndex, HIndex);
 		}
 	}
 	
 	// Resets direction to allow to move backwards
 	*Mode = Backward;
 	
+	// Changes LastDir for use with Backwards mode
+	*LastDir = Dir;
 
 
 	
@@ -195,4 +198,21 @@ void print_maze2(char** maze, int w, int h)
 	printf("\n");
 }
 
-
+void BackPrint(int LastDir, int WIndex, int HIndex)
+{
+	switch (LastDir)
+	{
+		case North:
+		printf("S %i, %i\n",WIndex,HIndex);
+			break;
+		case South:
+		printf("N %i, %i\n",WIndex,HIndex);
+			break;
+		case West:
+		printf("E %i, %i\n",WIndex,HIndex);
+			break;
+		case East:
+		printf("W %i, %i\n",WIndex,HIndex);
+			break;
+	}
+}
