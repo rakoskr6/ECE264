@@ -17,14 +17,14 @@ void BackPrint(int LastDir, int WIndex, int HIndex);
 void print_directions(char** maze, int w, int h) 
 {
 	int WIndex, HIndex; // Indicies used in while loops
-	int WStart; // width of where to start the maze 
+	int WStart; // Where to start the maze width
 	int Total = 0; // Number of squares needed to cover
-	int Direction = South;
-	int Mode = Forward;
+	int Direction = South; // Direction to go
+	int Mode = Forward; // Either forward or backwards mode
 	int LastW, LastH; // Location of index in previous stack
-	int LastDir = None;
+	int LastDir = None; // Direction went in previous call stack
 	
-	//printf("\e[1;1H\e[2J"); // Clears screen
+	//printf("\e[1;1H\e[2J"); // Uncomment to clear screen before execution
 	
 	for (WIndex = 0; WIndex < w; WIndex++) // Finds entrance
 	{
@@ -55,9 +55,9 @@ void print_directions(char** maze, int w, int h)
 	// Redfine Indicies to be equal to start location
 	WIndex = WStart;
 	HIndex = 0;
-
 	LastW = WIndex;
 	LastH = HIndex;
+	
 	IsNew(maze,0,WStart,&Total); // Ensures entrance is counted
 	print_maze2(maze, w, h);
 	Move(maze, WIndex, HIndex, w, h, Direction, &Total, &Mode, &LastW, &LastH, &LastDir); 	
@@ -186,8 +186,7 @@ void IsNew(char **maze,int HIndex,int WIndex,int *Total)
 
 void print_maze2(char** maze, int w, int h) 
 {
-	return;
-	// Print the maze to stdout.
+	return; //Delete this to print maze each step of the way
 	int y=0;
 	for(y=0; y <= h; y++) {
 		printf("%s\n", maze[y]);
