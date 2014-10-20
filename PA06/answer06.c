@@ -24,7 +24,7 @@ void print_directions(char** maze, int w, int h)
 	int LastW, LastH; // Location of index in previous stack
 	int LastDir = None;
 	
-	printf("\e[1;1H\e[2J"); // Clears screen
+	//printf("\e[1;1H\e[2J"); // Clears screen
 	
 	for (WIndex = 0; WIndex < w; WIndex++) // Finds entrance
 	{
