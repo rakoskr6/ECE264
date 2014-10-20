@@ -70,7 +70,8 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 	{
 		// Go south 
 		*Mode = Forward;
-		printf("S %i, %i\n",WIndex,HIndex);
+		//printf("S %i, %i\n",WIndex,HIndex);
+		printf("S 1\n");
 		print_maze2(maze, MaxW, MaxH);
 		// Declares the previously used indicies
 		*LastW = WIndex;
@@ -88,7 +89,8 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 	{
 		// Go east 
 		*Mode = Forward;
-		printf("E %i, %i\n",WIndex,HIndex);
+		//printf("E %i, %i\n",WIndex,HIndex);
+		printf("E 1\n");
 		print_maze2(maze, MaxW, MaxH);
 		// Declares the previously used indicies
 		*LastW = WIndex;
@@ -105,7 +107,8 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 	{
 		// Go west 
 		*Mode = Forward;
-		printf("W %i, %i\n",WIndex,HIndex);
+		//printf("W %i, %i\n",WIndex,HIndex);
+		printf("W 1\n");
 		print_maze2(maze, MaxW, MaxH);
 		// Declares the previously used indicies
 		*LastW = WIndex;
@@ -122,7 +125,8 @@ void Move(char ** maze, int WIndex, int HIndex, int MaxW, int MaxH, int Dir, int
 		// Go north 
 		
 		*Mode = Forward;
-		printf("N %i, %i\n",WIndex,HIndex);
+		//printf("N %i, %i\n",WIndex,HIndex);
+		printf("N 1\n");
 		print_maze2(maze, MaxW, MaxH);
 		// Declares the previously used indicies
 		*LastW = WIndex;
@@ -182,6 +186,7 @@ void IsNew(char **maze,int HIndex,int WIndex,int *Total)
 
 void print_maze2(char** maze, int w, int h) 
 {
+	return;
 	// Print the maze to stdout.
 	int y=0;
 	for(y=0; y <= h; y++) {
@@ -195,16 +200,20 @@ void BackPrint(int LastDir, int WIndex, int HIndex)
 	switch (LastDir)
 	{
 		case North:
-		printf("S %i, %i\n",WIndex,HIndex);
+		//printf("S %i, %i\n",WIndex,HIndex);
+		printf("S 1\n");
 			break;
 		case South:
-		printf("N %i, %i\n",WIndex,HIndex);
+		//printf("N %i, %i\n",WIndex,HIndex);
+		printf("N 1\n");
 			break;
 		case West:
-		printf("E %i, %i\n",WIndex,HIndex);
+		//printf("E %i, %i\n",WIndex,HIndex);
+		printf("E 1\n");
 			break;
 		case East:
-		printf("W %i, %i\n",WIndex,HIndex);
+		//printf("W %i, %i\n",WIndex,HIndex);
+		printf("W 1\n");
 			break;
 	}
 }
