@@ -26,38 +26,40 @@ typedef struct Image_st {
     uint8_t * data;
 } Image;
 
+
+Image * Image_loadbmp(const char * filename);
 /**
  * Loads a bmp (windows bitmap) image, returning an Image structure.
  * Will return NULL if there is any error.
  *
  * Note: This function is written for you and appears in image-bmp.c
  */
-Image * Image_loadbmp(const char * filename);
 
+int Image_savebmp(const char * filename, Image * image);
 /**
  * Saves an Image structure to a file. Returns TRUE if success, or
  * FALSE if there is any error.
  *
  * Note: This function is written for you and appears in image-bmp.c
  */
-int Image_savebmp(const char * filename, Image * image);
 
+Image * Image_load(const char * filename);
 /**
  * Loads an ECE264 image file, returning an Image structure.
  * Will return NULL if there is any error.
  *
  * Hint: Please see the README for extensive hints
  */
-Image * Image_load(const char * filename);
 
+int Image_save(const char * filename, Image * image);
 /**
  * Save an image to the passed filename, in ECE264 format.
  * Return TRUE if this succeeds, or FALSE if there is any error.
  *
  * Hint: Please see the README for extensive hints
  */
-int Image_save(const char * filename, Image * image);
 
+void Image_free(Image * image);
 /**
  * Free memory for an image structure
  *
@@ -67,12 +69,12 @@ int Image_save(const char * filename, Image * image);
  * you do not write this function correctly, then valgrind will 
  * report an error. 
  */
-void Image_free(Image * image);
 
+void linearNormalization(int width, int height, uint8_t * intensity);
 /**
  * Performs linear normalization, see README
  */
-void linearNormalization(int width, int height, uint8_t * intensity);
+
 
 #endif
 
