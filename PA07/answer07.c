@@ -4,7 +4,6 @@
 #include "answer07.h"
 #define FALSE 0
 #define TRUE 1
-int CheckValidee264(ImageHeader *Header);
 
 Image * Image_load(const char * filename)
 {
@@ -108,6 +107,7 @@ int Image_save(const char * filename, Image * image)
     int err = FALSE; 
     FILE * fp = fopen(filename, "wb");
     size_t written = 0;
+    uint8_t * buffer;
 
     if(fp == NULL) // Ensures file was properly opened
     {
@@ -116,8 +116,8 @@ int Image_save(const char * filename, Image * image)
     }
 
     // Prepare the header
-    Image ImageHeader;
-    header.type = ECE264_IMAGE_MAGIC_NUMBER;
+    ImageHeader header;
+    header.magic_number = ECE264_IMAGE_MAGIC_NUMBER;
     header.width = image->width;
     header.height = image->height;    
     header.comment_len = strlen(image->comment);
@@ -125,51 +125,59 @@ int Image_save(const char * filename, Image * image)
 
     if(!err) // Write the header
     {  
-		written = fwrite(&header, sizeof(ImageHeader), 1, fp);
+		written = fwrite(&header, sizeof(header), 1, fp);
 		if(written != 1) 
 		{
 			fprintf(stderr, "Error: only wrote %zd of %zd of file header to '%s'\n", written, sizeof(ImageHeader), filename);
 			err = TRUE;	
 		}
     }
-// Stopped working here! /////////////////////
 
-    if(!err) { // Before writing, we'll need a write buffer
-	buffer = malloc(bytes_per_row);
-	if(buffer == NULL) {
-	    fprintf(stderr, "Error: failed to allocate write buffer\n");
-	    err = TRUE;
-	} else {
-	    // not strictly necessary, we output file will be tidier.
-	    memset(buffer, 0, bytes_per_row); 
-	}
+
+    if(!err) // Before writing, we'll need a write buffer
+    { 
+		buffer = malloc(header.width);
+		if(buffer == NULL)
+		{
+			fprintf(stderr, "Error: failed to allocate write buffer\n");
+			err = TRUE;
+		}
+		else
+		{
+			// not strictly necessary, we output file will be tidier.
+			memset(buffer, 0, header.width); 
+		}
     }
 
-    if(!err) { // Write pixels	
-	uint8_t * read_ptr = image->data;	
-	int row, col; // row and column
-	for(row = 0; row < header.height && !err; ++row) {
-	    uint8_t * write_ptr = buffer;
-	    for(col = 0; col < header.width; ++col) {
-		*write_ptr++ = *read_ptr; // blue
-		*write_ptr++ = *read_ptr; // green
-		*write_ptr++ = *read_ptr; // red
-		read_ptr++; // advance to the next pixel
-	    }
-	    // Write line to file
-	    written = fwrite(buffer, sizeof(uint8_t), bytes_per_row, fp);
-	    if(written != bytes_per_row) {
-		fprintf(stderr, "Failed to write pixel data to file\n");
-		err = TRUE;
-	    }
-	}
+    if(!err) // Write pixels	
+    { 
+		uint8_t * read_ptr = image->data;	
+		int row, col; // row and column
+		for(row = 0; row < header.height && !err; ++row) 
+		{
+			uint8_t * write_ptr = buffer;
+			for(col = 0; col < header.width; ++col) 
+			{
+				*write_ptr++ = *read_ptr;
+				read_ptr++; // advance to the next pixel
+			}
+			// Write line to file
+			written = fwrite(buffer, sizeof(uint8_t), header.width, fp);
+			if(written != header.width) 
+			{
+				fprintf(stderr, "Failed to write pixel data to file\n");
+				err = TRUE;
+			}
+		}
     }
     
     // Cleanup
     free(buffer);
     if(fp)
-	fclose(fp);
-
+	{
+		fclose(fp);
+	}
+	
     return !err;	
 }
 
@@ -189,5 +197,24 @@ void Image_free(Image * image)
 
 void linearNormalization(int width, int height, uint8_t * intensity)
 {
+	int index;
+	int Max = intensity[0], Min = intensity[0];
 	
+	// Finds max and min
+	for (index = 0; index < (width * height); index++)
+	{
+		if (intensity[index] > Max)
+			Max = intensity[index];
+		if (intensity[index] < Min)
+			Min = intensity[index];
+	}
+	
+	for (index = 0; index < (width * height); index++)
+	{
+		intensity[index] = (intensity[index] - Min) * 255.0 / (Max - Min);
+	}
 }
+
+
+
+
