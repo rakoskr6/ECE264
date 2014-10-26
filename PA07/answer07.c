@@ -105,8 +105,72 @@ Image * Image_load(const char * filename)
 
 int Image_save(const char * filename, Image * image)
 {
+    int err = FALSE; 
+    FILE * fp = fopen(filename, "wb");
+    size_t written = 0;
 
-return EXIT_SUCCESS;	
+    if(fp == NULL) // Ensures file was properly opened
+    {
+		fprintf(stderr, "Failed to open '%s' for writing\n", filename);
+		return FALSE;
+    }
+
+    // Prepare the header
+    Image ImageHeader;
+    header.type = ECE264_IMAGE_MAGIC_NUMBER;
+    header.width = image->width;
+    header.height = image->height;    
+    header.comment_len = strlen(image->comment);
+
+
+    if(!err) // Write the header
+    {  
+		written = fwrite(&header, sizeof(ImageHeader), 1, fp);
+		if(written != 1) 
+		{
+			fprintf(stderr, "Error: only wrote %zd of %zd of file header to '%s'\n", written, sizeof(ImageHeader), filename);
+			err = TRUE;	
+		}
+    }
+// Stopped working here! /////////////////////
+
+    if(!err) { // Before writing, we'll need a write buffer
+	buffer = malloc(bytes_per_row);
+	if(buffer == NULL) {
+	    fprintf(stderr, "Error: failed to allocate write buffer\n");
+	    err = TRUE;
+	} else {
+	    // not strictly necessary, we output file will be tidier.
+	    memset(buffer, 0, bytes_per_row); 
+	}
+    }
+
+    if(!err) { // Write pixels	
+	uint8_t * read_ptr = image->data;	
+	int row, col; // row and column
+	for(row = 0; row < header.height && !err; ++row) {
+	    uint8_t * write_ptr = buffer;
+	    for(col = 0; col < header.width; ++col) {
+		*write_ptr++ = *read_ptr; // blue
+		*write_ptr++ = *read_ptr; // green
+		*write_ptr++ = *read_ptr; // red
+		read_ptr++; // advance to the next pixel
+	    }
+	    // Write line to file
+	    written = fwrite(buffer, sizeof(uint8_t), bytes_per_row, fp);
+	    if(written != bytes_per_row) {
+		fprintf(stderr, "Failed to write pixel data to file\n");
+		err = TRUE;
+	    }
+	}
+    }
+    
+    // Cleanup
+    free(buffer);
+    if(fp)
+	fclose(fp);
+
+    return !err;	
 }
 
 
