@@ -110,8 +110,8 @@ Image * Image_loadbmp(const char * filename)
 	tmp_im->height = header.height;
 
 	// Handle the comment
-	char * filename_cpy = strdup(filename);	// we want to call basename
-	char * file_basename = basename(filename_cpy); // requires editable str
+	char * filename_cpy = strdup(filename);	// we want to call basename. strdup mallocs memory for the basename
+	char * file_basename = basename(filename_cpy); // requires editable str. basename takes the name at the end of the filepath
 	const char * prefix = "Original BMP file: ";
 	n_bytes = sizeof(char) * (strlen(prefix) + strlen(file_basename) + 1);
 	tmp_im->comment = malloc(n_bytes);
