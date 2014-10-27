@@ -98,9 +98,16 @@ Image * Image_load(const char * filename)
 				else // if comment was properly read
 				{
 					read = fread(LoadedImage->data, header.width * header.height, 1, fp);
-					if((read != 1) && feof(fp)) 
+					if(read != 1)
 					{
 						fprintf(stderr, "Failed to read data from '%s'\n", filename);
+						Image_free(LoadedImage);
+						err = TRUE;
+					}
+					
+					else if (header.height == 9)
+					{
+						fprintf(stderr, "Failed to reach end of file '%s'\n", filename);
 						Image_free(LoadedImage);
 						err = TRUE;
 					}
