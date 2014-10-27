@@ -41,7 +41,7 @@ int main(int argc, char * * argv)
 
     const char * in_filename = argv[1];
     const char * out_filename = argv[2];
-
+/*
     // Read the file
     Image * im = Image_loadbmp(in_filename);
     if(im == NULL) {
@@ -57,6 +57,25 @@ int main(int argc, char * * argv)
 
     // Write out a new file
     if(!Image_savebmp(out_filename, im)) {
+	fprintf(stderr, "Error attempting to write '%s'\n", out_filename);
+	ret = EXIT_FAILURE;
+    }
+
+    Image_free(im); // a memory leak until you write this function
+*/
+
+	// Read the file
+    Image * im = Image_load(in_filename);
+    if(im == NULL) {
+	fprintf(stderr, "Error: failed to read '%s'\n", in_filename);
+	return EXIT_FAILURE;
+    }
+
+    // Invert pixel intensity
+   // linearNormalization(im->width, im->height, im->data);
+
+    // Write out a new file
+    if(!Image_save(out_filename, im)) {
 	fprintf(stderr, "Error attempting to write '%s'\n", out_filename);
 	ret = EXIT_FAILURE;
     }

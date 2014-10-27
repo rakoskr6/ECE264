@@ -31,7 +31,6 @@ Image * Image_load(const char * filename)
 		}
     }
 
-
     if(!err) // Ensure valid ee264 file
     { 
 		if(header.magic_number != ECE264_IMAGE_MAGIC_NUMBER)
@@ -46,7 +45,7 @@ Image * Image_load(const char * filename)
 			err = TRUE;
 		}
 		
-		else if (header.width <= 5000 || header.height <= 5000) // max size
+		else if (header.width >= 5000 || header.height >= 5000) // max size
 		{
 			fprintf(stderr, "Can't have dimension be 0 in '%s'\n", filename);
 			err = TRUE;
@@ -113,7 +112,7 @@ Image * Image_load(const char * filename)
 	{
 		return LoadedImage;
 	}
-	Image_free(LoadedImage);
+
 	return NULL;
 }
 
@@ -137,7 +136,7 @@ int Image_save(const char * filename, Image * image)
     header.magic_number = ECE264_IMAGE_MAGIC_NUMBER;
     header.width = image->width;
     header.height = image->height;    
-    header.comment_len = sizeof(image->comment);
+    header.comment_len =  sizeof(char) * strlen(image->comment) + 1; // plus 1 for null
 
 
     if(!err) // Write the header
@@ -165,6 +164,12 @@ int Image_save(const char * filename, Image * image)
 			memset(buffer, 0, header.width); 
 		}
     }
+
+	if(!err) // Write comments	
+    { 
+		written = fwrite(image->comment, header.comment_len, 1, fp);
+    }
+    
 
     if(!err) // Write pixels	
     { 
