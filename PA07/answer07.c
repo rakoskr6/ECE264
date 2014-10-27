@@ -50,6 +50,12 @@ Image * Image_load(const char * filename)
 			fprintf(stderr, "Can't have dimension be 0 in '%s'\n", filename);
 			err = TRUE;
 		}
+		
+		else if (header.comment_len >= 10000) // comment max size
+		{
+			fprintf(stderr, "Comment too large '%s'\n", filename);
+			err = TRUE;
+		}
     }
 
     if(!err) // Allocate Image struct
@@ -92,14 +98,27 @@ Image * Image_load(const char * filename)
 				else // if comment was properly read
 				{
 					read = fread(LoadedImage->data, header.width * header.height, 1, fp);
-					if(read != 1) 
+					if((read != 1) && feof(fp)) 
 					{
 						fprintf(stderr, "Failed to read data from '%s'\n", filename);
+						Image_free(LoadedImage);
 						err = TRUE;
 					}
 				}
 			}
 		}
+	}
+	
+	// Couple more checks
+	if (!err)
+	{
+		if ( (LoadedImage->comment[header.comment_len-1]) != '\0') 
+		{
+			fprintf(stderr, "Comment doesn't end with null character in '%s'\n", filename);
+			Image_free(LoadedImage);
+			err = TRUE;
+		}
+		
 	}
 		
 
