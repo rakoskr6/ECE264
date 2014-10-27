@@ -104,12 +104,18 @@ Image * Image_load(const char * filename)
 						Image_free(LoadedImage);
 						err = TRUE;
 					}
-					
-					else if (header.height == 9)
+					else // Ensure data isn't still left at the end of the file
 					{
-						fprintf(stderr, "Failed to reach end of file '%s'\n", filename);
-						Image_free(LoadedImage);
-						err = TRUE;
+						uint8_t * TestBuffer;
+						TestBuffer = malloc(sizeof(uint8_t) * 50);
+						read = fread(TestBuffer,sizeof(uint8_t), 1, fp);
+						if (read != 0)
+						{
+							fprintf(stderr, "Failed to reach end of file '%s'\n", filename);
+							Image_free(LoadedImage);
+							err = TRUE;
+						}
+						free(TestBuffer);
 					}
 				}
 			}
