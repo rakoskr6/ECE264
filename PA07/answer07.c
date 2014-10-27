@@ -39,6 +39,18 @@ Image * Image_load(const char * filename)
 			fprintf(stderr, "Invalid header in '%s'\n", filename);
 			err = TRUE;
 		}
+		
+		else if (header.width == 0 || header.height == 0) // min size
+		{
+			fprintf(stderr, "Can't have dimension be 0 in '%s'\n", filename);
+			err = TRUE;
+		}
+		
+		else if (header.width <= 5000 || header.height <= 5000) // max size
+		{
+			fprintf(stderr, "Can't have dimension be 0 in '%s'\n", filename);
+			err = TRUE;
+		}
     }
 
     if(!err) // Allocate Image struct
@@ -96,8 +108,13 @@ Image * Image_load(const char * filename)
     {
 		fclose(fp);
     }
-
-    return LoadedImage;
+    
+	if (!err)
+	{
+		return LoadedImage;
+	}
+	Image_free(LoadedImage);
+	return NULL;
 }
 
 
@@ -120,7 +137,7 @@ int Image_save(const char * filename, Image * image)
     header.magic_number = ECE264_IMAGE_MAGIC_NUMBER;
     header.width = image->width;
     header.height = image->height;    
-    header.comment_len = strlen(image->comment);
+    header.comment_len = sizeof(image->comment);
 
 
     if(!err) // Write the header
