@@ -6,8 +6,16 @@
 List * List_createNode(const char * str)
 {
 	List *ptr = malloc(sizeof(List));
-	ptr->str = malloc(strlen(str) * sizeof(char));
+	ptr->str = malloc(strlen(str) * sizeof(char)); // create space for string
 	ptr->next = NULL;
 	return ptr;
 }
 
+void List_destroy(List * list)
+{
+	if (list != NULL)
+	{
+		free(list->str);
+		free(list);
+	}
+}
