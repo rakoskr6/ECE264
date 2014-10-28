@@ -19,3 +19,13 @@ void List_destroy(List * list)
 		free(list);
 	}
 }
+
+int List_length(List * list)
+{
+	int index ;
+	for (index = 0; list->next != NULL; index++)
+	{
+		list = list->next;
+	}
+	return index;
+}
