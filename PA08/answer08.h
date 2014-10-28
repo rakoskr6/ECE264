@@ -4,33 +4,37 @@
 #ifndef PA08_H
 #define PA08_H
 
-/**
- * A ListNode structure for a linked list of strings.
- */
 typedef struct ListNode_st
 {
     char * str;
     struct ListNode_st * next;
 } List;
+/**
+ * A ListNode structure for a linked list of strings.
+ */
 
+List * List_createNode(const char * str);
 /**
  * Create a new list-node with the passed string. 
  * str should be copied (with strdup).
  */
-List * List_createNode(const char * str);
 
+void List_destroy(List * list);
 /**
  * Free all memory associated with the linked list, including memory for
  * contained strings. Must safely handle NULL lists.
  */
-void List_destroy(List * list);
 
+int List_length(List * list);
 /**
  * Length of a linked list. 
  * The length of "NULL" is 0.
  */
-int List_length(List * list);
+ 
 
+List * List_merge(List * lhs, 
+		  List * rhs, 
+		  int (*compar)(const char *, const char*));
 /**
  * Merge two sorted lists to produce a final sorted list.
  * 
@@ -57,10 +61,8 @@ int List_length(List * list);
  * If your code is longer than this, then you may save time by rethinking your
  * approach.
  */
-List * List_merge(List * lhs, 
-		  List * rhs, 
-		  int (*compar)(const char *, const char*));
 
+List * List_sort(List * list, int (*compar)(const char *, const char*));
 /** 
  * Sorts the list's elements using the merge-sort algorithm.
  * Merge-sort is a recursive algorithm. See the README for hints.
@@ -81,7 +83,7 @@ List * List_merge(List * lhs,
  * If your code is longer than this, then you may save time by rethinking your
  * approach.
  */
-List * List_sort(List * list, int (*compar)(const char *, const char*));
+
 
 #endif
 
