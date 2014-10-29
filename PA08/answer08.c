@@ -6,7 +6,7 @@
 List * List_createNode(const char * str)
 {
 	List *ptr = malloc(sizeof(List));
-	ptr->str = malloc(strlen(str) * sizeof(char)); // create space for string
+	ptr->str = strdup(str); // Copy string and create space for it
 	ptr->next = NULL;
 	return ptr;
 }
@@ -28,4 +28,24 @@ int List_length(List * list)
 		list = list->next;
 	}
 	return index;
+}
+
+List * List_merge(List * lhs, List * rhs, int (*compar)(const char *, const char*))
+{
+	while((lhs->next != NULL) && (rhs->next != NULL)
+	{
+		if ((strcmp(lhs->str,rhs->str)) > 0) // positive then first is bigger
+		{
+			lhs
+		}
+		else if ((strcmp(lhs->str,rhs->str)) < 0) // negative then second is bigger
+		{
+			
+		}
+		else // Then equal
+		{
+			
+		}
+	}
+	
 }

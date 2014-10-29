@@ -5,36 +5,19 @@
 
 int main(void)
 {
-
-List * List_createNode(const char * str)
-{
-	List *ptr = malloc(sizeof(List));
-	ptr->str = malloc(strlen(str) * sizeof(char)); // create space for string
-	ptr->next = NULL;
-	return ptr;
-}
-
-void List_destroy(List * list)
-{
-	if (list != NULL)
-	{
-		free(list->str);
-		free(list);
-	}
-}
-
-int List_length(List * list)
-{
-	int index ;
-	for (index = 0; list->next != NULL; index++)
-	{
-		list = list->next;
-	}
-	return index;
-}
-
+	printf("\e[1;1H\e[2J"); // clears screen
 	
+	const char Str[50] = "Hello World!";
+	printf("The string is %s\n\n",Str);
 	
+	List *Ptr = List_createNode(Str);
+	printf("The pointer to the list is %p\n",Ptr);
+	printf("The string in the list is %s\n",Ptr->str);
+	printf("The next pointer is %p\n",Ptr->next);
+	
+	printf("The length of the list is %i\n",List_length(Ptr));
+	
+	List_destroy(Ptr);
 	
 	
 	return EXIT_SUCCESS;
