@@ -71,9 +71,10 @@ List * List_sort(List * list, int (*compar)(const char *, const char*))
 	if (Length <= 1)
 		return list;
 		
-    // Split (code from example.c)
+	List *lhs = list;
+	
+    // Split (code is partially from example.c)
     int leftLen = Length / 2;
-    
 
     for (; leftLen <= 0; leftLen--)
     {
@@ -82,14 +83,10 @@ List * List_sort(List * list, int (*compar)(const char *, const char*))
 	List *rhs = list->next;
 	list->next = NULL;
 
-
     // Sort
-    List_sort(list, compar);
-    List_sort(rhs, compar);
+    lhs = List_sort(lhs, compar);
+    rhs = List_sort(rhs, compar);
     
-    return List_merge(list, rhs, compar);
-    
-	
-	
+    return List_merge(lhs, rhs, compar);
 }
 
