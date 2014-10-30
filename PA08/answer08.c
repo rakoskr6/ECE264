@@ -13,7 +13,7 @@ List * List_createNode(const char * str)
 
 void List_destroy(List * list)
 {
-	while (list != NULL)
+	while (list != NULL) // Removes list structure and string in it
 	{
 		List *ptr = list->next;
 		free(list->str);
@@ -38,7 +38,7 @@ List * List_merge(List * lhs, List * rhs, int (*compar)(const char *, const char
 {
 	List *ptr = NULL;
 	
-	if((lhs!= NULL) && (rhs != NULL))
+	if((lhs!= NULL) && (rhs != NULL)) // Compares if neither is null
 	{
 		int cmp = compar(lhs->str, rhs->str);
 		if (cmp < 0) // positive then first is bigger
@@ -52,12 +52,12 @@ List * List_merge(List * lhs, List * rhs, int (*compar)(const char *, const char
 			ptr->next = List_merge(lhs,rhs->next,compar);
 		}		
 	}
-	else if (lhs != NULL)
+	else if (lhs != NULL) // Finish placing all values from lhs
 	{
 		ptr = lhs;
 		ptr->next = List_merge(lhs->next,rhs,compar);
 	}
-	else if (rhs != NULL)
+	else if (rhs != NULL) // Finish placing all values from rhs
 	{
 		ptr = rhs;
 		ptr->next = List_merge(lhs,rhs->next,compar);
@@ -68,7 +68,7 @@ List * List_merge(List * lhs, List * rhs, int (*compar)(const char *, const char
 List * List_sort(List * list, int (*compar)(const char *, const char*))
 {
 	int Length = List_length(list);
-	if (Length <= 1)
+	if (Length <= 1) // If under 1 it's already sorted
 		return list;
 		
 	List *lhs = list;
@@ -87,6 +87,7 @@ List * List_sort(List * list, int (*compar)(const char *, const char*))
     lhs = List_sort(lhs, compar);
     rhs = List_sort(rhs, compar);
     
+    //Merge list and return
     return List_merge(lhs, rhs, compar);
 }
 
