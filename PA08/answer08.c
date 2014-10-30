@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
- int (*compar)(const char *, const char*);
 
 List * List_createNode(const char * str)
 {
@@ -38,29 +37,31 @@ int List_length(List * list)
 List * List_merge(List * lhs, List * rhs, int (*compar)(const char *, const char*))
 {
 	List *ptr = NULL;
-	while((lhs->next != NULL) && (rhs->next != NULL))
+	int cmp = compar(lhs->str, rhs->str);
+	if((lhs->next != NULL) && (rhs->next != NULL))
 	{
-		if (compar > 0) // positive then first is bigger
-		{
-			List_merge(lhs->next,rhs,strcmp((lhs->next)->str,rhs->str));
-		}
-		else if (compar < 0) // negative then second is bigger
+		if (cmp > 0) // positive then first is bigger
 		{
 			ptr = lhs;
-			lhs = rhs;
-			lhs->next = ptr;
-			List_merge(lhs->next,rhs->next,strcmp((lhs->next)->str,(rhs->next)->str));
+			ptr->next = List_merge(lhs->next,rhs,compar);
 		}
-		else // Then equal
+		else // negative then second is bigger (or equal)
 		{
-			ptr = lhs->next;
-			lhs->next = rhs;
-			// ???
-			List_merge(lhs->next,rhs->next,strcmp((lhs->next)->str,(rhs->next)->str));
-		}
-		
+			ptr = rhs;
+			ptr->next = List_merge(lhs,rhs->next,compar);
+		}		
 	}
-	return lhs;
+	else if (lhs->next != NULL)
+	{
+		ptr = lhs;
+		ptr->next = List_merge(lhs->next,rhs,compar);
+	}
+	else if (rhs->next != NULL)
+	{
+		ptr = rhs;
+		ptr->next = List_merge(lhs,rhs->next,compar);
+	}
+	return ptr;
 }
 
 
