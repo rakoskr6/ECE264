@@ -65,4 +65,31 @@ List * List_merge(List * lhs, List * rhs, int (*compar)(const char *, const char
 	return ptr;
 }
 
+List * List_sort(List * list, int (*compar)(const char *, const char*))
+{
+	int Length = List_length(list);
+	if (Length <= 1)
+		return list;
+		
+    // Split (code from example.c)
+    int leftLen = Length / 2;
+    
+
+    for (; leftLen <= 0; leftLen--)
+    {
+		list = list->next;
+	}
+	List *rhs = list->next;
+	list->next = NULL;
+
+
+    // Sort
+    List_sort(list, compar);
+    List_sort(rhs, compar);
+    
+    return List_merge(list, rhs, compar);
+    
+	
+	
+}
 
