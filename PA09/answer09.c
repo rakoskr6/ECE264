@@ -14,9 +14,11 @@ BusinessNode * create_node(char * stars, char * name, char * address)
 	return  NewNode;
 }
 
+
 BusinessNode *tree_insert(BusinessNode * node, BusinessNode * root)
 {
-	if(strcmp(root->name,node->name) > 0)//root before node, right side
+
+	if(strcmp(root->name,node->name) <= 0) //root before node, right side
 	{
 		if (root->right == NULL)
 		{
@@ -38,17 +40,39 @@ BusinessNode *tree_insert(BusinessNode * node, BusinessNode * root)
 			tree_insert(node,root->left);
 		}
 	}
-	return node;
+	return root;
 	
 }
+
+
+void destroy_tree(BusinessNode * root)
+{
+	// Goes to bottom left, then bottom right, and frees all nodes
+	if (root->left != NULL)
+	{
+		destroy_tree(root->left);
+	}
+	if (root->right != NULL)
+	{
+		destroy_tree(root->right);
+	}
+	// Also free name, stars, and address
+	free(root);
+}
+
+
+
+
+
 
 void print_node(BusinessNode * node)
 {
 	printf("Name: %s\nAddress: %s\n%s/5.0 stars\n\n",node->name,node->address,node->stars);
 }
 
-void print_tree2(BusinessNode * tree,int i)
+void print_tree2(BusinessNode * tree,int i) // i keeps track of how far down in tree
 {
+	// Prints nodes to left until null, then goes back up to right
 	if (tree != NULL)
 	{
 		printf("%i\n",i++);
