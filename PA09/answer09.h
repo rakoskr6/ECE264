@@ -18,8 +18,7 @@ typedef struct bnode {
  */
  
  
-BusinessNode *
-create_node(char * stars, char * name, char * address);
+BusinessNode *create_node(char * stars, char * name, char * address);
 /*
  * Construct one BusinessNode. You need to allocate memory for this node first.
  *
@@ -32,15 +31,13 @@ create_node(char * stars, char * name, char * address);
  */
 
 
-BusinessNode *
-tree_insert(BusinessNode * node, BusinessNode * root);
+BusinessNode *tree_insert(BusinessNode * node, BusinessNode * root);
 /* Insert a node into a BST. Primarily used in load_tree_from_file(). Return a
  * pointer to the root of the BST.
  */
 
 
-BusinessNode *
-load_tree_from_file(char * filename);
+BusinessNode *load_tree_from_file(char * filename);
 /* Parse a .tsv file line by line, create a BusinessNode for each entry, and
  * enter that node into a new BST. Return a pointer to the root of the BST.
  *
@@ -49,8 +46,7 @@ load_tree_from_file(char * filename);
  */
 
 
-BusinessNode *
-tree_search_name(char * name, BusinessNode * root);
+BusinessNode *tree_search_name(char * name, BusinessNode * root);
 /* Search a BusinessNode BST for the node with the name 'name'. Returns
  * pointer to the node with a match.
  *
@@ -58,8 +54,7 @@ tree_search_name(char * name, BusinessNode * root);
  */
 
 
-void
-print_node(BusinessNode * node);
+void print_node(BusinessNode * node);
 /* Print out a single node: name, address, and stars
  * The format can be similar to this:
  *
@@ -75,15 +70,13 @@ print_node(BusinessNode * node);
  */
 
 
-void
-print_tree(BusinessNode * tree);
+void print_tree(BusinessNode * tree);
 /* Print the entire tree, starting from the root. Like the print_node(...)
  * function, this is not graded.
  */
 
 
-void
-destroy_tree(BusinessNode * root);
+void destroy_tree(BusinessNode * root);
 /* Deallocate all of the memory used by a BusinessNode BST, without memory
  * leaks.
  */
