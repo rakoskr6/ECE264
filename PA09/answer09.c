@@ -50,10 +50,10 @@ BusinessNode *load_tree_from_file(char * filename)
 {
 	FILE *fpt;
 	char LineBuffer[150];
-	char **SplitLineBuffer;
+	char *stars,*name,*address;
 	BusinessNode *Root = NULL;
 	char c;
-	int index = 0, length =3;
+	int index = 0;
 
 	
 	// Ensures file can open
@@ -63,27 +63,36 @@ BusinessNode *load_tree_from_file(char * filename)
 		return NULL;
 	}
 	
-	
+	int i = 1;
 	while (!feof(fpt))
 	{
+		printf("%i\n",i++);
 		while (((c = fgetc(fpt)) != '\n') && !feof(fpt)) // Gets one line of the file
 		{
 			LineBuffer[index++] = c;
 		}
+		LineBuffer[index] = '\0'; // Terminates string
+		
+		if (strlen(LineBuffer) > 0)
+		{
+			// Gets individual strings
+			stars = strtok(LineBuffer,"\t");
+			name = strtok(NULL,"\t");
+			address = strtok(NULL,"\t");
 
-		SplitLineBuffer = explode(LineBuffer, "\t", &length); // Gets stars, name, and address
 		
-		printf("%s\n%s\n%s\n\n\n",SplitLineBuffer[0],SplitLineBuffer[1],SplitLineBuffer[2]);
+			printf("%s\n%s\n%s\n\n\n",stars,name,address);
 		
-		if (Root == NULL) // First value should be root
-		{
-			create_node(strdup(SplitLineBuffer[0]),strdup(SplitLineBuffer[1]),strdup(SplitLineBuffer[2]));
+			if (Root == NULL) // First value should be root
+			{
+				create_node(strdup(stars),strdup(name),strdup(address));
+			}
+			else // Otherwise insert
+			{
+				tree_insert(create_node(strdup(stars),strdup(name),strdup(address)),Root);		
+			}
+			index = 0; // Resets index
 		}
-		else // Otherwise insert
-		{
-			tree_insert(create_node(strdup(SplitLineBuffer[0]),strdup(SplitLineBuffer[1]),strdup(SplitLineBuffer[2])),Root);		
-		}
-		index = 0; // Resets index
 	}
 	fclose(fpt);
 	return Root;
@@ -121,101 +130,17 @@ void print_tree2(BusinessNode * tree,int i) // i keeps track of how far down in 
 		printf("%i\n",i++);
 		print_node(tree);
 	}
-	if (tree->left != NULL)
+	else
 	{
-		printf("Left");
-		print_tree2(tree->left,i);
-	}
-	if (tree->right != NULL)
-	{
-		printf("Right");
-		print_tree2(tree->right,i);
-	}
-	
-}
-
-
-// Modified explode from PA03
-char * * explode(const char * str, const char * delims, int * arrLen) // split str at delims for arrLen splits (+1)
-{
-	
-	int StrLength = 0, StrIndex = 0, DelimsLength = 0, DelimsIndex = 0, MaxSize = 0, PrevDelim = 0;
-	
-	char **StrArr;
-	int StrArrIndex = 0;
-	
-	int PrevDelimIndex = 0, CurrentSize = 0, StrNumber = 0;
-	*arrLen = 0;
-	
-	
-	StrLength = strlen(str); 
-	DelimsLength = strlen(delims);
-
-	// Computes number of rows (arrLen) and columns (MaxSize)
-	for (StrIndex = 0; StrIndex <= StrLength; StrIndex++)
-	{
-		for (DelimsIndex = 0; DelimsIndex < DelimsLength; DelimsIndex++)
+		if (tree->left != NULL)
 		{
-			if (str[StrIndex] == delims[DelimsIndex])
-			{
-				*arrLen = *arrLen + 1;
-				if (MaxSize < (StrIndex - PrevDelim))
-				{	
-					MaxSize = StrIndex - PrevDelim; // Perhaps -1
-				}
-				PrevDelim = StrIndex;
-			}
+			printf("Left");
+			print_tree2(tree->left,i);
+		}
+		if (tree->right != NULL)
+		{
+			printf("Right");
+			print_tree2(tree->right,i);
 		}
 	}
-	
-	
-	// Creates 2D array of appropriate length
-	StrArr = malloc((*arrLen + 1) * sizeof(char*));  // Plus 1
-	for (StrArrIndex = 0; StrArrIndex <= *arrLen; StrArrIndex++)
-	{
-		StrArr[StrArrIndex] = malloc(MaxSize * sizeof(char));
-	}
-	
-	
-		if (strcmp(delims,""))
-	{
-		strcpy(StrArr[0],str);
-		return StrArr;
-	}
-	
-	
-	// Breaks up the str array and adds it to the 2D StrArr array
-	PrevDelim = 0;
-	for (StrIndex = 0; StrIndex <= StrLength; StrIndex++)
-	{
-		for (DelimsIndex = 0; DelimsIndex < DelimsLength; DelimsIndex++)
-		{
-			
-			if ((str[StrIndex] == delims[DelimsIndex]) || (str[StrIndex] == '\0'))
-			{
-				// This is where the new string is actually created
-				CurrentSize = StrIndex - PrevDelim;
-				
-				for (PrevDelimIndex = 0; PrevDelimIndex <= CurrentSize; PrevDelimIndex++)
-				{
-					if (PrevDelimIndex != CurrentSize)
-					{
-						StrArr[StrNumber][PrevDelimIndex] = str[PrevDelim + PrevDelimIndex];
-					}
-					if (PrevDelimIndex == CurrentSize)
-					{
-						StrArr[StrNumber][PrevDelimIndex] = '\0'; // Add end of string character after finsihed
-					}
-				}
-				PrevDelim = StrIndex + 1; // +1 so the same value isn't repeated
-				StrNumber++;
-			}
-		
-		}
-	}
-		
-	*arrLen = *arrLen + 1;
-	
-	return StrArr;
 }
-
