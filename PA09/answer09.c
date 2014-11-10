@@ -18,7 +18,10 @@ BusinessNode * create_node(char * stars, char * name, char * address)
 
 BusinessNode *tree_insert(BusinessNode * node, BusinessNode * root)
 {
-
+	if (root == NULL)
+	{
+		return node;
+	}
 	if(strcmp(root->name,node->name) <= 0) //root before node, right side
 	{
 		if (root->right == NULL)
@@ -49,7 +52,7 @@ BusinessNode *tree_insert(BusinessNode * node, BusinessNode * root)
 BusinessNode *load_tree_from_file(char * filename)
 {
 	FILE *fpt;
-	char LineBuffer[150];
+	char LineBuffer[170];
 	char *stars,*name,*address;
 	BusinessNode *Root = NULL;
 	char c;
@@ -77,9 +80,6 @@ BusinessNode *load_tree_from_file(char * filename)
 			stars = strtok(LineBuffer,"\t");
 			name = strtok(NULL,"\t");
 			address = strtok(NULL,"\t");
-
-		
-			//printf("%s\n%s\n%s\n\n\n",stars,name,address);
 		
 			if (Root == NULL) // First value should be root
 			{
@@ -115,6 +115,30 @@ void destroy_tree(BusinessNode * root)
 		free(root->address);
 		free(root);
 	}
+}
+
+
+BusinessNode *tree_search_name(char * name, BusinessNode * root)
+{
+	if (root == NULL)
+	{
+		return NULL;
+	}
+	int cmp = strcmp(root->name,name);
+	if (cmp == 0)
+	{
+		return root;
+	}
+	else if (cmp < 0) // root before node, go right
+	{
+		return tree_search_name(name,root->right);
+	}
+	//else if (cmp > 0) // root after node, go left
+	//{
+		return tree_search_name(name,root->left);
+	//}
+	//return NULL;
+	
 }
 
 

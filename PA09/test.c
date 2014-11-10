@@ -27,8 +27,9 @@ int main(void)
 	//print_tree2(Holder,0);
 	//destroy_tree(Holder);
 	
-	BusinessNode *SmallFile = load_tree_from_file("shortfile.tsv");
+	BusinessNode *SmallFile = load_tree_from_file("yelp_businesses.tsv");
 	print_tree2(SmallFile,0);
+	printf("%p\n",(tree_search_name("Oriental Supermarket", SmallFile)));
 	destroy_tree(SmallFile);
 	
 	
