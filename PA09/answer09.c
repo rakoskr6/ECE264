@@ -63,10 +63,8 @@ BusinessNode *load_tree_from_file(char * filename)
 		return NULL;
 	}
 	
-	int i = 1;
 	while (!feof(fpt))
 	{
-		printf("%i\n",i++);
 		while (((c = fgetc(fpt)) != '\n') && !feof(fpt)) // Gets one line of the file
 		{
 			LineBuffer[index++] = c;
@@ -81,11 +79,11 @@ BusinessNode *load_tree_from_file(char * filename)
 			address = strtok(NULL,"\t");
 
 		
-			printf("%s\n%s\n%s\n\n\n",stars,name,address);
+			//printf("%s\n%s\n%s\n\n\n",stars,name,address);
 		
 			if (Root == NULL) // First value should be root
 			{
-				create_node(strdup(stars),strdup(name),strdup(address));
+				Root = create_node(strdup(stars),strdup(name),strdup(address));
 			}
 			else // Otherwise insert
 			{
@@ -102,18 +100,21 @@ BusinessNode *load_tree_from_file(char * filename)
 void destroy_tree(BusinessNode * root)
 {
 	// Goes to bottom left, then bottom right, and frees all nodes
-	if (root->left != NULL)
+	if ((root != NULL) && (root->left != NULL))
 	{
 		destroy_tree(root->left);
 	}
-	if (root->right != NULL)
+	if ((root != NULL) && (root->right != NULL))
 	{
 		destroy_tree(root->right);
 	}
-	free(root->name);
-	free(root->stars);
-	free(root->address);
-	free(root);
+	if (root != NULL)
+	{
+		free(root->name);
+		free(root->stars);
+		free(root->address);
+		free(root);
+	}
 }
 
 
@@ -130,17 +131,15 @@ void print_tree2(BusinessNode * tree,int i) // i keeps track of how far down in 
 		printf("%i\n",i++);
 		print_node(tree);
 	}
-	else
+	if ((tree != NULL) && (tree->left != NULL))
 	{
-		if (tree->left != NULL)
-		{
-			printf("Left");
-			print_tree2(tree->left,i);
-		}
-		if (tree->right != NULL)
-		{
-			printf("Right");
-			print_tree2(tree->right,i);
-		}
+		printf("Left");
+		print_tree2(tree->left,i);
 	}
+	if ((tree != NULL) && (tree->right != NULL))
+	{
+		printf("Right");
+		print_tree2(tree->right,i);
+	}
+	
 }
