@@ -81,14 +81,8 @@ BusinessNode *load_tree_from_file(char * filename)
 			name = strtok(NULL,"\t");
 			address = strtok(NULL,"\t");
 		
-			if (Root == NULL) // First value should be root
-			{
-				Root = create_node(strdup(stars),strdup(name),strdup(address));
-			}
-			else // Otherwise insert
-			{
-				tree_insert(create_node(strdup(stars),strdup(name),strdup(address)),Root);		
-			}
+			Root = tree_insert(create_node(strdup(stars),strdup(name),strdup(address)),Root);		
+
 			index = 0; // Resets index
 		}
 	}
@@ -125,7 +119,7 @@ BusinessNode *tree_search_name(char * name, BusinessNode * root)
 		return NULL;
 	}
 	int cmp = strcmp(root->name,name);
-	if (cmp == 0)
+	if (cmp == 0) // found, return the root
 	{
 		return root;
 	}
@@ -133,11 +127,9 @@ BusinessNode *tree_search_name(char * name, BusinessNode * root)
 	{
 		return tree_search_name(name,root->right);
 	}
-	//else if (cmp > 0) // root after node, go left
-	//{
-		return tree_search_name(name,root->left);
-	//}
-	//return NULL;
+
+	return tree_search_name(name,root->left);
+
 	
 }
 
