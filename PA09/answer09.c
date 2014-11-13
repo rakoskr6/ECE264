@@ -22,7 +22,7 @@ BusinessNode *tree_insert(BusinessNode * node, BusinessNode * root)
 	{
 		return node;
 	}
-	if(strcmp(root->name,node->name) <= 0) //root before node, right side
+	if(strcmp(root->name,node->name) < 0) // Note: received help from student to change from <= to <
 	{
 		if (root->right == NULL)
 		{
