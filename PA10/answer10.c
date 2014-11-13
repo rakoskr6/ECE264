@@ -1,31 +1,87 @@
 #include "answer10.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+Business *tree_insert(Business * node, Business * root);
 
 struct YelpDataBST{ // Root of tree (may want to consider changing)
-	struct Business *left;
-	struct Business *right;
+	
+	struct Business *BusinessInfo;
+	struct YelpDataBST *left;
+	struct YelpDataBST *right;
 };
 
 
-struct YelpDataBST* create_business_bst(const char* businesses_path,
-                                        const char* reviews_path);
+struct YelpDataBST* create_business_bst(const char* businesses_path, const char* reviews_path) // loads information
+{
 /* This function reads the two files and creates an index that can be used
  * to search the data and quickly retrieve the reviews.  You must *not* store
  * all of the review text in memory.  Your structure should store the file
  * offsets where the review text can be found.
- *
- * businesses_path - path to the businesses.tsv file provided for this assignment.
- * reviews_path - path to the businesses.tsv file provided for this assignment.
- *     When running on ecegrid, you can pass the following:
- *        /home/shay/a/ece264p0/share/yelp_data/businesses.tsv
- *        /home/shay/a/ece264p0/share/yelp_data/reviews.tsv
- *
- * DO NOT COPY THOSE FILES TO YOUR HOME DIRECTORY.  PLEASE ACCESS THEM USING
- * THOSE PATHS.  THESE ARE LARGE FILES AND WE DO NOT WANT TO FILL THE DISK
- * WITH MULTIPLE COPIES OF THEM.
  */
+ 
+ // Load all businesses as usual (make sure allowed to load whole file into binary tree)
+ 
+ // Go line by line adding reviews. Star values stored and review text is a pointer
+}
+
+Business *tree_insert(Business * node, Business * root) // inserts business node into YelpDataBST
+{
+	if (root == NULL)
+	{
+		return node;
+	}
+	if(strcmp(root->name,node->name) < 0) 
+	{
+		if (root->right == NULL)
+		{
+			root->right = node;
+		}
+		else
+		{
+			tree_insert(node,root->right);
+		}
+	}
+	else //root after node, left side
+	{
+		if (root->left == NULL)
+		{
+			root->left = node;
+		}
+		else
+		{
+			tree_insert(node,root->left);
+		}
+	}
+	return root;
+	
+}
+
+YelpDataBST * create_node(char * stars, char * name, char * address) // Creates new node with malloced memory
+{
+	// Allocates size for node and nodes contained inside them
+	YelpDataBST *NewNode = malloc(sizeof(BusinessNode));
+	NewNode->BusinessInfo = malloc(sizeof(Business));
+	NewNode->BusinessInfo->locations= malloc(sizeof(Location)); // will need to figure out how to handle multiple locations
+	NewNode->BusinessInfo->locations->reviews = malloc(sizeof(Review)); // will need to figure out how to handle multiple reviews
+	// Doesn't need strdup, uses given pointers
+	NewNode->BusinessInfo->name = name;
+	NewNode->BusinessInfo->num_locations = num_locations;
+	
+	NewNode->BusinessInfo->locations->address = address;
+	NewNode->BusinessInfo->locations->city = city;
+	NewNode->BusinessInfo->locations->num_reviews = num_reviews;
+	NewNode->BusinessInfo->locations->state = state;
+	NewNode->BusinessInfo->locations->zip_code = zip_code;
+	
+	NewNode->BusinessInfo->locations->reviews->stars = stars;
+	NewNode->BusinessInfo->locations->reviews->text = text;
+	// Makes next nodes null
+	NewNode->left = NULL;
+	NewNode->right = NULL;
+
+	return  NewNode;
+}
+
 
 struct Business* get_business_reviews(struct YelpDataBST* bst,
                                       char* name, char* state, char* zip_code);
