@@ -7,11 +7,10 @@ void print_nodeNew(struct YelpDataBST * node);
 void print_nodeOld(struct YelpDataBST * node);
 
 
-struct YelpDataBST{ // Root of tree (may want to consider changing)
+struct YelpDataBST{ 
 	uint32_t BusID;
 	struct Business *Bus;
-	struct Location *Loc;
-	struct Review *Rev;
+	struct Location **Loc;
 	struct YelpDataBST *left;
 	struct YelpDataBST *right;
 };
@@ -42,21 +41,25 @@ struct YelpDataBST * CreateYelpNode(uint32_t BusID, char *name, uint32_t num_loc
 	NewNode->Loc->state = state;
 	NewNode->Loc->zip_code = zip_code;
 	NewNode->Loc->num_reviews = num_reviews;
-	NewNode->Loc->reviews = NewNode->Rev; // Points to review node in YelpDataBST
+	//NewNode->Loc->reviews = NewNode->Rev; // Points to review node in YelpDataBST
 
 	return NewNode;
 }
 
-void print_nodeNew(struct YelpDataBST * node) // Prints node using only YelpDataBST
+
+struct YelpDataBST * AddLocation(struct YelpDataBST *node, uint32_t BusID, char *name, uint32_t num_locations, char *address, char *city, char *state, char *zip_code, uint32_t num_reviews)
 {
-	printf("-----Print New - Business ID: %i-----\n",node->BusID);
-	printf("Name: %s, Number of Locations: %i\n",node->Bus->name,node->Bus->num_locations);
-	printf("Address: %s, City: %s, Number of reviews: %i ",node->Loc->address,node->Loc->city,node->Loc->num_reviews);
-	printf("State: %s, Zip code: %s\n",node->Loc->state,node->Loc->zip_code);
-	//printf("Stars: %i, Text: %s\n\n",node->Rev->stars,node->Rev->text);
+	struct YelpDataBST *OldNode = node;
+	free(node);
+	node = malloc(sizeof(struct YelpDataBST) * num_locations);
+	node = OldNode;
+	
+	
+	
 }
 
-void print_nodeOld(struct YelpDataBST * node) // Prints node going fully through binary tree
+
+void print_node(struct YelpDataBST * node) // Prints node going fully through binary tree
 {
 	printf("-----Print Old - Business ID: %i-----\n",node->BusID);
 	printf("Name: %s, Number of Locations: %i\n",node->Bus->name,node->Bus->num_locations);
