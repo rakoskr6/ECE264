@@ -2,85 +2,115 @@
 #include "answer10.h"
 #include <stdio.h>
 #include <stdlib.h>
-struct YelpDataBST * CreateYelpNode(uint32_t BusID, char *name, uint32_t num_locations, char *address, char *city, char *state, char *zip_code, uint32_t num_reviews);
-void print_nodeNew(struct YelpDataBST * node);
-void print_nodeOld(struct YelpDataBST * node);
+struct YelpDataBST * CreateYelpNode(char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code);
+void print_node(struct YelpDataBST * node);
 
+typedef struct ReviewID {
+	char* text;
+	uint8_t stars;
+	struct ReviewID *RevLeft;
+	struct ReviewID *RevRight;
+}ReviewID;
+
+typedef struct LocationID {
+	uint32_t BusID;
+	char* address;
+	char* city;
+	char* state;
+	char* zip_code;
+	uint32_t num_reviews;
+	ReviewID *Rev;
+	struct LocationID *LocLeft;
+	struct LocationID *LocRight;
+	
+}LocationID;
+
+typedef struct BusinessID {
+	char* name;
+	uint32_t num_locations;
+	LocationID *Loc; 
+}BusinessID;
 
 struct YelpDataBST{ 
-	uint32_t *BusID;
-	struct Business *Bus;
+	BusinessID *Bus;
 	struct YelpDataBST *left;
 	struct YelpDataBST *right;
 };
 
+LocationID *CreateLocation(uint32_t BusID, char *address, char *city, char *state, char *zip_code);
+
+
+
+
+
+
+
+
 
 /******************* Functions *******************/
-struct YelpDataBST * CreateYelpNode(uint32_t BusID, char *name, uint32_t num_locations, char *address, char *city, char *state, char *zip_code, uint32_t num_reviews)
-{	// Creates new Yelp Node if this is a newly created business, must pass string pointers with strdup
+struct YelpDataBST * CreateYelpNode(char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code)
+{	// Creates new Yelp Node, doesn't add reviews, must pass string pointers with strdup
 	
-	// Allocates size for nodes and adds data (no reviews added now)
+	// Allocates size for nodes and adds data
 	struct YelpDataBST *NewNode = malloc(sizeof(struct YelpDataBST));
-	NewNode->Bus = malloc(sizeof(struct Business));
-	NewNode->Loc = malloc(sizeof(struct Location));
+	NewNode->Bus = malloc(sizeof(BusinessID));
+	NewNode->Bus->Loc = malloc(sizeof(LocationID)); 
 
 	
 	// Makes next nodes null
 	NewNode->left = NULL;
 	NewNode->right = NULL;
-
+	NewNode->Bus->Loc->LocLeft = NULL;
+	NewNode->Bus->Loc->LocRight = NULL;
+	NewNode->Bus->Loc->Rev = NULL;
+	
 	// Business Info
 	NewNode->Bus->name = name;
-	NewNode->Bus->num_locations = num_locations;
+	NewNode->Bus->num_locations = 1;
 	
 	// Location Info
-	NewNode->Bus->locations->address = address;
-	NewNode->Bus->locations->city = city;
-	NewNode->Bus->locations->state = state;
-	NewNode->Bus->locations->zip_code = zip_code;
-	NewNode->Bus->locations->num_reviews = num_reviews;
+	NewNode->Bus->Loc->BusID = BusID;
+	NewNode->Bus->Loc->address = address;
+	NewNode->Bus->Loc->city = city;
+	NewNode->Bus->Loc->state = state;
+	NewNode->Bus->Loc->zip_code = zip_code;
+	NewNode->Bus->Loc->num_reviews = 0;
+	
 
 	return NewNode;
 }
 
 
-struct YelpDataBST * AddLocation(struct Location *node, uint32_t BusID, char *name, uint32_t num_locations, char *address, char *city, char *state, char *zip_code, uint32_t num_reviews)
-{
-	int index;
-	struct Location *TempNode;
-	struct Location *NewNode;
+struct LocationID *CreateLocation(uint32_t BusID, char *address, char *city, char *state, char *zip_code)
+{	// Creates new Location Node, doesn't add reviews, must pass string pointers with strdup
+		
+	// Allocates size for nodes and adds data
+	LocationID *NewNode = malloc(sizeof(struct LocationID));
+
+	// Makes next nodes null
+	NewNode->LocLeft = NULL;
+	NewNode->LocRight = NULL;
+	NewNode->Rev = NULL;
 	
-	// Creates location node with new data
-	NewNode = malloc(sizeof(struct Location));
+	// Location Info
+	NewNode->BusID = BusID;
 	NewNode->address = address;
 	NewNode->city = city;
 	NewNode->state = state;
 	NewNode->zip_code = zip_code;
-	NewNode->num_reviews = num_reviews;
-	
-	memcpy(TempNode,node,sizeof(struct YelpDataBST)*num_locations); // copies node to temp storage
-	free(node); // frees old node to allow realocating more space
-	num_locations++;
-	node = malloc(sizeof(struct YelpDataBST) * num_locations);
-	
-	// Goes through array adding new locations in a sorted order
-	for (index = 0; index <= num_locations; index++)
-	{
-		
-	}
-	
-	
+	NewNode->num_reviews = 0;
+
+	return NewNode;
 }
 
-
-void print_node(struct YelpDataBST * node) // Prints node going fully through binary tree
+void print_node(struct YelpDataBST * node)
 {
-	printf("-----Print Old - Business ID: %i-----\n",node->BusID);
-	printf("Name: %s, Number of Locations: %i\n",node->Bus->name,node->Bus->num_locations);
-	printf("Address: %s, City: %s, Number of reviews: %i ",node->Bus->locations->address,node->Bus->locations->city,node->Bus->locations->num_reviews);
-	printf("State: %s, Zip code: %s\n",node->Bus->locations->state,node->Bus->locations->zip_code);
+	printf("----- Business Name: %s (%i locations)-----\n",node->Bus->name,node->Bus->num_locations);
+	printf("ID: %i, Address: %s, City: %s, State: %s, Zip: %s\n",node->Bus->Loc->BusID, node->Bus->Loc->address,node->Bus->Loc->city,node->Bus->Loc->state,node->Bus->Loc->zip_code);
+	printf("Number of reviews: %i\n\n",node->Bus->Loc->num_reviews);
 	//printf("Stars: %i, Text: %s\n\n",node->Bus->locations->reviews->stars,node->Bus->locations->reviews->text);
 }
+
 
 //struct YelpDataBST* create_business_bst(const char* businesses_path, const char* reviews_path) // loads information
 //{
