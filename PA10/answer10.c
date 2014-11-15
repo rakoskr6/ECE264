@@ -2,11 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 struct Business *tree_insert(struct Business * node, struct Business * root);
-struct YelpDataBST * create_node(char *name, uint32_t num_locations, char *address, char *city, uint32_t num_reviews, char *state, char *zip_code, uint32_t stars, char *text);
+struct YelpDataBST * create_node(uint32_t BusinessID, char *name, uint32_t num_locations, char *address, char *city, uint32_t num_reviews, char *state, char *zip_code, uint8_t stars, char *text); 
 
 struct YelpDataBST{ // Root of tree (may want to consider changing)
 	
 	struct Business *BusinessInfo;
+	uint32_t BusinessID;
 	struct YelpDataBST *left;
 	struct YelpDataBST *right;
 };
@@ -57,7 +58,7 @@ struct YelpDataBST{ // Root of tree (may want to consider changing)
 	
 //}
 
-struct YelpDataBST * create_node(char *name, uint32_t num_locations, char *address, char *city, uint32_t num_reviews, char *state, char *zip_code, uint32_t stars, char *text) 
+struct YelpDataBST * create_node(uint32_t BusinessID, char *name, uint32_t num_locations, char *address, char *city, uint32_t num_reviews, char *state, char *zip_code, uint8_t stars, char *text) 
 {	// Creates new node with malloced memory, must pass string pointers with strdup
 	
 	// Allocates size for node and nodes contained inside them
@@ -71,6 +72,7 @@ struct YelpDataBST * create_node(char *name, uint32_t num_locations, char *addre
 	NewNode->right = NULL;
 
 	// Business Info
+	NewNode->BusinessID = BusinessID;
 	NewNode->BusinessInfo->name = name;
 	NewNode->BusinessInfo->num_locations = num_locations;
 	
@@ -90,10 +92,11 @@ struct YelpDataBST * create_node(char *name, uint32_t num_locations, char *addre
 
 void print_node(struct YelpDataBST * node)
 {
+	printf("-----Business ID: %i-----\n",node->BusinessID);
 	printf("Name: %s, Number of Locations: %i\n",node->BusinessInfo->name,node->BusinessInfo->num_locations);
 	printf("Address: %s, City: %s, Number of reviews: %i ",node->BusinessInfo->locations->address,node->BusinessInfo->locations->city,node->BusinessInfo->locations->num_reviews);
 	printf("State: %s, Zip code: %s\n",node->BusinessInfo->locations->state,node->BusinessInfo->locations->zip_code);
-	printf("Stars: %i, Text: %s\n",node->BusinessInfo->locations->reviews->stars,node->BusinessInfo->locations->reviews->text);
+	printf("Stars: %i, Text: %s\n\n",node->BusinessInfo->locations->reviews->stars,node->BusinessInfo->locations->reviews->text);
 }
 
 
