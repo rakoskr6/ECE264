@@ -8,9 +8,8 @@ void print_nodeOld(struct YelpDataBST * node);
 
 
 struct YelpDataBST{ 
-	uint32_t BusID;
+	uint32_t *BusID;
 	struct Business *Bus;
-	struct Location **Loc;
 	struct YelpDataBST *left;
 	struct YelpDataBST *right;
 };
@@ -24,7 +23,7 @@ struct YelpDataBST * CreateYelpNode(uint32_t BusID, char *name, uint32_t num_loc
 	struct YelpDataBST *NewNode = malloc(sizeof(struct YelpDataBST));
 	NewNode->Bus = malloc(sizeof(struct Business));
 	NewNode->Loc = malloc(sizeof(struct Location));
-	NewNode->BusID = BusID;
+
 	
 	// Makes next nodes null
 	NewNode->left = NULL;
@@ -33,27 +32,42 @@ struct YelpDataBST * CreateYelpNode(uint32_t BusID, char *name, uint32_t num_loc
 	// Business Info
 	NewNode->Bus->name = name;
 	NewNode->Bus->num_locations = num_locations;
-	NewNode->Bus->locations = NewNode->Loc; // Points to locations node in YelpDataBST
 	
 	// Location Info
-	NewNode->Loc->address = address;
-	NewNode->Loc->city = city;
-	NewNode->Loc->state = state;
-	NewNode->Loc->zip_code = zip_code;
-	NewNode->Loc->num_reviews = num_reviews;
-	//NewNode->Loc->reviews = NewNode->Rev; // Points to review node in YelpDataBST
+	NewNode->Bus->locations->address = address;
+	NewNode->Bus->locations->city = city;
+	NewNode->Bus->locations->state = state;
+	NewNode->Bus->locations->zip_code = zip_code;
+	NewNode->Bus->locations->num_reviews = num_reviews;
 
 	return NewNode;
 }
 
 
-struct YelpDataBST * AddLocation(struct YelpDataBST *node, uint32_t BusID, char *name, uint32_t num_locations, char *address, char *city, char *state, char *zip_code, uint32_t num_reviews)
+struct YelpDataBST * AddLocation(struct Location *node, uint32_t BusID, char *name, uint32_t num_locations, char *address, char *city, char *state, char *zip_code, uint32_t num_reviews)
 {
-	struct YelpDataBST *OldNode = node;
-	free(node);
-	node = malloc(sizeof(struct YelpDataBST) * num_locations);
-	node = OldNode;
+	int index;
+	struct Location *TempNode;
+	struct Location *NewNode;
 	
+	// Creates location node with new data
+	NewNode = malloc(sizeof(struct Location));
+	NewNode->address = address;
+	NewNode->city = city;
+	NewNode->state = state;
+	NewNode->zip_code = zip_code;
+	NewNode->num_reviews = num_reviews;
+	
+	memcpy(TempNode,node,sizeof(struct YelpDataBST)*num_locations); // copies node to temp storage
+	free(node); // frees old node to allow realocating more space
+	num_locations++;
+	node = malloc(sizeof(struct YelpDataBST) * num_locations);
+	
+	// Goes through array adding new locations in a sorted order
+	for (index = 0; index <= num_locations; index++)
+	{
+		
+	}
 	
 	
 }
