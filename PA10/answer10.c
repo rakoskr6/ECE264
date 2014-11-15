@@ -1,17 +1,103 @@
+/******************* Declarations *******************/
 #include "answer10.h"
 #include <stdio.h>
 #include <stdlib.h>
-struct Business *tree_insert(struct Business * node, struct Business * root);
-struct YelpDataBST * create_node(uint32_t BusinessID, char *name, uint32_t num_locations, char *address, char *city, uint32_t num_reviews, char *state, char *zip_code, uint8_t stars, char *text); 
+
+struct YelpDataBST * CreateBusNode(char *name, uint32_t num_locations);
+struct LocationID * CreateLocationNode(uint32_t BusinessID, char *address, char *city, uint32_t num_reviews, char *state, char *zip_code);
+struct Review * CreateReviewNode(uint8_t stars, char *text);
 
 struct YelpDataBST{ // Root of tree (may want to consider changing)
-	
-	struct Business *BusinessInfo;
-	uint32_t BusinessID;
+	struct BusinessID *BusinessInfoID;
 	struct YelpDataBST *left;
 	struct YelpDataBST *right;
 };
+struct BusinessID{
+	struct Business BusinessInfo; // Declares actual business
+	struct LocationID* LocID; // Declares user created locationID
+	
+	char* name; // Will have to be stored in BusinessInfo
+	uint32_t num_locations; // Will have to be stored in BusinessInfo
+	
+	
+};
+struct LocationID{ //Stores location and Business ID
+	struct Location loc; // Declares actual location
+	uint32_t BusID; // Actual BusinessID
+	
+	char* address; // to be copied to Location
+	char* city; // to be copied to Location
+	char* state; // to be copied to Location
+	char* zip_code; // to be copied to Location
+	struct Review* reviews; // to be copied to Location
+	uint32_t num_reviews; // to be copied to Location
+};
 
+/******************* Functions *******************/
+struct YelpDataBST * CreateBusNode(char *name, uint32_t num_locations)
+{	// Creates new node with malloced memory, must pass string pointers with strdup
+	
+	// Allocates size for node and nodes contained inside them
+	struct YelpDataBST *NewNode = malloc(sizeof(struct YelpDataBST));
+	NewNode->BusinessInfoID = malloc(sizeof(struct BusinessID));
+	NewNode->BusinessInfoID->BusinessInfo = malloc(sizeof(struct Business));
+	
+	// Makes next nodes null
+	NewNode->left = NULL;
+	NewNode->right = NULL;
+
+	// BusinessID Info
+	NewNode->BusinessInfoID->name = name;
+	NewNode->BusinessInfoID->num_locations = num_locations;
+	
+	// Copies to BusinessInfo (not ever used, but required due to declaration in .h file)
+	NewNode->BusinessInfoID->BusinessInfo->name = NewNode->BusinessInfoID->name ;
+	NewNode->BusinessInfoID->BusinessInfo->num_locations = NewNode->BusinessInfoID->num_locations;
+	return NewNode;
+}
+
+struct LocationID * CreateLocationNode(uint32_t BusID, char *address, char *city, uint32_t num_reviews, char *state, char *zip_code)
+{	// Creates new node with malloced memory, must pass string pointers with strdup
+	
+	// Allocates size for node and nodes contained inside them
+	struct LocationID *NewNode = malloc(sizeof(struct LocationID));
+	NewNode->loc = malloc(sizeof(struct Location));
+	
+
+	// Business Info
+	NewNode->BusinessID = BusinessID;
+.
+	
+	// Location info
+	NewNode->loc->address = address;
+	NewNode->loc->city = city;
+	NewNode->loc->num_reviews = num_reviews;
+	NewNode->loc->state = state;
+	NewNode->loc->zip_code = zip_code;
+
+	return NewNode;
+}
+struct Review * CreateReviewNode(uint8_t stars, char *text)
+{
+	// Allocates size for node and nodes contained inside them
+	struct Review *NewNode = malloc(sizeof(struct Review));
+	
+	// Review info
+	NewNode->stars = stars;
+	NewNode->text = text;
+
+	return NewNode;
+}
+
+
+void print_node(struct YelpDataBST * node)
+{
+	printf("-----Business ID: %i-----\n",node->BusinessID);
+	printf("Name: %s, Number of Locations: %i\n",node->BusinessInfo->name,node->BusinessInfo->num_locations);
+	printf("Address: %s, City: %s, Number of reviews: %i ",node->BusinessInfo->locations->address,node->BusinessInfo->locations->city,node->BusinessInfo->locations->num_reviews);
+	printf("State: %s, Zip code: %s\n",node->BusinessInfo->locations->state,node->BusinessInfo->locations->zip_code);
+	printf("Stars: %i, Text: %s\n\n",node->BusinessInfo->locations->reviews->stars,node->BusinessInfo->locations->reviews->text);
+}
 
 //struct YelpDataBST* create_business_bst(const char* businesses_path, const char* reviews_path) // loads information
 //{
@@ -21,18 +107,20 @@ struct YelpDataBST{ // Root of tree (may want to consider changing)
  //* offsets where the review text can be found.
  //*/
  
- //// Load all businesses as usual (make sure allowed to load whole file into binary tree)
+  //Load all businesses as usual (make sure allowed to load whole file into binary tree)
  
- //// Go line by line adding reviews. Star values stored and review text is a pointer
+  //Go line by line adding reviews. Star values stored and review text is a pointer
 //}
 
-//Business *tree_insert(Business * node, Business * root) // inserts business node into YelpDataBST
+//Business *tree_insert(struct YelpDataBST *node, struct YelpDataBST *root) // inserts business node into YelpDataBST
 //{
+	//// Insert business node sorting by business name->state->city->address->stars->review->text
+	//// All except business name are case insensitive 
 	//if (root == NULL)
 	//{
 		//return node;
 	//}
-	//if(strcmp(root->name,node->name) < 0) 
+	//if(strcmp(root->BusinessInfo->name,node->BusinessInfo->name) < 0) 
 	//{
 		//if (root->right == NULL)
 		//{
@@ -57,47 +145,6 @@ struct YelpDataBST{ // Root of tree (may want to consider changing)
 	//return root;
 	
 //}
-
-struct YelpDataBST * create_node(uint32_t BusinessID, char *name, uint32_t num_locations, char *address, char *city, uint32_t num_reviews, char *state, char *zip_code, uint8_t stars, char *text) 
-{	// Creates new node with malloced memory, must pass string pointers with strdup
-	
-	// Allocates size for node and nodes contained inside them
-	struct YelpDataBST *NewNode = malloc(sizeof(struct YelpDataBST));
-	NewNode->BusinessInfo = malloc(sizeof(struct Business));
-	NewNode->BusinessInfo->locations= malloc(sizeof(struct Location)); // will need to figure out how to handle multiple locations
-	NewNode->BusinessInfo->locations->reviews = malloc(sizeof(struct Review)); // will need to figure out how to handle multiple reviews
-	
-	// Makes next nodes null
-	NewNode->left = NULL;
-	NewNode->right = NULL;
-
-	// Business Info
-	NewNode->BusinessID = BusinessID;
-	NewNode->BusinessInfo->name = name;
-	NewNode->BusinessInfo->num_locations = num_locations;
-	
-	// Location info
-	NewNode->BusinessInfo->locations->address = address;
-	NewNode->BusinessInfo->locations->city = city;
-	NewNode->BusinessInfo->locations->num_reviews = num_reviews;
-	NewNode->BusinessInfo->locations->state = state;
-	NewNode->BusinessInfo->locations->zip_code = zip_code;
-	
-	// Review info
-	NewNode->BusinessInfo->locations->reviews->stars = stars;
-	NewNode->BusinessInfo->locations->reviews->text = text;
-
-	return  NewNode;
-}
-
-void print_node(struct YelpDataBST * node)
-{
-	printf("-----Business ID: %i-----\n",node->BusinessID);
-	printf("Name: %s, Number of Locations: %i\n",node->BusinessInfo->name,node->BusinessInfo->num_locations);
-	printf("Address: %s, City: %s, Number of reviews: %i ",node->BusinessInfo->locations->address,node->BusinessInfo->locations->city,node->BusinessInfo->locations->num_reviews);
-	printf("State: %s, Zip code: %s\n",node->BusinessInfo->locations->state,node->BusinessInfo->locations->zip_code);
-	printf("Stars: %i, Text: %s\n\n",node->BusinessInfo->locations->reviews->stars,node->BusinessInfo->locations->reviews->text);
-}
 
 
 //struct Business* get_business_reviews(struct YelpDataBST* bst,
