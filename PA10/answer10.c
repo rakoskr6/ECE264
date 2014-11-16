@@ -62,7 +62,7 @@ struct LocationID *CreateLocation(uint32_t BusID, char *address, char *city, cha
 }
 
 
-struct LocationID *BusExist(char *name, struct YelpDataBST *root) // checks if the business name already exists
+struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root) // checks if the business name already exists
 {
 	if (root == NULL)
 	{
@@ -71,7 +71,7 @@ struct LocationID *BusExist(char *name, struct YelpDataBST *root) // checks if t
 	int cmp = strcmp(root->Bus->name,name);
 	if (cmp == 0) // found, return 1
 	{
-		return root->Bus->Loc;
+		return root;
 	}
 	else if (cmp < 0) // root before node, go right
 	{
@@ -198,6 +198,21 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 	
 }
 
+struct YelpDataBST *Insert(struct YelpDataBST *root, char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code)
+{	
+	struct YelpDataBST *LocExists = BusExist(name,root);
+	if (LocExists == NULL)
+	{
+		root = Bus_insert(CreateYelpNode(name,BusID,address,city,state,zip_code),root);
+	}
+	else
+	{
+		LocExists->Bus->num_locations++;
+		LocExists->Bus->Loc = Loc_insert(CreateLocation(BusID, address,city,state,zip_code),LocExists->Bus->Loc);
+	}
+	return root;
+	
+}
 
 //struct YelpDataBST* create_business_bst(const char* businesses_path, const char* reviews_path) // loads information
 //{
@@ -262,7 +277,7 @@ void print_Loc(struct LocationID * node)
 	//printf("Stars: %i, Text: %s\n\n",node->Bus->locations->reviews->stars,node->Bus->locations->reviews->text);
 }
 
-void print_LocTree(struct LocationID *node)
+void print_LocTree(struct LocationID *node, int i)
 {
 	if (node != NULL)
 		{
@@ -271,32 +286,32 @@ void print_LocTree(struct LocationID *node)
 		}
 		if ((node != NULL) && (node->LocLeft != NULL))
 		{
-			printf("Left");
-			print_LocTree(node->LocLeft);
+			printf("Left %i\n",i++);
+			print_LocTree(node->LocLeft, i);
 		}
 		if ((node != NULL) && (node->LocRight != NULL))
 		{
-			printf("Right");
-			print_LocTree(node->LocRight);
+			printf("Right %i\n",i++);
+			print_LocTree(node->LocRight, i);
 		}
 }
-void print_tree(struct YelpDataBST *tree)
+void print_tree(struct YelpDataBST *tree, int i)
 {
 	// Prints nodes to left until null, then goes back up to right
 	if (tree != NULL)
 	{
 		print_Bus(tree);
-		print_LocTree(tree->Bus->Loc);
+		print_LocTree(tree->Bus->Loc,i);
 		
 	}
 	if ((tree != NULL) && (tree->left != NULL))
 	{
-		printf("Left");
-		print_tree(tree->left);
+		printf("Left %i\n",i);
+		print_tree(tree->left, i);
 	}
 	if ((tree != NULL) && (tree->right != NULL))
 	{
-		printf("Right");
-		print_tree(tree->right);
+		printf("Right %i\n",i);
+		print_tree(tree->right, i);
 	}
 }
