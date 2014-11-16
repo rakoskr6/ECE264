@@ -2,44 +2,8 @@
 #include "answer10.h"
 #include <stdio.h>
 #include <stdlib.h>
-struct YelpDataBST * CreateYelpNode(char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code);
-void print_node(struct YelpDataBST * node);
-void print_tree(struct YelpDataBST *tree);
-
-typedef struct ReviewID {
-	char* text;
-	uint8_t stars;
-	struct ReviewID *RevLeft;
-	struct ReviewID *RevRight;
-}ReviewID;
-
-typedef struct LocationID {
-	uint32_t BusID;
-	char* address;
-	char* city;
-	char* state;
-	char* zip_code;
-	uint32_t num_reviews;
-	ReviewID *Rev;
-	struct LocationID *LocLeft;
-	struct LocationID *LocRight;
-	
-}LocationID;
-
-typedef struct BusinessID {
-	char* name;
-	uint32_t num_locations;
-	LocationID *Loc; 
-}BusinessID;
-
-struct YelpDataBST{ 
-	struct BusinessID *Bus;
-	struct YelpDataBST *left;
-	struct YelpDataBST *right;
-};
-
-LocationID *CreateLocation(uint32_t BusID, char *address, char *city, char *state, char *zip_code);
-
+#include <string.h>
+#include "test.h"
 
 /******************* Functions *******************/
 struct YelpDataBST * CreateYelpNode(char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code)
@@ -97,6 +61,195 @@ struct LocationID *CreateLocation(uint32_t BusID, char *address, char *city, cha
 	return NewNode;
 }
 
+
+struct LocationID *BusExist(char *name, struct YelpDataBST *root) // checks if the business name already exists
+{
+	if (root == NULL)
+	{
+		return NULL; // Never found, return NULL
+	}
+	int cmp = strcmp(root->Bus->name,name);
+	if (cmp == 0) // found, return 1
+	{
+		return root->Bus->Loc;
+	}
+	else if (cmp < 0) // root before node, go right
+	{
+		return BusExist(name,root->right);
+	}
+
+	return BusExist(name,root->left);
+}
+
+struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *root) // inserts business node into YelpDataBST if business is new
+{
+	// Insert business node sorting by business name (case insensitive)
+	
+	
+	if (root == NULL)
+	{
+		return node;
+	}
+	if(strcmp(root->Bus->name,node->Bus->name) < 0) 
+	{
+		if (root->right == NULL)
+		{
+			root->right = node;
+		}
+		else
+		{
+			Bus_insert(node,root->right);
+		}
+	}
+	else if(strcmp(root->Bus->name,node->Bus->name) > 0) //root after node, left side
+	{
+		if (root->left == NULL)
+		{
+			root->left = node;
+		}
+		else
+		{
+			Bus_insert(node,root->left);
+		}
+	}
+	return root;
+	
+}
+
+
+struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts location node into YelpDataBST if business exists
+{
+	// Insert location node sorting by state->city->address (case insensitive)
+	
+	if(strcasecmp(root->state,node->state) < 0) 
+	{
+		if (root->LocRight == NULL)
+		{
+			root->LocRight = node;
+		}
+		else
+		{
+			Loc_insert(node,root->LocRight);
+		}
+	}
+	else if(strcasecmp(root->state,node->state) > 0) //root after node, left side
+	{
+		if (root->LocLeft == NULL)
+		{
+			root->LocLeft = node;
+		}
+		else
+		{
+			Loc_insert(node,root->LocLeft);
+		}
+	}
+	else // nodes equal, now check city
+	{
+		if(strcasecmp(root->city,node->city) < 0) 
+		{
+			if (root->LocRight == NULL)
+			{
+				root->LocRight = node;
+			}
+			else
+			{
+				Loc_insert(node,root->LocRight);
+			}
+		}
+		else if(strcasecmp(root->city,node->city) > 0) //root after node, left side
+		{
+			if (root->LocLeft == NULL)
+			{
+				root->LocLeft = node;
+			}
+			else
+			{
+				Loc_insert(node,root->LocLeft);
+			}
+		}
+		else // nodes still equal, now check address
+		{
+			if(strcasecmp(root->address,node->address) < 0) 
+			{
+				if (root->LocRight == NULL)
+				{
+					root->LocRight = node;
+				}
+				else
+				{
+					Loc_insert(node,root->LocRight);
+				}
+			}
+			else //root after node, left side
+			{
+				if (root->LocLeft == NULL)
+				{
+					root->LocLeft = node;
+				}
+				else
+				{
+					Loc_insert(node,root->LocLeft);
+				}
+			}
+		}
+	}
+	
+	return root;
+	
+}
+
+
+//struct YelpDataBST* create_business_bst(const char* businesses_path, const char* reviews_path) // loads information
+//{
+///* This function reads the two files and creates an index that can be used
+ //* to search the data and quickly retrieve the reviews.  You must *not* store
+ //* all of the review text in memory.  Your structure should store the file
+ //* offsets where the review text can be found.
+ //*/
+ 
+  //Load all businesses as usual (make sure allowed to load whole file into binary tree)
+ 
+  //Go line by line adding reviews. Star values stored and review text is a pointer
+//}
+
+
+
+
+//struct Business* get_business_reviews(struct YelpDataBST* bst,
+                                      //char* name, char* state, char* zip_code);
+///* get_reviews(..) should return a pointer to a Business struct object
+ //* on the heap.  That object will include links to the individual locations.
+ //* For example, if "McDonald's" is the business, then there would be thousands
+ //* of locations.  Each Location struct object in turn contains links to
+ //* reviews of that location.
+ //*
+ //* bst - the object returned by create_business_bst(..)
+ //* name - name of the business to search for (e.g., "McDonald's"); search is
+ //*     case insensitive.
+ //* state - two-letter (uppercase) state code to filter locations by, or NULL
+ //*     to include all states.
+ //* zip_code - five digit ZIP code to filter locations by, or NULL to include
+ //*     all ZIP codes.
+ //*
+ //* Locations must be sorted by state >> city >> address.
+ //*
+ //* Reviews must be sorted by star rating (descending) >> text of review.
+ //*
+ //* Matching of names, cities, and states must be case-insensitive.  You
+ //* may use functions from strings.h for that, if you wish.
+ //*/
+
+
+//void destroy_business_bst(struct YelpDataBST* bst);
+///* Deallocate all memory allocated by the object returned
+ //* by create_business_bst(..) and close the files. */
+
+//void destroy_business_result(struct Business* b);
+///* Deallocate all heap memory tied to an object returned
+ //* by get_business_reviews(..). */
+
+
+
 void print_Bus(struct YelpDataBST * node)
 {
 	printf("----- Business Name: %s (%i locations) -----\n\n",node->Bus->name,node->Bus->num_locations);
@@ -147,84 +300,3 @@ void print_tree(struct YelpDataBST *tree)
 		print_tree(tree->right);
 	}
 }
-
-//struct YelpDataBST* create_business_bst(const char* businesses_path, const char* reviews_path) // loads information
-//{
-///* This function reads the two files and creates an index that can be used
- //* to search the data and quickly retrieve the reviews.  You must *not* store
- //* all of the review text in memory.  Your structure should store the file
- //* offsets where the review text can be found.
- //*/
- 
-  //Load all businesses as usual (make sure allowed to load whole file into binary tree)
- 
-  //Go line by line adding reviews. Star values stored and review text is a pointer
-//}
-
-//Business *tree_insert(struct YelpDataBST *node, struct YelpDataBST *root) // inserts business node into YelpDataBST
-//{
-	//// Insert business node sorting by business name->state->city->address->stars->review->text
-	//// All except business name are case insensitive 
-	//if (root == NULL)
-	//{
-		//return node;
-	//}
-	//if(strcmp(root->BusinessInfo->name,node->BusinessInfo->name) < 0) 
-	//{
-		//if (root->right == NULL)
-		//{
-			//root->right = node;
-		//}
-		//else
-		//{
-			//tree_insert(node,root->right);
-		//}
-	//}
-	//else //root after node, left side
-	//{
-		//if (root->left == NULL)
-		//{
-			//root->left = node;
-		//}
-		//else
-		//{
-			//tree_insert(node,root->left);
-		//}
-	//}
-	//return root;
-	
-//}
-
-
-//struct Business* get_business_reviews(struct YelpDataBST* bst,
-                                      //char* name, char* state, char* zip_code);
-///* get_reviews(..) should return a pointer to a Business struct object
- //* on the heap.  That object will include links to the individual locations.
- //* For example, if "McDonald's" is the business, then there would be thousands
- //* of locations.  Each Location struct object in turn contains links to
- //* reviews of that location.
- //*
- //* bst - the object returned by create_business_bst(..)
- //* name - name of the business to search for (e.g., "McDonald's"); search is
- //*     case insensitive.
- //* state - two-letter (uppercase) state code to filter locations by, or NULL
- //*     to include all states.
- //* zip_code - five digit ZIP code to filter locations by, or NULL to include
- //*     all ZIP codes.
- //*
- //* Locations must be sorted by state >> city >> address.
- //*
- //* Reviews must be sorted by star rating (descending) >> text of review.
- //*
- //* Matching of names, cities, and states must be case-insensitive.  You
- //* may use functions from strings.h for that, if you wish.
- //*/
-
-
-//void destroy_business_bst(struct YelpDataBST* bst);
-///* Deallocate all memory allocated by the object returned
- //* by create_business_bst(..) and close the files. */
-
-//void destroy_business_result(struct Business* b);
-///* Deallocate all heap memory tied to an object returned
- //* by get_business_reviews(..). */
