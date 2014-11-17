@@ -214,18 +214,54 @@ struct YelpDataBST *Insert(struct YelpDataBST *root, char *name, uint32_t BusID,
 	
 }
 
-//struct YelpDataBST* create_business_bst(const char* businesses_path, const char* reviews_path) // loads information
-//{
-///* This function reads the two files and creates an index that can be used
- //* to search the data and quickly retrieve the reviews.  You must *not* store
- //* all of the review text in memory.  Your structure should store the file
- //* offsets where the review text can be found.
- //*/
- 
-  //Load all businesses as usual (make sure allowed to load whole file into binary tree)
- 
-  //Go line by line adding reviews. Star values stored and review text is a pointer
-//}
+struct YelpDataBST *create_business_bst(const char* businesses_path, const char* reviews_path) // loads information
+{
+	FILE *fp;
+	char LineBuffer[170];
+	char *BusIDTemp, *Name, *Address,*City, *State, *Zip;
+	uint32_t BusID;
+	struct YelpDataBST *Root = NULL;
+	char c;
+	int index = 0;
+	
+	int i = 0;
+
+	// Ensures file can open
+	if ((fp = fopen(businesses_path,"r")) == NULL)
+	{
+		printf("Unable to open file\n");
+		return NULL;
+	}
+	
+	while (!feof(fp))
+	{
+		i++;
+		while (((c = fgetc(fp)) != '\n') && !feof(fp)) // Gets one line of the file
+		{
+			LineBuffer[index++] = c;
+		}
+		LineBuffer[index] = '\0'; // Terminates string
+		
+		if (strlen(LineBuffer) > 0)
+		{
+			// Gets individual strings
+			BusIDTemp = strtok(LineBuffer,"\t");
+			Name = strtok(NULL,"\t");
+			Address = strtok(NULL,"\t");
+			City = strtok(NULL,"\t");
+			State = strtok(NULL,"\t");
+			Zip = strtok(NULL,"\t");
+			
+			BusID = atoi(BusIDTemp);
+			Root = Insert(Root,strdup(Name),BusID, strdup(Address), strdup(City), strdup(State), strdup(Zip));		
+
+			index = 0; // Resets index
+		}
+		print_tree(Root,1);
+	}
+	fclose(fp);
+	return Root;
+}
 
 
 
