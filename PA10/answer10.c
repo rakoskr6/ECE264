@@ -26,7 +26,7 @@ struct YelpDataBST * CreateYelpNode(char *name, uint32_t BusID, char *address, c
 	NewNode->Bus->name = name;
 	NewNode->Bus->num_locations = 1;
 	
-	// Location Info
+	// Location Info (change to store pointers instead)
 	NewNode->Bus->Loc->BusID = BusID;
 	NewNode->Bus->Loc->address = address;
 	NewNode->Bus->Loc->city = city;
@@ -50,7 +50,7 @@ struct LocationID *CreateLocation(uint32_t BusID, char *address, char *city, cha
 	NewNode->LocRight = NULL;
 	NewNode->Rev = NULL;
 	
-	// Location Info
+	// Location Info (change to store pointers (as shown in above function))
 	NewNode->BusID = BusID;
 	NewNode->address = address;
 	NewNode->city = city;
@@ -257,7 +257,6 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 
 			index = 0; // Resets index
 		}
-		print_tree(Root,1);
 	}
 	fclose(fp);
 	return Root;

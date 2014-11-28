@@ -17,6 +17,7 @@ int main(void)
 	//root = Insert(root, strdup("McDonalds"), 123, strdup("21 Main St"), strdup("Houston"), strdup("TX"), strdup("54128"));
 	//root = Insert(root, strdup("Chipotle"), 25, strdup("587 Randall Rd"), strdup("Geneva"), strdup("IL"), strdup("60134"));
 	//root = Insert(root, strdup("Chipotle"), 1328, strdup("State St"), strdup("West Lafayette"), strdup("IN"), strdup("47906"));
+
 	
 	root = create_business_bst("/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businessesShort.tsv", "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/reviews.tsv");
 	
