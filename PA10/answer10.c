@@ -224,6 +224,9 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 	char c;
 	int index = 0;
 	
+	int LineStart = 0, LineEnd = 0;
+	int BusIDL, NameL, AddressL, CityL, StateL, ZipL;
+	
 	int i = 0;
 
 	// Ensures file can open
@@ -236,11 +239,13 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 	while (!feof(fp))
 	{
 		i++;
+		LineStart = ftell(fp); // gets location at start of reading line
 		while (((c = fgetc(fp)) != '\n') && !feof(fp)) // Gets one line of the file
 		{
 			LineBuffer[index++] = c;
 		}
 		LineBuffer[index] = '\0'; // Terminates string
+		LineEnd = ftell(fp); // gets location at end of reading line
 		
 		if (strlen(LineBuffer) > 0)
 		{
@@ -251,9 +256,17 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			City = strtok(NULL,"\t");
 			State = strtok(NULL,"\t");
 			Zip = strtok(NULL,"\t");
-			
 			BusID = atoi(BusIDTemp);
-			Root = Insert(Root,strdup(Name),BusID, strdup(Address), strdup(City), strdup(State), strdup(Zip));		
+			
+			// Obtains file location by taking begining of line offset + string lengths + null character
+			BusIDL	 	= LineStart;
+			NameL 		= BusIDL + strlen(BusIDTemp) + 1;
+			AddressL 	= NameL + strlen(Name) + 1;
+			CityL 		= AddressL + strlen(Address) + 1;
+			StateL 		= CityL + strlen(City) + 1;
+			ZipL		= StateL + strlen(State) + 1;
+			
+			Root = Insert(Root,Name,BusID, Address, City, State, Zip);		
 
 			index = 0; // Resets index
 		}
