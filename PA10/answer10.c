@@ -224,7 +224,7 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 	char c;
 	int index = 0;
 	
-	int LineStart = 0, LineEnd = 0;
+	int LineStart = 0;
 	int BusIDL, NameL, AddressL, CityL, StateL, ZipL;
 	
 	int i = 0;
@@ -245,7 +245,6 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			LineBuffer[index++] = c;
 		}
 		LineBuffer[index] = '\0'; // Terminates string
-		LineEnd = ftell(fp); // gets location at end of reading line
 		
 		if (strlen(LineBuffer) > 0)
 		{
@@ -266,8 +265,11 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			StateL 		= CityL + strlen(City) + 1;
 			ZipL		= StateL + strlen(State) + 1;
 			
-			Root = Insert(Root,Name,BusID, Address, City, State, Zip);		
-
+			printf("%s, %s, %s\n",OffsetToString(BusIDL,businesses_path), OffsetToString(NameL,businesses_path), OffsetToString(AddressL,businesses_path));
+			printf("%s, %s, %s\n\n",OffsetToString(CityL,businesses_path), OffsetToString(StateL,businesses_path), OffsetToString(ZipL,businesses_path));
+			
+			Root = Insert(Root,NameL,BusIDL, AddressL, CityL, StateL, ZipL);		
+			
 			index = 0; // Resets index
 		}
 	}
@@ -275,7 +277,31 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 	return Root;
 }
 
-
+char *OffsetToString (int Offset, const char *FilePath)
+{
+	FILE *fp;
+	char c, LineBuffer[170];
+	int index = 0;
+	
+	// Opens file
+	if ((fp = fopen(FilePath,"r")) == NULL)
+	{
+		printf("Unable to open file\n");
+		return NULL;
+	}
+	
+	// Sets offset to desired position
+	fseek(fp,Offset,SEEK_SET);
+	
+	// Gets string at desired position
+	while (((c = fgetc(fp)) != '\n') && !feof(fp) && (c != '\t')) // Gets one line of the file
+	{
+		LineBuffer[index++] = c;
+	}
+	LineBuffer[index] = '\0'; // Terminates string
+		
+	return strdup(LineBuffer);
+}
 
 
 //struct Business* get_business_reviews(struct YelpDataBST* bst,

@@ -43,3 +43,5 @@ void print_LocTree(struct LocationID *node, int i);
 struct YelpDataBST *Insert(struct YelpDataBST *root, char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code);
 struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *root);
 struct LocationID *Loc_insert(LocationID *node, LocationID *root);
+
+char *OffsetToString (int Offset, const char *FilePath);
