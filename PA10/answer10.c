@@ -50,10 +50,8 @@ struct LocationID *CreateLocation(int BusIDL, int addressL, int cityL, int state
 	return NewNode;
 }
 
-
 struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root) // checks if the business name already exists
-{
-	
+{	
 	if (root == NULL)
 	{
 		return NULL; // Never found, return NULL
@@ -67,6 +65,7 @@ struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root) // checks if 
 	}
 	else if (cmp < 0) // root before node, go right
 	{
+		free(NameComp);
 		return BusExist(name,root->right);
 	}
 	
@@ -75,9 +74,7 @@ struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root) // checks if 
 }
 
 struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *root) // inserts business node into YelpDataBST if business is new
-{
-	// Insert business node sorting by business name (case insensitive)<-double check
-	
+{	// Insert business node sorting by business name (case insensitive)<-double check
 	
 	if (root == NULL)
 	{
@@ -87,12 +84,10 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 	char *NameComp = OffsetToString(node->Bus->name,BusPath);
 	char *Name = OffsetToString(root->Bus->name,BusPath);
 	
-	if(strcasecmp(Name, NameComp) < 0) 
+	if(strcasecmp(Name, NameComp) < 0)  // root before node, right side
 	{
 		if (root->right == NULL)
 		{
-			free(NameComp);
-			free(Name);
 			root->right = node;
 		}
 		else
@@ -104,8 +99,6 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 	{
 		if (root->left == NULL)
 		{
-			free(NameComp);
-			free(Name);
 			root->left = node;
 		}
 		else
@@ -113,14 +106,16 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 			Bus_insert(node,root->left);
 		}
 	}
-	return root;
 	
+	free(NameComp);
+	free(Name);
+			
+	return root;
 }
 
 
 struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts location node into YelpDataBST if business exists
-{
-	// Insert location node sorting by state->city->address (case insensitive)
+{	// Insert location node sorting by state->city->address (case insensitive)
 	char *State = OffsetToString(root->state,BusPath);
 	char *StateComp = OffsetToString(node->state,BusPath);
 	char *City = OffsetToString(root->city,BusPath);
@@ -131,14 +126,7 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 	if(strcasecmp(State, StateComp) < 0) 
 	{
 		if (root->LocRight == NULL)
-		{
-			free (State);
-			free (StateComp);
-			free (City);
-			free (CityComp);
-			free (Address);
-			free(AddressComp);
-			
+		{			
 			root->LocRight = node;
 		}
 		else
@@ -150,13 +138,6 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 	{
 		if (root->LocLeft == NULL)
 		{
-			free (State);
-			free (StateComp);
-			free (City);
-			free (CityComp);
-			free (Address);
-			free(AddressComp);
-			
 			root->LocLeft = node;
 		}
 		else
@@ -170,13 +151,6 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 		{
 			if (root->LocRight == NULL)
 			{
-				free (State);
-				free (StateComp);
-				free (City);
-				free (CityComp);
-				free (Address);
-				free(AddressComp);
-			
 				root->LocRight = node;
 			}
 			else
@@ -188,13 +162,6 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 		{
 			if (root->LocLeft == NULL)
 			{
-				free (State);
-				free (StateComp);
-				free (City);
-				free (CityComp);
-				free (Address);
-				free(AddressComp);
-			
 				root->LocLeft = node;
 			}
 			else
@@ -208,13 +175,6 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 			{
 				if (root->LocRight == NULL)
 				{
-					free (State);
-					free (StateComp);
-					free (City);
-					free (CityComp);
-					free (Address);
-					free(AddressComp);
-					
 					root->LocRight = node;
 				}
 				else
@@ -226,13 +186,6 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 			{
 				if (root->LocLeft == NULL)
 				{
-					free (State);
-					free (StateComp);
-					free (City);
-					free (CityComp);
-					free (Address);
-					free(AddressComp);
-					
 					root->LocLeft = node;
 				}
 				else
@@ -243,21 +196,30 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 		}
 	}
 	
+	free (State);
+	free (StateComp);
+	free (City);
+	free (CityComp);
+	free (Address);
+	free(AddressComp);
 	return root;
 	
 }
 
 struct YelpDataBST *Insert(struct YelpDataBST *root, int nameL, int BusIDL, int addressL, int cityL, int stateL, int zip_codeL)
-{	
-	struct YelpDataBST *LocExists = BusExist(OffsetToString(nameL,BusPath),root);
-	if (LocExists == NULL)
+{	// Determines if business already exists and appropriatly adds to location
+	char *BusName = OffsetToString(nameL,BusPath);
+	struct YelpDataBST *BusExists = BusExist(BusName,root);
+	free(BusName);
+
+	if (BusExists == NULL)
 	{
 		root = Bus_insert(CreateYelpNode(nameL,BusIDL,addressL,cityL,stateL,zip_codeL),root);
 	}
 	else
 	{
-		LocExists->Bus->num_locations++;
-		LocExists->Bus->Loc = Loc_insert(CreateLocation(BusIDL, addressL,cityL,stateL,zip_codeL),LocExists->Bus->Loc);
+		BusExists->Bus->num_locations++;
+		BusExists->Bus->Loc = Loc_insert(CreateLocation(BusIDL, addressL,cityL,stateL,zip_codeL),BusExists->Bus->Loc);
 	}
 	return root;
 	
@@ -312,8 +274,15 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			StateL 		= CityL + strlen(City) + 1;
 			ZipL		= StateL + strlen(State) + 1;
 			
-			//printf("%s, %s, %s\n",OffsetToString(BusIDL,businesses_path), OffsetToString(NameL,businesses_path), OffsetToString(AddressL,businesses_path));
-			//printf("%s, %s, %s\n\n",OffsetToString(CityL,businesses_path), OffsetToString(StateL,businesses_path), OffsetToString(ZipL,businesses_path));
+			char *BusP, *NameP, *AddP, *CityP, *StateP, *ZipP;
+			printf("%s, %s, %s\n",BusP = OffsetToString(BusIDL,businesses_path), NameP = OffsetToString(NameL,businesses_path), AddP = OffsetToString(AddressL,businesses_path));
+			printf("%s, %s, %s\n\n",CityP = OffsetToString(CityL,businesses_path), StateP = OffsetToString(StateL,businesses_path), ZipP = OffsetToString(ZipL,businesses_path));
+			free(BusP);
+			free(NameP);
+			free(AddP);
+			free(CityP);
+			free(StateP);
+			free(ZipP);
 			
 			Root = Insert(Root,NameL,BusIDL, AddressL, CityL, StateL, ZipL);		
 			
