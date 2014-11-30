@@ -1,16 +1,16 @@
 typedef struct ReviewID {
-	char* text;
-	uint8_t stars;
+	int text;
+	int stars;
 	struct ReviewID *RevLeft;
 	struct ReviewID *RevRight;
 }ReviewID;
 
 typedef struct LocationID {
-	uint32_t BusID;
-	char* address;
-	char* city;
-	char* state;
-	char* zip_code;
+	int BusID;
+	int address;
+	int city;
+	int state;
+	int zip_code;
 	uint32_t num_reviews;
 	ReviewID *Rev;
 	struct LocationID *LocLeft;
@@ -19,7 +19,7 @@ typedef struct LocationID {
 }LocationID;
 
 typedef struct BusinessID {
-	char* name;
+	int name;
 	uint32_t num_locations;
 	LocationID *Loc; 
 }BusinessID;
@@ -31,17 +31,19 @@ struct YelpDataBST{
 };
 
 
-struct YelpDataBST * CreateYelpNode(char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code);
+struct YelpDataBST * CreateYelpNode(int nameL, int BusIDL, int addressL, int cityL, int stateL, int zip_codeL);
 void print_node(struct YelpDataBST * node);
 void print_tree(struct YelpDataBST *tree, int i);
-struct LocationID *CreateLocation(uint32_t BusID, char *address, char *city, char *state, char *zip_code);
+struct LocationID *CreateLocation(int BusIDL, int addressL, int cityL, int stateL, int zip_codeL);
 
 
 struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root);
 void print_LocTree(struct LocationID *node, int i);
 
-struct YelpDataBST *Insert(struct YelpDataBST *root, char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code);
+struct YelpDataBST *Insert(struct YelpDataBST *root, int nameL, int BusIDL, int addressL, int cityL, int stateL, int zip_codeL);
 struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *root);
 struct LocationID *Loc_insert(LocationID *node, LocationID *root);
 
 char *OffsetToString (int Offset, const char *FilePath);
+
+#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businesses.tsv"

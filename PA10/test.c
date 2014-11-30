@@ -19,9 +19,9 @@ int main(void)
 	//root = Insert(root, strdup("Chipotle"), 1328, strdup("State St"), strdup("West Lafayette"), strdup("IN"), strdup("47906"));
 
 	
-	root = create_business_bst("/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businessesShort.tsv", "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/reviews.tsv");
+	root = create_business_bst(BusPath, "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/reviews.tsv");
 	
-	print_tree(root, 1);
+	//print_tree(root, 1);
 	
 	return EXIT_SUCCESS;
 }

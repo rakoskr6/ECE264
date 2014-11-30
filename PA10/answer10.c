@@ -6,41 +6,30 @@
 #include "test.h"
 
 /******************* Functions *******************/
-struct YelpDataBST * CreateYelpNode(char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code)
-{	// Creates new Yelp Node, doesn't add reviews, must pass string pointers with strdup
+struct YelpDataBST * CreateYelpNode(int nameL, int BusIDL, int addressL, int cityL, int stateL, int zip_codeL)
+{	// Creates new Yelp Node (and Business and Location node), doesn't add reviews
 	
 	// Allocates size for nodes and adds data
 	struct YelpDataBST *NewNode = malloc(sizeof(struct YelpDataBST));
 	NewNode->Bus = malloc(sizeof(BusinessID));
-	NewNode->Bus->Loc = malloc(sizeof(LocationID)); 
-
 	
 	// Makes next nodes null
 	NewNode->left = NULL;
 	NewNode->right = NULL;
-	NewNode->Bus->Loc->LocLeft = NULL;
-	NewNode->Bus->Loc->LocRight = NULL;
-	NewNode->Bus->Loc->Rev = NULL;
 	
 	// Business Info
-	NewNode->Bus->name = name;
+	NewNode->Bus->name = nameL;
 	NewNode->Bus->num_locations = 1;
 	
-	// Location Info (change to store pointers instead)
-	NewNode->Bus->Loc->BusID = BusID;
-	NewNode->Bus->Loc->address = address;
-	NewNode->Bus->Loc->city = city;
-	NewNode->Bus->Loc->state = state;
-	NewNode->Bus->Loc->zip_code = zip_code;
-	NewNode->Bus->Loc->num_reviews = 0;
+	// Location Info 
+	NewNode->Bus->Loc = CreateLocation(BusIDL,addressL, cityL, stateL, zip_codeL);
 	
-
 	return NewNode;
 }
 
 
-struct LocationID *CreateLocation(uint32_t BusID, char *address, char *city, char *state, char *zip_code)
-{	// Creates new Location Node, doesn't add reviews, must pass string pointers with strdup
+struct LocationID *CreateLocation(int BusIDL, int addressL, int cityL, int stateL, int zip_codeL)
+{	// Creates new Location Node, doesn't add reviews
 		
 	// Allocates size for nodes and adds data
 	LocationID *NewNode = malloc(sizeof(struct LocationID));
@@ -50,12 +39,12 @@ struct LocationID *CreateLocation(uint32_t BusID, char *address, char *city, cha
 	NewNode->LocRight = NULL;
 	NewNode->Rev = NULL;
 	
-	// Location Info (change to store pointers (as shown in above function))
-	NewNode->BusID = BusID;
-	NewNode->address = address;
-	NewNode->city = city;
-	NewNode->state = state;
-	NewNode->zip_code = zip_code;	
+	// Location Info
+	NewNode->BusID = BusIDL;
+	NewNode->address = addressL;
+	NewNode->city = cityL;
+	NewNode->state = stateL;
+	NewNode->zip_code = zip_codeL;	
 	NewNode->num_reviews = 0;
 
 	return NewNode;
@@ -64,36 +53,46 @@ struct LocationID *CreateLocation(uint32_t BusID, char *address, char *city, cha
 
 struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root) // checks if the business name already exists
 {
+	
 	if (root == NULL)
 	{
 		return NULL; // Never found, return NULL
 	}
-	int cmp = strcmp(root->Bus->name,name);
+	char *NameComp = OffsetToString(root->Bus->name,BusPath);
+	int cmp = strcmp(NameComp,name);
 	if (cmp == 0) // found, return 1
 	{
+		free(NameComp);
 		return root;
 	}
 	else if (cmp < 0) // root before node, go right
 	{
 		return BusExist(name,root->right);
 	}
-
+	
+	free(NameComp);
 	return BusExist(name,root->left);
 }
 
 struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *root) // inserts business node into YelpDataBST if business is new
 {
-	// Insert business node sorting by business name (case insensitive)
+	// Insert business node sorting by business name (case insensitive)<-double check
 	
 	
 	if (root == NULL)
 	{
 		return node;
 	}
-	if(strcmp(root->Bus->name,node->Bus->name) < 0) 
+	
+	char *NameComp = OffsetToString(node->Bus->name,BusPath);
+	char *Name = OffsetToString(root->Bus->name,BusPath);
+	
+	if(strcasecmp(Name, NameComp) < 0) 
 	{
 		if (root->right == NULL)
 		{
+			free(NameComp);
+			free(Name);
 			root->right = node;
 		}
 		else
@@ -101,10 +100,12 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 			Bus_insert(node,root->right);
 		}
 	}
-	else if(strcmp(root->Bus->name,node->Bus->name) > 0) //root after node, left side
+	else if(strcmp(Name, NameComp) > 0) //root after node, left side
 	{
 		if (root->left == NULL)
 		{
+			free(NameComp);
+			free(Name);
 			root->left = node;
 		}
 		else
@@ -120,11 +121,24 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts location node into YelpDataBST if business exists
 {
 	// Insert location node sorting by state->city->address (case insensitive)
+	char *State = OffsetToString(root->state,BusPath);
+	char *StateComp = OffsetToString(node->state,BusPath);
+	char *City = OffsetToString(root->city,BusPath);
+	char *CityComp = OffsetToString(node->city,BusPath);
+	char *Address = OffsetToString(root->address,BusPath);
+	char *AddressComp = OffsetToString(node->address,BusPath);
 	
-	if(strcasecmp(root->state,node->state) < 0) 
+	if(strcasecmp(State, StateComp) < 0) 
 	{
 		if (root->LocRight == NULL)
 		{
+			free (State);
+			free (StateComp);
+			free (City);
+			free (CityComp);
+			free (Address);
+			free(AddressComp);
+			
 			root->LocRight = node;
 		}
 		else
@@ -132,10 +146,17 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 			Loc_insert(node,root->LocRight);
 		}
 	}
-	else if(strcasecmp(root->state,node->state) > 0) //root after node, left side
+	else if(strcasecmp(State, StateComp) > 0) //root after node, left side
 	{
 		if (root->LocLeft == NULL)
 		{
+			free (State);
+			free (StateComp);
+			free (City);
+			free (CityComp);
+			free (Address);
+			free(AddressComp);
+			
 			root->LocLeft = node;
 		}
 		else
@@ -145,10 +166,17 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 	}
 	else // nodes equal, now check city
 	{
-		if(strcasecmp(root->city,node->city) < 0) 
+		if(strcasecmp(City, CityComp) < 0) 
 		{
 			if (root->LocRight == NULL)
 			{
+				free (State);
+				free (StateComp);
+				free (City);
+				free (CityComp);
+				free (Address);
+				free(AddressComp);
+			
 				root->LocRight = node;
 			}
 			else
@@ -156,10 +184,17 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 				Loc_insert(node,root->LocRight);
 			}
 		}
-		else if(strcasecmp(root->city,node->city) > 0) //root after node, left side
+		else if(strcasecmp(City, CityComp) > 0) //root after node, left side
 		{
 			if (root->LocLeft == NULL)
 			{
+				free (State);
+				free (StateComp);
+				free (City);
+				free (CityComp);
+				free (Address);
+				free(AddressComp);
+			
 				root->LocLeft = node;
 			}
 			else
@@ -169,10 +204,17 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 		}
 		else // nodes still equal, now check address
 		{
-			if(strcasecmp(root->address,node->address) < 0) 
+			if(strcasecmp(Address, AddressComp) < 0) 
 			{
 				if (root->LocRight == NULL)
 				{
+					free (State);
+					free (StateComp);
+					free (City);
+					free (CityComp);
+					free (Address);
+					free(AddressComp);
+					
 					root->LocRight = node;
 				}
 				else
@@ -184,6 +226,13 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 			{
 				if (root->LocLeft == NULL)
 				{
+					free (State);
+					free (StateComp);
+					free (City);
+					free (CityComp);
+					free (Address);
+					free(AddressComp);
+					
 					root->LocLeft = node;
 				}
 				else
@@ -198,17 +247,17 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 	
 }
 
-struct YelpDataBST *Insert(struct YelpDataBST *root, char *name, uint32_t BusID, char *address, char *city, char *state, char *zip_code)
+struct YelpDataBST *Insert(struct YelpDataBST *root, int nameL, int BusIDL, int addressL, int cityL, int stateL, int zip_codeL)
 {	
-	struct YelpDataBST *LocExists = BusExist(name,root);
+	struct YelpDataBST *LocExists = BusExist(OffsetToString(nameL,BusPath),root);
 	if (LocExists == NULL)
 	{
-		root = Bus_insert(CreateYelpNode(name,BusID,address,city,state,zip_code),root);
+		root = Bus_insert(CreateYelpNode(nameL,BusIDL,addressL,cityL,stateL,zip_codeL),root);
 	}
 	else
 	{
 		LocExists->Bus->num_locations++;
-		LocExists->Bus->Loc = Loc_insert(CreateLocation(BusID, address,city,state,zip_code),LocExists->Bus->Loc);
+		LocExists->Bus->Loc = Loc_insert(CreateLocation(BusIDL, addressL,cityL,stateL,zip_codeL),LocExists->Bus->Loc);
 	}
 	return root;
 	
@@ -218,8 +267,7 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 {
 	FILE *fp;
 	char LineBuffer[170];
-	char *BusIDTemp, *Name, *Address,*City, *State, *Zip;
-	uint32_t BusID;
+	char *BusID, *Name, *Address,*City, *State;
 	struct YelpDataBST *Root = NULL;
 	char c;
 	int index = 0;
@@ -249,17 +297,16 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 		if (strlen(LineBuffer) > 0)
 		{
 			// Gets individual strings
-			BusIDTemp = strtok(LineBuffer,"\t");
+			BusID = strtok(LineBuffer,"\t");
 			Name = strtok(NULL,"\t");
 			Address = strtok(NULL,"\t");
 			City = strtok(NULL,"\t");
 			State = strtok(NULL,"\t");
-			Zip = strtok(NULL,"\t");
-			BusID = atoi(BusIDTemp);
+			//Zip = strtok(NULL,"\t");
 			
 			// Obtains file location by taking begining of line offset + string lengths + null character
 			BusIDL	 	= LineStart;
-			NameL 		= BusIDL + strlen(BusIDTemp) + 1;
+			NameL 		= BusIDL + strlen(BusID) + 1;
 			AddressL 	= NameL + strlen(Name) + 1;
 			CityL 		= AddressL + strlen(Address) + 1;
 			StateL 		= CityL + strlen(City) + 1;
@@ -299,7 +346,9 @@ char *OffsetToString (int Offset, const char *FilePath)
 		LineBuffer[index++] = c;
 	}
 	LineBuffer[index] = '\0'; // Terminates string
-		
+	
+	fclose(fp);
+	
 	return strdup(LineBuffer);
 }
 
@@ -341,14 +390,29 @@ char *OffsetToString (int Offset, const char *FilePath)
 
 void print_Bus(struct YelpDataBST * node)
 {
-	printf("----- Business Name: %s (%i locations) -----\n\n",node->Bus->name,node->Bus->num_locations);
+	char *Name = OffsetToString(node->Bus->name,BusPath);
+	printf("----- Business Name: %s (%i locations) -----\n\n",Name,node->Bus->num_locations);
+	free(Name);
 }
 
 void print_Loc(struct LocationID * node)
 {
-	printf("ID: %i, Address: %s, City: %s, State: %s, Zip: %s ",node->BusID, node->address,node->city,node->state,node->zip_code);
+	char *BusID = OffsetToString(node->BusID,BusPath);
+	char *State = OffsetToString(node->state,BusPath);
+	char *City = OffsetToString(node->city,BusPath);
+	char *Address = OffsetToString(node->address,BusPath);
+	char *Zip = OffsetToString(node->zip_code,BusPath);
+	
+	
+	printf("ID: %s, Address: %s, City: %s, State: %s, Zip: %s ",BusID, Address, City, State, Zip);
 	printf("Number of reviews: %i\n\n",node->num_reviews);
 	//printf("Stars: %i, Text: %s\n\n",node->Bus->locations->reviews->stars,node->Bus->locations->reviews->text);
+	
+	free(BusID);
+	free(State);
+	free(City);
+	free(Address);
+	free(Zip);
 }
 
 void print_LocTree(struct LocationID *node, int i)
