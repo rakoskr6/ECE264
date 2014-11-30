@@ -46,4 +46,9 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root);
 
 char *OffsetToString (int Offset, const char *FilePath);
 
-#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businesses.tsv"
+void DestroyBusinessID (BusinessID *node);
+void DestroyLocationID(LocationID *node);
+void DestroyReviewID(ReviewID *node);
+
+
+#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businessesShort.tsv"

@@ -20,7 +20,7 @@ int main(void)
 
 	
 	root = create_business_bst(BusPath, "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/reviews.tsv");
-	
+	destroy_business_bst(root);
 	//print_tree(root, 1);
 	
 	return EXIT_SUCCESS;

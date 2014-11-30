@@ -312,8 +312,8 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			StateL 		= CityL + strlen(City) + 1;
 			ZipL		= StateL + strlen(State) + 1;
 			
-			printf("%s, %s, %s\n",OffsetToString(BusIDL,businesses_path), OffsetToString(NameL,businesses_path), OffsetToString(AddressL,businesses_path));
-			printf("%s, %s, %s\n\n",OffsetToString(CityL,businesses_path), OffsetToString(StateL,businesses_path), OffsetToString(ZipL,businesses_path));
+			//printf("%s, %s, %s\n",OffsetToString(BusIDL,businesses_path), OffsetToString(NameL,businesses_path), OffsetToString(AddressL,businesses_path));
+			//printf("%s, %s, %s\n\n",OffsetToString(CityL,businesses_path), OffsetToString(StateL,businesses_path), OffsetToString(ZipL,businesses_path));
 			
 			Root = Insert(Root,NameL,BusIDL, AddressL, CityL, StateL, ZipL);		
 			
@@ -378,9 +378,73 @@ char *OffsetToString (int Offset, const char *FilePath)
  //*/
 
 
-//void destroy_business_bst(struct YelpDataBST* bst);
-///* Deallocate all memory allocated by the object returned
- //* by create_business_bst(..) and close the files. */
+void destroy_business_bst(struct YelpDataBST* bst)
+{
+/* Deallocate all memory allocated by the object returned
+ * by create_business_bst(..) and close the files. */
+ 
+ 	// Goes to bottom left, then bottom right, and frees all nodes
+	if ((bst != NULL) && (bst->left != NULL))
+	{
+		destroy_business_bst(bst->left);
+	}
+	if ((bst != NULL) && (bst->right != NULL))
+	{
+		destroy_business_bst(bst->right);
+	}
+	if (bst != NULL)
+	{
+		DestroyBusinessID(bst->Bus);
+		free(bst);
+	}
+}
+
+void DestroyBusinessID (BusinessID *node)
+{
+	DestroyLocationID(node->Loc);
+	free(node);
+}
+
+void DestroyLocationID(LocationID *node)
+{ 	// Goes to bottom left, then bottom right, and frees all nodes
+	if ((node != NULL) && (node->LocLeft != NULL))
+	{
+		DestroyLocationID(node->LocLeft);
+	}
+	if ((node != NULL) && (node->LocRight != NULL))
+	{
+		DestroyLocationID(node->LocRight);
+	}
+	if (node != NULL)
+	{
+		DestroyReviewID(node->Rev);
+		free(node);
+	}
+	
+}
+
+void DestroyReviewID(ReviewID *node)
+{ 	// Goes to bottom left, then bottom right, and frees all nodes
+	if ((node != NULL) && (node->RevLeft != NULL))
+	{
+		DestroyReviewID(node->RevLeft);
+	}
+	if ((node != NULL) && (node->RevRight != NULL))
+	{
+		DestroyReviewID(node->RevRight);
+	}
+	if (node != NULL)
+	{
+		free(node);
+	}
+	
+}
+
+
+
+
+
+
 
 //void destroy_business_result(struct Business* b);
 ///* Deallocate all heap memory tied to an object returned
