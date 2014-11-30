@@ -6,6 +6,113 @@
 #include "test.h"
 
 /******************* Functions *******************/
+struct YelpDataBST *create_business_bst(const char* businesses_path, const char* reviews_path) 
+{// Loads all businesss and reviews into YelpDataBST structure
+	FILE *fp;
+	char LineBuffer[170], c, *BusID, *Name, *Address,*City, *State;
+	struct YelpDataBST *Root = NULL;
+	int index = 0, LineStart = 0, BusIDL, NameL, AddressL, CityL, StateL, ZipL;
+
+	// Ensures file can open
+	if ((fp = fopen(businesses_path,"r")) == NULL)
+	{
+		printf("Unable to open file\n");
+		return NULL;
+	}
+	
+	// Reads file
+	while (!feof(fp))
+	{
+		LineStart = ftell(fp); // gets location at start of reading line
+		while (((c = fgetc(fp)) != '\n') && !feof(fp)) // Gets one line of the file
+		{
+			LineBuffer[index++] = c;
+		}
+		LineBuffer[index] = '\0'; // Terminates string
+		index = 0; // Resets index
+		
+		if (strlen(LineBuffer) > 0)
+		{
+			// Gets individual strings
+			BusID = strtok(LineBuffer,"\t");
+			Name = strtok(NULL,"\t");
+			Address = strtok(NULL,"\t");
+			City = strtok(NULL,"\t");
+			State = strtok(NULL,"\t");
+			//Zip = strtok(NULL,"\t");
+			
+			// Converts strings to offsets (line offset + string lengths + null character)
+			BusIDL	 	= LineStart;
+			NameL 		= BusIDL + strlen(BusID) + 1;
+			AddressL 	= NameL + strlen(Name) + 1;
+			CityL 		= AddressL + strlen(Address) + 1;
+			StateL 		= CityL + strlen(City) + 1;
+			ZipL		= StateL + strlen(State) + 1;
+			
+		/*	// Uncoments to print 
+			char *BusP, *NameP, *AddP, *CityP, *StateP, *ZipP;
+			printf("%s, %s, %s\n",BusP = OffsetToString(BusIDL,businesses_path), NameP = OffsetToString(NameL,businesses_path), AddP = OffsetToString(AddressL,businesses_path));
+			printf("%s, %s, %s\n\n",CityP = OffsetToString(CityL,businesses_path), StateP = OffsetToString(StateL,businesses_path), ZipP = OffsetToString(ZipL,businesses_path));
+			free(BusP);
+			free(NameP);
+			free(AddP);
+			free(CityP);
+			free(StateP);
+			free(ZipP);
+			*/
+			
+			// Adds offset data to YelpDataBST
+			Root = Insert(Root,NameL,BusIDL, AddressL, CityL, StateL, ZipL); // consider passing review info to add reviews in insert function
+		}
+	}
+	fclose(fp); // close Business file
+}
+
+
+struct YelpDataBST *Insert(struct YelpDataBST *root, int nameL, int BusIDL, int addressL, int cityL, int stateL, int zip_codeL)
+{	// Adds or creates new location from given data
+	char *BusName = OffsetToString(nameL,BusPath);
+	struct YelpDataBST *BusExists = BusExist(BusName,root);
+	free(BusName);
+
+	if (BusExists == NULL) // Create first business location
+	{
+		root = Bus_insert(CreateYelpNode(nameL,BusIDL,addressL,cityL,stateL,zip_codeL),root);
+	}
+	else // Add new business to location
+	{
+		BusExists->Bus->num_locations++;
+		BusExists->Bus->Loc = Loc_insert(CreateLocation(BusIDL, addressL,cityL,stateL,zip_codeL),BusExists->Bus->Loc);
+	}
+	return root;
+	
+}
+
+
+struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root) // checks if the business name already exists
+{	
+	if (root == NULL)
+	{
+		return NULL; // Never found, return NULL
+	}
+	char *NameComp = OffsetToString(root->Bus->name,BusPath);
+	int cmp = strcmp(NameComp,name);
+	if (cmp == 0) // found, return 1
+	{
+		free(NameComp);
+		return root;
+	}
+	else if (cmp < 0) // root before node, go right
+	{
+		free(NameComp);
+		return BusExist(name,root->right);
+	}
+	
+	free(NameComp);
+	return BusExist(name,root->left);
+}
+
+
 struct YelpDataBST * CreateYelpNode(int nameL, int BusIDL, int addressL, int cityL, int stateL, int zip_codeL)
 {	// Creates new Yelp Node (and Business and Location node), doesn't add reviews
 	
@@ -50,30 +157,8 @@ struct LocationID *CreateLocation(int BusIDL, int addressL, int cityL, int state
 	return NewNode;
 }
 
-struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root) // checks if the business name already exists
-{	
-	if (root == NULL)
-	{
-		return NULL; // Never found, return NULL
-	}
-	char *NameComp = OffsetToString(root->Bus->name,BusPath);
-	int cmp = strcmp(NameComp,name);
-	if (cmp == 0) // found, return 1
-	{
-		free(NameComp);
-		return root;
-	}
-	else if (cmp < 0) // root before node, go right
-	{
-		free(NameComp);
-		return BusExist(name,root->right);
-	}
-	
-	free(NameComp);
-	return BusExist(name,root->left);
-}
 
-struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *root) // inserts business node into YelpDataBST if business is new
+struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *root)
 {	// Insert business node sorting by business name (case insensitive)<-double check
 	
 	if (root == NULL)
@@ -114,7 +199,7 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 }
 
 
-struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts location node into YelpDataBST if business exists
+struct LocationID *Loc_insert(LocationID *node, LocationID *root)
 {	// Insert location node sorting by state->city->address (case insensitive)
 	char *State = OffsetToString(root->state,BusPath);
 	char *StateComp = OffsetToString(node->state,BusPath);
@@ -206,100 +291,9 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root) // inserts loc
 	
 }
 
-struct YelpDataBST *Insert(struct YelpDataBST *root, int nameL, int BusIDL, int addressL, int cityL, int stateL, int zip_codeL)
-{	// Determines if business already exists and appropriatly adds to location
-	char *BusName = OffsetToString(nameL,BusPath);
-	struct YelpDataBST *BusExists = BusExist(BusName,root);
-	free(BusName);
-
-	if (BusExists == NULL)
-	{
-		root = Bus_insert(CreateYelpNode(nameL,BusIDL,addressL,cityL,stateL,zip_codeL),root);
-	}
-	else
-	{
-		BusExists->Bus->num_locations++;
-		BusExists->Bus->Loc = Loc_insert(CreateLocation(BusIDL, addressL,cityL,stateL,zip_codeL),BusExists->Bus->Loc);
-	}
-	return root;
-	
-}
-
-struct YelpDataBST *create_business_bst(const char* businesses_path, const char* reviews_path) // loads information
-{
-	FILE *fp;
-	char LineBuffer[170];
-	char *BusID, *Name, *Address,*City, *State;
-	struct YelpDataBST *Root = NULL;
-	char c;
-	int index = 0;
-	
-	int LineStart = 0;
-	int BusIDL, NameL, AddressL, CityL, StateL, ZipL;
-	
-	int i = 0;
-
-	// Ensures file can open
-	if ((fp = fopen(businesses_path,"r")) == NULL)
-	{
-		printf("Unable to open file\n");
-		return NULL;
-	}
-	
-	while (!feof(fp))
-	{
-		i++;
-		LineStart = ftell(fp); // gets location at start of reading line
-		while (((c = fgetc(fp)) != '\n') && !feof(fp)) // Gets one line of the file
-		{
-			LineBuffer[index++] = c;
-		}
-		LineBuffer[index] = '\0'; // Terminates string
-		
-		if (strlen(LineBuffer) > 0)
-		{
-			// Gets individual strings
-			BusID = strtok(LineBuffer,"\t");
-			Name = strtok(NULL,"\t");
-			Address = strtok(NULL,"\t");
-			City = strtok(NULL,"\t");
-			State = strtok(NULL,"\t");
-			//Zip = strtok(NULL,"\t");
-			
-			// Obtains file location by taking begining of line offset + string lengths + null character
-			BusIDL	 	= LineStart;
-			NameL 		= BusIDL + strlen(BusID) + 1;
-			AddressL 	= NameL + strlen(Name) + 1;
-			CityL 		= AddressL + strlen(Address) + 1;
-			StateL 		= CityL + strlen(City) + 1;
-			ZipL		= StateL + strlen(State) + 1;
-			
-			/*
-			char *BusP, *NameP, *AddP, *CityP, *StateP, *ZipP;
-			printf("%s, %s, %s\n",BusP = OffsetToString(BusIDL,businesses_path), NameP = OffsetToString(NameL,businesses_path), AddP = OffsetToString(AddressL,businesses_path));
-			printf("%s, %s, %s\n\n",CityP = OffsetToString(CityL,businesses_path), StateP = OffsetToString(StateL,businesses_path), ZipP = OffsetToString(ZipL,businesses_path));
-			free(BusP);
-			free(NameP);
-			free(AddP);
-			free(CityP);
-			free(StateP);
-			free(ZipP);
-			*/
-			Root = Insert(Root,NameL,BusIDL, AddressL, CityL, StateL, ZipL);		
-			
-			index = 0; // Resets index
-		}
-	}
-	fclose(fp);
-	
-	// Now open review file and add to tree
-	
-	
-	return Root;
-}
 
 char *OffsetToString (int Offset, const char *FilePath)
-{
+{// Converts ofsets into actual string, must free outputed string 
 	FILE *fp;
 	char c, LineBuffer[170];
 	int index = 0;
@@ -353,10 +347,8 @@ char *OffsetToString (int Offset, const char *FilePath)
 
 
 void destroy_business_bst(struct YelpDataBST* bst)
-{
-/* Deallocate all memory allocated by the object returned
- * by create_business_bst(..) and close the files. */
- 
+{ // Frees all memory from YelpDataBST
+	
  	// Goes to bottom left, then bottom right, and frees all nodes
 	if ((bst != NULL) && (bst->left != NULL))
 	{
@@ -373,14 +365,17 @@ void destroy_business_bst(struct YelpDataBST* bst)
 	}
 }
 
+
 void DestroyBusinessID (BusinessID *node)
-{
+{//Removes Location before freeing itself
 	DestroyLocationID(node->Loc);
 	free(node);
 }
 
+
 void DestroyLocationID(LocationID *node)
-{ 	// Goes to bottom left, then bottom right, and frees all nodes
+{ // Removes review before removing itself
+	// Goes to bottom left, then bottom right, and frees all nodes
 	if ((node != NULL) && (node->LocLeft != NULL))
 	{
 		DestroyLocationID(node->LocLeft);
@@ -396,6 +391,7 @@ void DestroyLocationID(LocationID *node)
 	}
 	
 }
+
 
 void DestroyReviewID(ReviewID *node)
 { 	// Goes to bottom left, then bottom right, and frees all nodes
@@ -415,26 +411,21 @@ void DestroyReviewID(ReviewID *node)
 }
 
 
-
-
-
-
-
 //void destroy_business_result(struct Business* b);
 ///* Deallocate all heap memory tied to an object returned
  //* by get_business_reviews(..). */
 
 
-
 void print_Bus(struct YelpDataBST * node)
-{
+{// Prints business name
 	char *Name = OffsetToString(node->Bus->name,BusPath);
 	printf("----- Business Name: %s (%i locations) -----\n\n",Name,node->Bus->num_locations);
 	free(Name);
 }
 
+
 void print_Loc(struct LocationID * node)
-{
+{// Prints location information
 	char *BusID = OffsetToString(node->BusID,BusPath);
 	char *State = OffsetToString(node->state,BusPath);
 	char *City = OffsetToString(node->city,BusPath);
@@ -453,8 +444,9 @@ void print_Loc(struct LocationID * node)
 	free(Zip);
 }
 
+
 void print_LocTree(struct LocationID *node, int i)
-{
+{// Prints every location of business
 	if (node != NULL)
 		{
 			print_Loc(node);
@@ -471,8 +463,10 @@ void print_LocTree(struct LocationID *node, int i)
 			print_LocTree(node->LocRight, i);
 		}
 }
+
+
 void print_tree(struct YelpDataBST *tree, int i)
-{
+{// Prints every business and location
 	// Prints nodes to left until null, then goes back up to right
 	if (tree != NULL)
 	{
