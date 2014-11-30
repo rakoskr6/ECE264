@@ -51,4 +51,4 @@ void DestroyLocationID(LocationID *node);
 void DestroyReviewID(ReviewID *node);
 
 
-#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businessesShort.tsv"
+#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businesses.tsv"

@@ -274,6 +274,7 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			StateL 		= CityL + strlen(City) + 1;
 			ZipL		= StateL + strlen(State) + 1;
 			
+			/*
 			char *BusP, *NameP, *AddP, *CityP, *StateP, *ZipP;
 			printf("%s, %s, %s\n",BusP = OffsetToString(BusIDL,businesses_path), NameP = OffsetToString(NameL,businesses_path), AddP = OffsetToString(AddressL,businesses_path));
 			printf("%s, %s, %s\n\n",CityP = OffsetToString(CityL,businesses_path), StateP = OffsetToString(StateL,businesses_path), ZipP = OffsetToString(ZipL,businesses_path));
@@ -283,13 +284,17 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			free(CityP);
 			free(StateP);
 			free(ZipP);
-			
+			*/
 			Root = Insert(Root,NameL,BusIDL, AddressL, CityL, StateL, ZipL);		
 			
 			index = 0; // Resets index
 		}
 	}
 	fclose(fp);
+	
+	// Now open review file and add to tree
+	
+	
 	return Root;
 }
 
