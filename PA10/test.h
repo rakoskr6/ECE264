@@ -57,6 +57,10 @@ LocationID *FindBusLocAddress(char* address, LocationID *root);
 ReviewID *CreateReviewID(int starsL, int textL);
 ReviewID *AddReview(ReviewID *node, ReviewID *root);
 
+void print_RevTree(struct ReviewID *node, int i);
+void print_Rev(struct ReviewID * node);
+void print_Bus(struct YelpDataBST * node);
+void print_Loc(struct LocationID * node);
 
-#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businessesShort.tsv"
+#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businesses.tsv"
 #define RevPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/reviewsShort.tsv"
