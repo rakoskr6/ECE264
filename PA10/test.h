@@ -50,5 +50,10 @@ void DestroyBusinessID (BusinessID *node);
 void DestroyLocationID(LocationID *node);
 void DestroyReviewID(ReviewID *node);
 
+BusinessID *FindBusiness(char *name, YelpDataBST *root);
+LocationID *FindBusLocState(char *state, BusinessID *root);
+LocationID *FindBusLocCity(char *city, LocationID *root);
+LocationID *FindBusLocAddress(char* address, LocationID *root);
+struct YelpDataBST *AddReview(LocationID *location, int starsL, int textL)
 
 #define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businessesShort.tsv"
