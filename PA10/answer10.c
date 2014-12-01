@@ -6,14 +6,17 @@
 #include "test.h"
 
 /******************* Functions *******************/
+// note: change all BusPath, and RevPath global declarations to use function inputs
 struct YelpDataBST *create_business_bst(const char* businesses_path, const char* reviews_path) 
 {// Loads all businesss and reviews into YelpDataBST structure
 	FILE *fp, *fp2;
 	char LineBuffer[170], LineBuffer2[170], c, *BusID, *Name, *Address,*City, *State;
-	char *BusIDRev, *Stars, *Funny, *Useful, *Cool, *Text;
+	char *BusIDRev, *Stars, *Funny, *Useful, *Cool;
 	struct YelpDataBST *Root = NULL;
 	int index = 0, index2 = 0, LineStart = 0, LineStart2 = 0, BusIDL, NameL, AddressL, CityL, StateL, ZipL;
 	int BusIDRevL, StarsL, FunnyL, UsefulL, CoolL, TextL;
+	BusID = "0"; // initialize value to first business
+	BusIDRev = "0"; // initialize value to first business
 	// Ensures file can open
 	if (((fp = fopen(businesses_path,"r")) == NULL) || ((fp2 = fopen(reviews_path,"r")) == NULL))
 	{
@@ -99,8 +102,8 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 					}
 					else // else find business location and add reviews
 					{
-						LocationID *CurrentBus = FindBusLocAddress(Address,FindBusLocCity(City,FindBusLocState(State,FindBusiness(Name,Root)))); // finds given location
-						Root = AddReview(CurrentBus, StarsL, TextL)
+						LocationID *CurrentBus = FindBusLocAddress(Address,FindBusLocCity(City,FindBusLocState(State,(FindBusiness(Name,Root))->Loc))); // finds given location
+						CurrentBus->Rev = AddReview(CreateReviewID(StarsL,TextL),CurrentBus->Rev);
 					}
 				}
 			} 
@@ -334,39 +337,44 @@ struct LocationID *Loc_insert(LocationID *node, LocationID *root)
 }
 
 
-BusinessID *FindBusiness(char *name, YelpDataBST *root)
+BusinessID *FindBusiness(char *name, struct YelpDataBST *root)
 {// finds specified business node
 	if (root == NULL)
 		return NULL;
-	int cmp = strcmp(root->Bus->name,name);
+	char *BusComp = OffsetToString(root->Bus->name,BusPath);
+	int cmp = strcmp(BusComp,name);
+	free(BusComp);
 	if (cmp == 0) // found, return the root
 	{
 		return root->Bus;
 	}
 	else if (cmp < 0) // root before node, go right
 	{
-		return FindBusinessLoc(name, root->right);
+		return FindBusiness(name, root->right);
 	}
-
-	return FindBusinessLoc(name, root->left);
+	
+	return FindBusiness(name, root->left);
 }
 
 
-LocationID *FindBusLocState(char *state, BusinessID *root)
+LocationID *FindBusLocState(char *state, LocationID *root)
 {// finds specified location node by state
 	if (root == NULL)
 		return NULL;
-	int cmp = strcmp(root->Loc->state,state);
+		
+	char *StateComp = OffsetToString(root->state,BusPath);
+	int cmp = strcmp(StateComp,state);
+	free(StateComp);
 	if (cmp == 0) // found, return the root
 	{
-		return root->Loc;
+		return root;
 	}
 	else if (cmp < 0) // root before node, go right
 	{
-		return FindBusLocState(state, root->right);
+		return FindBusLocState(state, root->LocRight);
 	}
 
-	return FindBusLocState(state, root->left);
+	return FindBusLocState(state, root->LocLeft);
 }
 
 
@@ -374,17 +382,20 @@ LocationID *FindBusLocCity(char *city, LocationID *root)
 {// finds specified location node by city
 	if (root == NULL)
 		return NULL;
-	int cmp = strcmp(root->city,city);
+		
+	char *CityComp = OffsetToString(root->city,BusPath);
+	int cmp = strcmp(CityComp,city);
+	free(CityComp);
 	if (cmp == 0) // found, return the root
 	{
 		return root;
 	}
 	else if (cmp < 0) // root before node, go right
 	{
-		return FindBusLocState(city, root->right);
+		return FindBusLocState(city, root->LocRight);
 	}
 
-	return FindBusLocState(city, root->left);
+	return FindBusLocState(city, root->LocLeft);
 }
 
 
@@ -392,21 +403,23 @@ LocationID *FindBusLocAddress(char* address, LocationID *root)
 {// finds specified location node by address
 	if (root == NULL)
 		return NULL;
-	int cmp = strcmp(root->address,address);
+	char *AddComp = OffsetToString(root->address,BusPath);
+	int cmp = strcmp(AddComp,address);
+	free(AddComp);
 	if (cmp == 0) // found, return the root
 	{
 		return root;
 	}
 	else if (cmp < 0) // root before node, go right
 	{
-		return FindBusLocState(address, root->right);
+		return FindBusLocState(address, root->LocRight);
 	}
 
-	return FindBusLocState(address, root->left);
+	return FindBusLocState(address, root->LocLeft);
 }
 
 
-ReviewID CreateReviewID(int starsL, int textL)
+ReviewID *CreateReviewID(int starsL, int textL)
 {// Creates new Review Node
 		
 	// Allocates size for nodes and adds data
@@ -424,41 +437,67 @@ ReviewID CreateReviewID(int starsL, int textL)
 }
 
 
-LocationID *AddReview(LocationID *node, LocationID *root)
+ReviewID *AddReview(ReviewID *node, ReviewID *root)
 {
 	if (root == NULL)
 	{
 		return node;
 	}
 	
-	char *StarsComp = OffsetToString(node->Bus->name,BusPath);
-	char *Stars = OffsetToString(root->Bus->name,BusPath);
+	char *StarsComp = OffsetToString(node->stars,RevPath);
+	char *Stars = OffsetToString(root->stars,RevPath);
+	char *TextComp = OffsetToString(node->text,RevPath);
+	char *Text = OffsetToString(root->text,RevPath);
 	
-	if(strcasecmp(Name, NameComp) < 0)  // root before node, right side
+	if(strcasecmp(Stars, StarsComp) < 0)  // root before node, right side
 	{
-		if (root->right == NULL)
+		if (root->RevRight == NULL)
 		{
-			root->right = node;
+			root->RevRight = node;
 		}
 		else
 		{
-			Bus_insert(node,root->right);
+			AddReview(node,root->RevRight);
 		}
 	}
-	else if(strcmp(Name, NameComp) > 0) //root after node, left side
+	else if(strcmp(Stars, StarsComp) > 0) //root after node, left side
 	{
-		if (root->left == NULL)
+		if (root->RevLeft == NULL)
 		{
-			root->left = node;
+			root->RevLeft = node;
 		}
 		else
 		{
-			Bus_insert(node,root->left);
+			AddReview(node,root->RevLeft);
+		}
+	}
+	else if (strcmp(Text, TextComp) < 0) // root before node, right side
+	{
+		if (root->RevRight == NULL)
+		{
+			root->RevRight = node;
+		}
+		else
+		{
+			AddReview(node,root->RevRight);
+		}
+	}
+	else
+	{
+		if (root->RevLeft == NULL)
+		{
+			root->RevLeft = node;
+		}
+		else
+		{
+			AddReview(node,root->RevLeft);
 		}
 	}
 	
-	free(NameComp);
-	free(Name);
+	free(StarsComp);
+	free(Stars);
+	free(TextComp);
+	free(Text);
 			
 	return root;
 }
