@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+void InsertNode(HuffNode *First, HuffNode *Second);
 
 HuffNode * HuffNode_create(int value)
 {
@@ -63,6 +63,7 @@ int Stack_isEmpty(Stack * stack)
 	}
 }
 
+
 HuffNode * Stack_popFront(Stack * stack)
 {
 	HuffNode *node = stack->tree;
@@ -82,4 +83,38 @@ void Stack_pushFront(Stack * stack, HuffNode * tree)
 }
 
 
+void Stack_popPopCombinePush(Stack * stack)
+{
+	HuffNode *FirstNode = Stack_popFront(stack);
+	HuffNode *SecondNode = Stack_popFront(stack);
+	InsertNode(FirstNode, SecondNode); // Combine nodes
+	Stack_pushFront(FirstNode); // push first node (now already combined)
+	
+	
+}
 
+void InsertNode(HuffNode *First, HuffNode *Second)
+{
+	if(SecondNode->value <= FirstNode->Value) // Less than or equal, go left 
+	{
+		if (FirstNode->left == NULL)
+		{
+			FirstNode->left = SecondNode;
+		}
+		else
+		{
+			InsertNode(First->left, Second);
+		}
+	}
+	else //greater than, right side
+	{
+		if (FirstNode->right == NULL)
+		{
+			FirstNode->right = SecondNode;
+		}
+		else
+		{
+			InsertNode(First->right, Second);
+		}
+	}
+}
