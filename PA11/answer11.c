@@ -126,6 +126,7 @@ HuffNode * HuffTree_readTextHeader(FILE * fp)
 	char Text[1000], *c;
 	int index = 0, Max = 0;
 	HuffNode *node;
+	Stack *stack = Stack_create();
 	
 	while(feof(fp) == 0)
 	{
@@ -139,13 +140,16 @@ HuffNode * HuffTree_readTextHeader(FILE * fp)
 		
 		if (strcmp(c,'1') == 0) // then push
 		{
-			
+			Stack_pushFront(stack, node);
 		}
 		else if (strmcp(c,'0') == 0) // then pop-pop-combine-push
 		{
-			
+			Stack_popPopCombinePush(stack)
 		}
 		else if (strmcp(c,'\n') != 0) // if not \n then add char
+		{
+			stack->head->next * HuffNode_create(int value)
+		}
 	}
 	
 	
