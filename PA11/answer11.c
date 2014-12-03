@@ -18,11 +18,11 @@ void HuffNode_destroy(HuffNode * tree)
 {// Goes to bottom left, then bottom right, and frees all nodes
 	if ((tree != NULL) && (tree->left != NULL))
 	{
-		destroy_tree(tree->left);
+		HuffNode_destroy(tree->left);
 	}
-	if ((tree != NULL) && (root->tree != NULL))
+	if ((tree != NULL) && (tree->right != NULL))
 	{
-		destroy_tree(tree->right);
+		HuffNode_destroy(tree->right);
 	}
 	if (tree != NULL)
 	{
@@ -41,19 +41,20 @@ Stack * Stack_create()
 
 void Stack_destroy(Stack * stack)
 {
-	while (stack != NULL)
+	while (stack->head != NULL)
 	{
-		Stack *ptr = stack->next;
-		HuffNode_destroy(stack->tree);
-		free(stack);
-		stack = ptr;
+		StackNode *ptr = stack->head->next;
+		HuffNode_destroy(stack->head->tree);
+		free(stack->head);
+		stack->head = ptr;
 	}
+	free(stack);
 }
 
 
 int Stack_isEmpty(Stack * stack)
 {
-	if (stack == NULL)
+	if ((stack == NULL) || (stack->head == NULL))
 	{
 		return 1; // stack's empty, return true
 	}
@@ -66,20 +67,20 @@ int Stack_isEmpty(Stack * stack)
 
 HuffNode * Stack_popFront(Stack * stack)
 {
-	HuffNode *node = stack->tree;
-	Stack *ptr = stack->next;
-	free(stack);
-	stack = ptr; // makes stack point to next node	
+	HuffNode *node = stack->head->tree;
+	StackNode *ptr = stack->head->next;
+	free(stack->head);
+	stack->head = ptr; // makes stack point to next node	
 	return node;
 }
 
 
 void Stack_pushFront(Stack * stack, HuffNode * tree)
 {
-	Stack *node = Stack_create();
+	StackNode *node = malloc(sizeof(StackNode));
 	node->tree = tree;
-	node->next = stack; // new node points to previous first node
-	stack = node; // stack now points to new node
+	node->next = stack->head; // new node points to previous first node
+	stack->head = node; // stack now points to new node
 }
 
 
@@ -88,14 +89,14 @@ void Stack_popPopCombinePush(Stack * stack)
 	HuffNode *FirstNode = Stack_popFront(stack);
 	HuffNode *SecondNode = Stack_popFront(stack);
 	InsertNode(FirstNode, SecondNode); // Combine nodes
-	Stack_pushFront(FirstNode); // push first node (now already combined)
+	Stack_pushFront(stack, FirstNode); // push first node (now already combined)
 	
 	
 }
 
-void InsertNode(HuffNode *First, HuffNode *Second)
+void InsertNode(HuffNode *FirstNode, HuffNode *SecondNode)
 {
-	if(SecondNode->value <= FirstNode->Value) // Less than or equal, go left 
+	if(SecondNode->value <= FirstNode->value) // Less than or equal, go left 
 	{
 		if (FirstNode->left == NULL)
 		{
@@ -103,7 +104,7 @@ void InsertNode(HuffNode *First, HuffNode *Second)
 		}
 		else
 		{
-			InsertNode(First->left, Second);
+			InsertNode(FirstNode->left, SecondNode);
 		}
 	}
 	else //greater than, right side
@@ -114,7 +115,8 @@ void InsertNode(HuffNode *First, HuffNode *Second)
 		}
 		else
 		{
-			InsertNode(First->right, Second);
+			InsertNode(FirstNode->right, SecondNode);
 		}
 	}
 }
+
