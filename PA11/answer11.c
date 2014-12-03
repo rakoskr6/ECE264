@@ -120,3 +120,39 @@ void InsertNode(HuffNode *FirstNode, HuffNode *SecondNode)
 	}
 }
 
+
+HuffNode * HuffTree_readTextHeader(FILE * fp)
+{
+	char Text[1000], *c;
+	int index = 0, Max = 0;
+	HuffNode *node;
+	
+	while(feof(fp) == 0)
+	{
+		Text[index++] = fgetc(fp);
+	}
+	Max = index - 1;
+	
+	for (index = 0; index <= Max; index++)
+	{
+		c = Text[index];
+		
+		if (strcmp(c,'1') == 0) // then push
+		{
+			
+		}
+		else if (strmcp(c,'0') == 0) // then pop-pop-combine-push
+		{
+			
+		}
+		else if (strmcp(c,'\n') != 0) // if not \n then add char
+	}
+	
+	
+	return node;
+}
+HuffNode * HuffTree_readBinaryHeader(FILE * fp)
+{
+	HuffNode *rand;
+	return rand;
+}
