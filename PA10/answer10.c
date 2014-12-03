@@ -69,7 +69,7 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			Root = Insert(Root,NameL,BusIDL, AddressL, CityL, StateL, ZipL);
 		
 			// Get review data from seperate file	CHANGE 5 TO 0 TO GO THROUGH LOOP
-			while (strcmp(BusIDRev,BusID) == 0) // add reviews when the business ID's are the same
+			while (strcmp(BusIDRev,BusID) == 5) // add reviews when the business ID's are the same
 			{
 				LineStart2 = ftell(fp2); // gets location at start of reading line
 				while (((c = fgetc(fp2)) != '\n') && !feof(fp2)) // Gets one line of the file
@@ -236,7 +236,7 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 	{
 		if (root->right == NULL)
 		{
-			printf("%s r\n",NameComp); // temp debug
+			//printf("%s r\n",NameComp); // temp debug
 			root->right = node;
 		}
 		else
@@ -249,7 +249,7 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 	{
 		if (root->left == NULL)
 		{
-			printf("%s l\n",NameComp); // temp debug
+			//printf("%s l\n",NameComp); // temp debug
 			root->left = node;
 		}
 		else
