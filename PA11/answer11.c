@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
+
 //void InsertNode(HuffNode *First, HuffNode *Second);
 
 HuffNode * HuffNode_create(int value)
@@ -153,8 +155,6 @@ HuffNode * HuffTree_readTextHeader(FILE * fp)
 	
 	for (index = 0; index <= Max; index++)
 	{
-		//if ((Stack_isEmpty(stack) != 1) || (index == 0))
-		//{
 			c = Text[index];
 			
 			if (c == '1') // then push
@@ -177,14 +177,81 @@ HuffNode * HuffTree_readTextHeader(FILE * fp)
 					Stack_popPopCombinePush(stack);
 				}
 			}
-		//}
 	}
-	
 	
 	return NULL;
 }
+
+
+uint8_t GetBit(uint8_t * byte, int *Offset, int *index)
+{
+	uint8_t temp = (byte[*index]>>*Offset)&0x01;
+	*Offset = *Offset - 1;
+	if (*Offset < 0)
+	{
+		*Offset = *Offset + 8;
+		*index = *index + 1;
+	}
+	return temp;
+}
+
+
+uint8_t GetByte(uint8_t * first, int *Offset, int *index)
+{
+	uint8_t temp = (first[*index]<<(7-*Offset)) | (first[*index+1]>>((*Offset)+1));
+		*index = *index + 1;
+	if (*Offset < 0)
+	{
+		*Offset = *Offset + 8;
+		*index = *index + 1;
+	}
+	
+	return temp;
+}
+
+
 HuffNode * HuffTree_readBinaryHeader(FILE * fp)
 {
-	HuffNode *rand;
-	return rand;
+	uint8_t Text[1000], c;
+	int index = 0;//, Max = 0;
+	HuffNode *node;
+	Stack *stack = Stack_create();
+	int Offset = 7;
+	uint8_t Bit;
+	
+	while(feof(fp) == 0)
+	{
+		Text[index++] = fgetc(fp);
+	}
+
+	index = 0;
+	
+	while (1)
+	{
+		Bit = GetBit(Text ,&Offset, &index);
+		
+		if (Bit == 1) // then push
+		{
+			c = GetByte(Text,&Offset,&index);
+			node = HuffNode_create(c);
+			Stack_pushFront(stack, node);
+		}
+		else  // then pop-pop-combine-push
+		{
+			if (Stack_isEmpty1(stack) == 1) // stack is empty
+			{
+				node = Stack_popFront(stack);
+				Stack_destroy(stack);
+				fseek(fp,(Offset < 7) ? index+1 : index,SEEK_SET);
+				return node;
+			}
+			else
+			{
+				Stack_popPopCombinePush(stack);
+			}
+		}
+		
+	}
+	
+	return NULL;
 }
