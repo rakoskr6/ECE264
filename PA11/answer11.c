@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-void InsertNode(HuffNode *First, HuffNode *Second);
+//void InsertNode(HuffNode *First, HuffNode *Second);
 
 HuffNode * HuffNode_create(int value)
 {
@@ -34,6 +34,7 @@ void HuffNode_destroy(HuffNode * tree)
 Stack * Stack_create()
 {
 	Stack *node = malloc(sizeof(Stack));
+	node->head = NULL;
 	return node;
 	
 }
@@ -65,6 +66,18 @@ int Stack_isEmpty(Stack * stack)
 }
 
 
+int Stack_isEmpty1(Stack * stack)
+{
+	if ((stack->head->next == NULL))
+	{
+		return 1; // stack's empty, return true
+	}
+	else
+	{
+		return 0; // else it's not empty, return false
+	}
+}ANSWER11_H
+
 HuffNode * Stack_popFront(Stack * stack)
 {
 	HuffNode *node = stack->head->tree;
@@ -88,12 +101,16 @@ void Stack_popPopCombinePush(Stack * stack)
 {
 	HuffNode *FirstNode = Stack_popFront(stack);
 	HuffNode *SecondNode = Stack_popFront(stack);
-	InsertNode(FirstNode, SecondNode); // Combine nodes
-	Stack_pushFront(stack, FirstNode); // push first node (now already combined)
+	HuffNode *Top = HuffNode_create(0);
+	Top->left = SecondNode;
+	Top->right = FirstNode;
+
+	Stack_pushFront(stack, Top);
 	
 	
 }
 
+/*
 void InsertNode(HuffNode *FirstNode, HuffNode *SecondNode)
 {
 	if(SecondNode->value <= FirstNode->value) // Less than or equal, go left 
@@ -119,11 +136,11 @@ void InsertNode(HuffNode *FirstNode, HuffNode *SecondNode)
 		}
 	}
 }
-
+*/
 
 HuffNode * HuffTree_readTextHeader(FILE * fp)
 {
-	char Text[1000], *c;
+	char Text[1000], c;
 	int index = 0, Max = 0;
 	HuffNode *node;
 	Stack *stack = Stack_create();
@@ -136,24 +153,35 @@ HuffNode * HuffTree_readTextHeader(FILE * fp)
 	
 	for (index = 0; index <= Max; index++)
 	{
-		c = Text[index];
-		
-		if (strcmp(c,'1') == 0) // then push
-		{
-			Stack_pushFront(stack, node);
-		}
-		else if (strmcp(c,'0') == 0) // then pop-pop-combine-push
-		{
-			Stack_popPopCombinePush(stack)
-		}
-		else if (strmcp(c,'\n') != 0) // if not \n then add char
-		{
-			stack->head->next * HuffNode_create(int value)
-		}
+		//if ((Stack_isEmpty(stack) != 1) || (index == 0))
+		//{
+			c = Text[index];
+			
+			if (c == '1') // then push
+			{
+				index++;
+				node = HuffNode_create(Text[index]);
+				Stack_pushFront(stack, node);
+			}
+			else if (c == '0') // then pop-pop-combine-push
+			{
+				if (Stack_isEmpty1(stack) == 1) // stack is empty
+				{
+					node = Stack_popFront(stack);
+					Stack_destroy(stack);
+					fseek(fp,index,SEEK_SET);
+					return node;
+				}
+				else
+				{
+					Stack_popPopCombinePush(stack);
+				}
+			}
+		//}
 	}
 	
 	
-	return node;
+	return NULL;
 }
 HuffNode * HuffTree_readBinaryHeader(FILE * fp)
 {
