@@ -19,7 +19,7 @@ typedef struct LocationID {
 }LocationID;
 
 typedef struct BusinessID {
-	uint32_t name;
+	char *name;
 	uint32_t num_locations;
 	LocationID *Loc; 
 }BusinessID;
@@ -31,7 +31,7 @@ struct YelpDataBST{
 };
 
 
-struct YelpDataBST * CreateYelpNode(uint32_t nameL, uint32_t BusIDL, uint32_t addressL, uint32_t cityL, uint32_t stateL, uint32_t zip_codeL);
+struct YelpDataBST * CreateYelpNode(char *name, uint32_t BusIDL, uint32_t addressL, uint32_t cityL, uint32_t stateL, uint32_t zip_codeL);
 void print_node(struct YelpDataBST * node);
 void print_tree(struct YelpDataBST *tree, int i);
 struct LocationID *CreateLocation(uint32_t BusIDL, uint32_t addressL, uint32_t cityL, uint32_t stateL, uint32_t zip_codeL);
@@ -40,7 +40,7 @@ struct LocationID *CreateLocation(uint32_t BusIDL, uint32_t addressL, uint32_t c
 struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root);
 void print_LocTree(struct LocationID *node, int i);
 
-struct YelpDataBST *Insert(struct YelpDataBST *root, uint32_t nameL, uint32_t BusIDL, uint32_t addressL, uint32_t cityL, uint32_t stateL, uint32_t zip_codeL);
+struct YelpDataBST *Insert(struct YelpDataBST *root, char *name, uint32_t BusIDL, uint32_t addressL, uint32_t cityL, uint32_t stateL, uint32_t zip_codeL);
 struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *root);
 struct LocationID *Loc_insert(LocationID *node, LocationID *root);
 
@@ -62,5 +62,5 @@ void print_Rev(struct ReviewID * node);
 void print_Bus(struct YelpDataBST * node);
 void print_Loc(struct LocationID * node);
 
-#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businesses.tsv"
+#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businessesShort.tsv"
 #define RevPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/reviews.tsv"
