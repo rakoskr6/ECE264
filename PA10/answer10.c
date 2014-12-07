@@ -63,11 +63,6 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			free(StateP);
 			free(ZipP);
 			
-			int TempCompare = strcmp(Name,"Lovejoys Kansas City Bar-B-Q");
-			if (TempCompare == 0)
-			{
-				printf("Here\n");
-			}
 	
 			// Adds offset data to YelpDataBST
 			Root = Insert(Root,strdup(Name),BusIDL, AddressL, CityL, StateL, ZipL);
@@ -75,7 +70,7 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			
 			
 			// Get review data from seperate file	CHANGE 5 TO 0 TO GO THROUGH LOOP
-			while (strcmp(BusIDRev,BusID) == 5) // add reviews when the business ID's are the same
+			while (strcasecmp(BusIDRev,BusID) == 0) // add reviews when the business ID's are the same
 			{
 				LineStart2 = ftell(fp2); // gets location at start of reading line
 				while (((c = fgetc(fp2)) != '\n') && !feof(fp2)) // Gets one line of the file
@@ -102,22 +97,18 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 					CoolL 		= UsefulL + strlen(Useful) + 1;
 					TextL		= CoolL + strlen(Cool) + 1;
 					
-					if (strcmp(BusIDRev,BusID) != 0)// Check if BusIDs don't match, if so move pointer to beginning of the line
+					if (strcasecmp(BusIDRev,BusID) != 0)// Check if BusIDs don't match, if so move pointer to beginning of the line
 					{
 						fseek(fp2,LineStart2,SEEK_SET);
 					}
 					else // else find business location and add reviews
 					{
 						BusinessID *TempBusID = FindBusiness(Name,Root);
-						if (TempBusID == NULL)
-						{
-							printf("Error when BusID is %s, BusIDL is %i, BusIDRev is %s, name is %s\n",BusID,BusIDL,BusIDRev,Name);
-							return NULL;
-						}
-						LocationID *TempLocID1 = TempBusID->Loc;
-						LocationID *TempLocID2 = FindBusLocState(State,TempLocID1);
-						LocationID *TempLocID3 = FindBusLocCity(City,TempLocID2);
-						LocationID *CurrentBus = FindBusLocAddress(Address,TempLocID3); // finds given location
+						//if (BusIDRevL == 11129007)
+						//{
+							//printf("Weird\n");
+						//}
+						LocationID *CurrentBus = FindLocation(TempBusID->Loc, State, City, Address);
 						CurrentBus->num_reviews++;
 						CurrentBus->Rev = AddReview(CreateReviewID(StarsL,TextL),CurrentBus->Rev);
 					}
@@ -131,6 +122,32 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 }
 
 
+LocationID *FindLocation(LocationID *TempLocID1, char *State, char *City, char *Address)
+{//Finds location of business for inserting reviews
+	
+	LocationID *TempLocID2 = FindBusLocState(State,TempLocID1);
+	if (TempLocID2 == NULL)
+	{
+		return(FindLocation(TempLocID1->LocLeft,State,City,Address));
+	}
+	
+	LocationID *TempLocID3 = FindBusLocCity(City,TempLocID2);
+	
+	if (TempLocID3 == NULL)
+	{
+		return(FindLocation(TempLocID2->LocLeft,State,City,Address));
+	}
+	
+	LocationID *CurrentBus = FindBusLocAddress(Address,TempLocID3);
+		
+	if (CurrentBus == NULL)
+	{
+		return(CurrentBus = FindLocation(TempLocID3->LocLeft,State,City,Address));
+	}
+	return CurrentBus;	
+}
+
+
 struct YelpDataBST *Insert(struct YelpDataBST *root, char *name, uint32_t BusIDL, uint32_t addressL, uint32_t cityL, uint32_t stateL, uint32_t zip_codeL)
 {	// Adds or creates new location from given data
 	struct YelpDataBST *BusExists = BusExist(name,root);
@@ -141,6 +158,7 @@ struct YelpDataBST *Insert(struct YelpDataBST *root, char *name, uint32_t BusIDL
 	}
 	else // Add new business to location
 	{
+		free(name); // no longer need name since business already exists
 		BusExists->Bus->num_locations++;
 		BusExists->Bus->Loc = Loc_insert(CreateLocation(BusIDL, addressL,cityL,stateL,zip_codeL),BusExists->Bus->Loc);
 	}
@@ -202,12 +220,7 @@ struct LocationID *CreateLocation(uint32_t BusIDL, uint32_t addressL, uint32_t c
 	NewNode->LocLeft = NULL;
 	NewNode->LocRight = NULL;
 	NewNode->Rev = NULL;
-	
-	// Location Info
-	//if (BusIDL == 0)
-	//{
-		//printf("Error! BusIDL is 0\n\n\n");
-	//}
+
 	NewNode->BusID = BusIDL;
 	NewNode->address = addressL;
 	NewNode->city = cityL;
@@ -233,7 +246,7 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 
 		
 		
-	if(strcasecmp(Name, NameComp) < 0)  // root before node, right side
+	if(strcmp(Name, NameComp) < 0)  // root before node, right side
 	{
 		if (root->right == NULL)
 		{
@@ -246,7 +259,7 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 			Bus_insert(node,root->right);
 		}
 	}
-	else if(strcasecmp(Name, NameComp) > 0) //root after node, left side
+	else if(strcmp(Name, NameComp) > 0) //root after node, left side
 	{
 		if (root->left == NULL)
 		{
@@ -384,7 +397,7 @@ LocationID *FindBusLocState(char *state, LocationID *root)
 		return NULL;
 		
 	char *StateComp = OffsetToString(root->state,BusPath);
-	int cmp = strcmp(StateComp,state);
+	int cmp = strcasecmp(StateComp,state);
 	free(StateComp);
 	if (cmp == 0) // found, return the root
 	{
@@ -405,7 +418,7 @@ LocationID *FindBusLocCity(char *city, LocationID *root)
 		return NULL;
 		
 	char *CityComp = OffsetToString(root->city,BusPath);
-	int cmp = strcmp(CityComp,city);
+	int cmp = strcasecmp(CityComp,city);
 	free(CityComp);
 	if (cmp == 0) // found, return the root
 	{
@@ -413,10 +426,10 @@ LocationID *FindBusLocCity(char *city, LocationID *root)
 	}
 	else if (cmp < 0) // root before node, go right
 	{
-		return FindBusLocState(city, root->LocRight);
+		return FindBusLocCity(city, root->LocRight);
 	}
 
-	return FindBusLocState(city, root->LocLeft);
+	return FindBusLocCity(city, root->LocLeft);
 }
 
 
@@ -425,7 +438,7 @@ LocationID *FindBusLocAddress(char* address, LocationID *root)
 	if (root == NULL)
 		return NULL;
 	char *AddComp = OffsetToString(root->address,BusPath);
-	int cmp = strcmp(AddComp,address);
+	int cmp = strcasecmp(AddComp,address);
 	free(AddComp);
 	if (cmp == 0) // found, return the root
 	{
@@ -433,10 +446,10 @@ LocationID *FindBusLocAddress(char* address, LocationID *root)
 	}
 	else if (cmp < 0) // root before node, go right
 	{
-		return FindBusLocState(address, root->LocRight);
+		return FindBusLocAddress(address, root->LocRight);
 	}
 
-	return FindBusLocState(address, root->LocLeft);
+	return FindBusLocAddress(address, root->LocLeft);
 }
 
 
@@ -481,7 +494,7 @@ ReviewID *AddReview(ReviewID *node, ReviewID *root)
 			AddReview(node,root->RevRight);
 		}
 	}
-	else if(strcmp(Stars, StarsComp) > 0) //root after node, left side
+	else if(strcasecmp(Stars, StarsComp) > 0) //root after node, left side
 	{
 		if (root->RevLeft == NULL)
 		{
@@ -492,7 +505,7 @@ ReviewID *AddReview(ReviewID *node, ReviewID *root)
 			AddReview(node,root->RevLeft);
 		}
 	}
-	else if (strcmp(Text, TextComp) < 0) // root before node, right side
+	else if (strcasecmp(Text, TextComp) < 0) // root before node, right side
 	{
 		if (root->RevRight == NULL)
 		{
@@ -580,20 +593,17 @@ char *OffsetToString (int Offset, const char *FilePath)
 
 void destroy_business_bst(struct YelpDataBST* bst)
 { // Frees all memory from YelpDataBST
-	
+	if (bst == NULL)
+	{
+		return;
+	}
  	// Goes to bottom left, then bottom right, and frees all nodes
-	if ((bst != NULL) && (bst->left != NULL))
-	{
-		destroy_business_bst(bst->left);
-	}
-	if ((bst != NULL) && (bst->right != NULL))
-	{
-		destroy_business_bst(bst->right);
-	}
-	if (bst != NULL)
-	{
-		DestroyBusinessID(bst->Bus);	
-	}
+	destroy_business_bst(bst->left);
+	
+	destroy_business_bst(bst->right);
+
+	DestroyBusinessID(bst->Bus);	
+
 	free(bst);
 }
 

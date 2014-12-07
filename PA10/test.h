@@ -62,5 +62,7 @@ void print_Rev(struct ReviewID * node);
 void print_Bus(struct YelpDataBST * node);
 void print_Loc(struct LocationID * node);
 
-#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businessesShort.tsv"
+LocationID *FindLocation(LocationID *TempLocID1, char *State, char *City, char *Address);
+
+#define BusPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/businesses.tsv"
 #define RevPath "/home/kyle/Documents/ECE264/solutions/ECE264/PA10/reviews.tsv"
