@@ -15,8 +15,8 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 
 	int LocNumber = 0;
 	
-	//char *BusIDRev = "0", *Stars, *Funny, *Useful, *Cool, LineBuffer2[6000];
-	//int BusIDRevL, StarsL, FunnyL, UsefulL, CoolL, TextL, index2 = 0, LineStart2 = 0;
+	char *BusIDRev = "0", *Stars, *Funny, *Useful, *Cool, LineBuffer2[6000];
+	int BusIDRevL, StarsL, FunnyL, UsefulL, CoolL, TextL, index2 = 0, LineStart2 = 0, index3 = 0;
 
 	// Ensures file can open
 	if (((fp = fopen(businesses_path,"r")) == NULL) || ((fp2 = fopen(reviews_path,"r")) == NULL))
@@ -55,10 +55,51 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 			ZipL		= StateL + strlen(State) + 1;
 			
 			Root = Insert(Root, BusIDL, strdup(Name), AddressL, CityL, StateL, ZipL, &LocNumber);
-			
+			index3 = 0;
+			// Get review data from seperate file	CHANGE 5 TO 0 TO GO THROUGH LOOP
+			while (strcasecmp(BusIDRev,BusID) == 0) // add reviews when the business ID's are the same
+			{
+				LineStart2 = ftell(fp2); // gets location at start of reading line
+				while (((c = fgetc(fp2)) != '\n') && !feof(fp2)) // Gets one line of the file
+				{
+					LineBuffer2[index2++] = c;
+				}
+				LineBuffer2[index2] = '\0'; // Terminates string
+				index2 = 0; // Resets index
+				if (strlen(LineBuffer2) > 0) // ensures line read isn't blank
+				{
+					// Gets individual strings
+					BusIDRev = strtok(LineBuffer2,"\t");
+					Stars = strtok(NULL,"\t");
+					Funny = strtok(NULL,"\t");
+					Useful = strtok(NULL,"\t");
+					Cool = strtok(NULL,"\t");
+					//Text = strtok(NULL,"\t");
+	
+					// Converts strings to offsets (line offset + string lengths + null character)
+					BusIDRevL 	= LineStart2;
+					StarsL 		= BusIDRevL + strlen(BusIDRev) + 1;
+					FunnyL	 	= StarsL + strlen(Stars) + 1;
+					UsefulL		= FunnyL + strlen(Funny) + 1;
+					CoolL 		= UsefulL + strlen(Useful) + 1;
+					TextL		= CoolL + strlen(Cool) + 1;
+					
+					if (strcasecmp(BusIDRev,BusID) != 0)// Check if BusIDs don't match, if so move pointer to beginning of the line
+					{
+						fseek(fp2,LineStart2,SEEK_SET);
+					}
+					else // else find business location and add reviews
+					{
+						struct YelpDataBST *TempBusID = FindBusiness(Name,Root);
+						TempBusID->Locations[LocNumber]->num_reviews++;
+						TempBusID->Locations[LocNumber]->Reviews[index3++] = CreateReviewInfo(TextL,StarsL);
+					}
+				}
+			} 
 		}
 	}
-	
+	fclose(fp);
+	fclose(fp2);
 	return Root;
 }
 
@@ -97,7 +138,7 @@ struct YelpDataBST *BusExist(char *name, struct YelpDataBST *root)
 		return NULL; // Never found, return NULL
 	}
 	char *NameComp = root->name;
-	int cmp = strcmp(NameComp,name);
+	int cmp = strcasecmp(NameComp,name);
 	if (cmp == 0) // found, return 1
 	{
 		return root;
@@ -168,7 +209,7 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 	char *NameComp = node->name;
 	char *Name = root->name;
 
-	if(strcmp(Name, NameComp) < 0)  // root before node, right side
+	if(strcasecmp(Name, NameComp) < 0)  // root before node, right side
 	{
 		if (root->right == NULL)
 		{
@@ -179,7 +220,7 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 			Bus_insert(node,root->right);
 		}
 	}
-	else if(strcmp(Name, NameComp) > 0) //root after node, left side
+	else if(strcasecmp(Name, NameComp) > 0) //root after node, left side
 	{
 		if (root->left == NULL)
 		{
@@ -260,4 +301,23 @@ void print_tree(struct YelpDataBST *tree)
 		printf("Right\n");
 		print_tree(tree->right);
 	}
+}
+
+struct YelpDataBST *FindBusiness(char *name, struct YelpDataBST *root)
+{// finds specified business node
+	if (root == NULL)
+		return NULL;
+	
+	int cmp = strcasecmp(root->name,name);
+
+	if (cmp == 0) // found, return the root
+	{
+		return root;
+	}
+	else if (cmp < 0) // root before node, go right
+	{
+		return FindBusiness(name, root->right);
+	}
+
+	return FindBusiness(name, root->left);
 }

@@ -34,5 +34,6 @@ struct YelpDataBST *Bus_insert(struct YelpDataBST *node, struct YelpDataBST *roo
 void destroy_business_bst(struct YelpDataBST* bst);
 void DestroyReviews(LocInfo *node);
 void print_tree(struct YelpDataBST *tree);
+struct YelpDataBST *FindBusiness(char *name, struct YelpDataBST *root);
 
 
