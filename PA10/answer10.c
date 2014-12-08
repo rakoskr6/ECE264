@@ -95,9 +95,32 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 						TempBusID->Locations[LocNumber]->Reviews[index3++] = CreateReviewInfo(TextL,StarsL);
 					}
 				}
-			} 
+			}
 		}
+		
+		// Sort arrays
+			//index = 0;
+			//index2 = 0;
+			//while (tree->Locations[index] != NULL)
+			//{
+				//int RevieweLength = 0;
+				
+				//while (tree->Locations[index]->Reviews[index
+				//qsort(tree->Locations[index]->Reviews[0],
+				//while (tree->Locations[index]->Reviews[index2] != NULL)
+				//{
+					//printf("Text: %i, Stars %i\n\n",tree->Locations[index]->Reviews[index2]->text,tree->Locations[index]->Reviews[index2]->stars);
+					//index2++;
+				//}
+				//index++;
+			//} 
 	}
+	
+	
+	
+	
+	
+	
 	fclose(fp);
 	fclose(fp2);
 	return Root;

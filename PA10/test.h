@@ -11,14 +11,14 @@ typedef struct LocInfo{
 	uint32_t state;
 	uint32_t zip_code;
 	uint32_t num_reviews;
-	ReviewInfo *Reviews[500];
+	ReviewInfo *Reviews[5000];
 
 }LocInfo;
 
 struct YelpDataBST{ 
 	char *name;
 	uint32_t num_locations;
-	LocInfo *Locations[500];
+	LocInfo *Locations[600];
 	struct YelpDataBST *left;
 	struct YelpDataBST *right;
 };
