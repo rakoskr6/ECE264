@@ -97,30 +97,10 @@ struct YelpDataBST *create_business_bst(const char* businesses_path, const char*
 				}
 			}
 		}
-		
-		// Sort arrays
-			//index = 0;
-			//index2 = 0;
-			//while (tree->Locations[index] != NULL)
-			//{
-				//int RevieweLength = 0;
-				
-				//while (tree->Locations[index]->Reviews[index
-				//qsort(tree->Locations[index]->Reviews[0],
-				//while (tree->Locations[index]->Reviews[index2] != NULL)
-				//{
-					//printf("Text: %i, Stars %i\n\n",tree->Locations[index]->Reviews[index2]->text,tree->Locations[index]->Reviews[index2]->stars);
-					//index2++;
-				//}
-				//index++;
-			//} 
 	}
 	
-	
-	
-	
-	
-	
+	SortAll(Root);
+
 	fclose(fp);
 	fclose(fp2);
 	return Root;
@@ -343,4 +323,163 @@ struct YelpDataBST *FindBusiness(char *name, struct YelpDataBST *root)
 	}
 
 	return FindBusiness(name, root->left);
+}
+
+
+
+
+void SortAll(struct YelpDataBST *root)
+{
+	//Sort arrays
+	int index1 = 0, index2 = 0;
+	int ength1 = 0, Length2 = 0;
+	
+	if (root == NULL)
+	{
+		return
+	}
+	// Sorting of all arrays in current leaf
+	while (root->Locations[Length2] != NULL)
+	{
+		while (tree->Locations[index1]->Reviews[Length1] != NULL) // gets review length
+		{
+			Length1++;
+		}
+		qsort(tree->Locations[index]->Reviews[0],Length1, sizeof(ReviewInfo),cmpfunc1); // sorts reviews
+		Length2++;
+	}
+	qsort(tree->Locations[0],Length2,sizeof(LocInfo),cmpfunc2); // sorts locations
+	
+	// Go left
+	SortAll(root->left);
+	
+	// Go right
+	SortAll(root->right);
+
+} 
+
+
+int cmpfunc1 (const void *a, const void *b)
+{
+	char *State = OffsetToString(root->state,BusPath);
+	char *StateComp = OffsetToString(node->state,BusPath);
+	char *City = OffsetToString(root->city,BusPath);
+	char *CityComp = OffsetToString(node->city,BusPath);
+	char *Address = OffsetToString(root->address,BusPath);
+	char *AddressComp = OffsetToString(node->address,BusPath);
+	
+	if(strcasecmp(State, StateComp) < 0) 
+	{
+		if (root->LocRight == NULL)
+		{			
+			root->LocRight = node;
+		}
+		else
+		{
+			Loc_insert(node,root->LocRight);
+		}
+	}
+	else if(strcasecmp(State, StateComp) > 0) //root after node, left side
+	{
+		if (root->LocLeft == NULL)
+		{
+			root->LocLeft = node;
+		}
+		else
+		{
+			Loc_insert(node,root->LocLeft);
+		}
+	}
+	else // nodes equal, now check city
+	{
+		if(strcasecmp(City, CityComp) < 0) 
+		{
+			if (root->LocRight == NULL)
+			{
+				root->LocRight = node;
+			}
+			else
+			{
+				Loc_insert(node,root->LocRight);
+			}
+		}
+		else if(strcasecmp(City, CityComp) > 0) //root after node, left side
+		{
+			if (root->LocLeft == NULL)
+			{
+				root->LocLeft = node;
+			}
+			else
+			{
+				Loc_insert(node,root->LocLeft);
+			}
+		}
+		else // nodes still equal, now check address
+		{
+			if(strcasecmp(Address, AddressComp) < 0) 
+			{
+				if (root->LocRight == NULL)
+				{
+					root->LocRight = node;
+				}
+				else
+				{
+					Loc_insert(node,root->LocRight);
+				}
+			}
+			else //root after node, left side
+			{
+				if (root->LocLeft == NULL)
+				{
+					root->LocLeft = node;
+				}
+				else
+				{
+					Loc_insert(node,root->LocLeft);
+				}
+			}
+		}
+	}
+	
+	free (State);
+	free (StateComp);
+	free (City);
+	free (CityComp);
+	free (Address);
+	free(AddressComp);
+	return root;
+}
+
+
+int cmpfunc2 (const void *a, const void *b)
+{
+	
+}
+
+char *OffsetToString (int Offset, const char *FilePath)
+{// Converts ofsets into actual string, must free outputed string 
+	FILE *fp;
+	char c, LineBuffer[6000];
+	int index = 0;
+	
+	// Opens file
+	if ((fp = fopen(FilePath,"r")) == NULL)
+	{
+		printf("Unable to open file\n");
+		return NULL;
+	}
+	
+	// Sets offset to desired position
+	fseek(fp,Offset,SEEK_SET);
+	
+	// Gets string at desired position
+	while (((c = fgetc(fp)) != '\n') && !feof(fp) && (c != '\t')) // Gets one line of the file
+	{
+		LineBuffer[index++] = c;
+	}
+	LineBuffer[index] = '\0'; // Terminates string
+	
+	fclose(fp);
+	
+	return strdup(LineBuffer);
 }

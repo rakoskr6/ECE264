@@ -36,4 +36,9 @@ void DestroyReviews(LocInfo *node);
 void print_tree(struct YelpDataBST *tree);
 struct YelpDataBST *FindBusiness(char *name, struct YelpDataBST *root);
 
+void SortAll(struct YelpDataBST *root);
+int cmpfunc1 (const void *a, const void *b);
+int cmpfunc2 (const void *a, const void *b);
+char *OffsetToString (int Offset, const char *FilePath);
+
 
