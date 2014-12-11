@@ -26,7 +26,7 @@ uint128 alphaTou128(const char * str)
 
 char * u128ToString(uint128 value) // ensure string can be added big to lower index, Temp should only 
 {
-	int index =0, length = 0, Temp = 0;
+	int index = 0, length = 0, Temp = 0;
 	char *String;
 	uint128 value2;
 	value2 = value;
@@ -36,21 +36,19 @@ char * u128ToString(uint128 value) // ensure string can be added big to lower in
 		length++;
 		value2 = value2 / 10;
 	}
-	String = malloc(sizeof(char) * (length + 1));
-	
+	String = malloc(sizeof(char) * (length + 1)); // plus one for null
+	length--; // since arrays start at 0
 	
 	for (index = 0; index <= length; index++)
 	{
-		if (value > 0)
-		{
-			Temp = value % 10; // gets lowest value
-			String[length - index] = '0' + Temp; // stores in string
-			value = value / 10; // decrements place value of uint128
-		}
+		Temp = value % 10; // gets lowest value
+		String[length - index] = '0' + Temp; // stores in string
+		printf("String[%i] = %c\n",length-index,String[length-index]);
+		value = value / 10; // decrements place value of uint128
 	}
-	String[length + 1] = '\0';
+	String[length + 1] = '\0'; // null terminated
 
-	return strdup(String);
+	return String;
 }
 
 //int primalityTestParallel(uint128 value, int n_threads)
