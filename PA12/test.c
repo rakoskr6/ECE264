@@ -9,7 +9,7 @@ int main(void)
 	uint128 value;
 	char *sValue;
 	
-	value = alphaTou128("9");
+	value = alphaTou128(" 340282366920938463463374607431768211455th");
 	sValue = u128ToString(value);
 	printf("%s is %i\n",sValue, primalityTestParallel(value, 1));
 	printf("%i is %i\n",5, primalityTestParallel(5, 1));

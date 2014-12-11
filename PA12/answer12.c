@@ -11,7 +11,7 @@ uint128 alphaTou128(const char * str)
 	uint128 FinalNumber = 0;
 	place = strlen(str) - 1; // minus one since place should end at 0
 	
-	if ((str[index] > '9') || (str[index] < '0') && (str[index] != ' '))
+	if (((str[index] > '9') || (str[index] < '0')) && (str[index] != ' '))
 			{
 				return 0; // random characters start string, return 0
 			}
