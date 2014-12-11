@@ -13,7 +13,7 @@ uint128 alphaTou128(const char * str)
 		if (str[index] != ' ')
 		{
 			tempint = str[index] - '0';
-			FinalNumber += place*10*tempint;
+			FinalNumber += pow(10,place)*tempint;
 			place++;
 		}
 	}
@@ -21,11 +21,34 @@ uint128 alphaTou128(const char * str)
 	 
 }
 
-char * u128ToString(uint128 value)
+char * u128ToString(uint128 value) // ensure string can be added big to lower index, Temp should only 
 {
-	place = 38;
+	int place = 38, Temp, index, FirstValue = 0;//, indexS = 0;
+	char *String;
+	long double Decimal;
 	
-	value / pow(10,place);
+	for (index = 38; index >= 0; index--)
+	{
+		Temp = value / pow(10,place); // gets integer at hightest to lowest place value
+		Decimal = value / pow(10,place);
+		value = (Decimal - Temp) * pow(10,place--);
+		printf("%i\n",Temp);
+		
+		if (Temp != 0 || FirstValue == 1) // Ignores leading zeros
+		{
+			if(!FirstValue)//Just found beginning of number, must malloc string
+			{
+				String = malloc(sizeof(char) * (index + 1)); // Plus one for null character
+				//indexS = index + 1;
+				String[index + 1] = '\0';
+			}
+			FirstValue = 1;
+			String[index] = '0' + Temp;
+		}
+		
+	}
+	//String[indexS] = '\0';
+	return String;
 }
 
 //int primalityTestParallel(uint128 value, int n_threads)

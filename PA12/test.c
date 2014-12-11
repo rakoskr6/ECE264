@@ -6,11 +6,12 @@
 
 int main(void)
 {
-	int a, b;
-	float x = 1.4, y = 1.9;
-	a = x;
-	b = y;
-	printf("%i, %i\n",a,b);
+	uint128 value;
+	char *sValue;
+	
+	value = alphaTou128("123456789876543210");
+	sValue = u128ToString(value);
+	printf("%s\n",sValue);
 	
 	return 0;
 }
