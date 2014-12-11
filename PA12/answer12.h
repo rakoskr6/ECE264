@@ -9,6 +9,7 @@ typedef __uint128_t uint128;
 #define FALSE 0
 #define TRUE 1
 
+uint128 alphaTou128(const char * str);
 /**
  * Convert the initial portion of C-string 'str' to an unsigned 128-bit integer
  *
@@ -18,8 +19,9 @@ typedef __uint128_t uint128;
  *
  * See PA02 for hints on implementing this function.
  */
-uint128 alphaTou128(const char * str);
 
+
+char * u128ToString(uint128 value);
 /**
  * Return a newly allocated C-string which represents the passed value.
  * The caller is responsible for freeing the allocated string.
@@ -27,8 +29,9 @@ uint128 alphaTou128(const char * str);
  * If you have already implemented alphaTou128(...) (see hint), then you should
  * be able to figure out how to implement u128ToString(...).
  */
-char * u128ToString(uint128 value);
 
+
+int primalityTestParallel(uint128 value, int n_threads);
 /**
  * Test if 'value' is prime.
  * 'n_threads' is the number of threads that will be created to complete 
@@ -39,6 +42,6 @@ char * u128ToString(uint128 value);
  *
  * Good luck!
  */
-int primalityTestParallel(uint128 value, int n_threads);
+
 
 #endif
