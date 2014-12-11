@@ -9,9 +9,10 @@ int main(void)
 	uint128 value;
 	char *sValue;
 	
-	value = alphaTou128(" 0123456789999999999999999999876543210");
+	value = alphaTou128("9");
 	sValue = u128ToString(value);
-	printf("%s\n",sValue);
+	printf("%s is %i\n",sValue, primalityTestParallel(value, 1));
+	printf("%i is %i\n",5, primalityTestParallel(5, 1));
 	free(sValue);
 	return 0;
 }

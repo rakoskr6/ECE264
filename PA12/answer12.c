@@ -15,6 +15,10 @@ uint128 alphaTou128(const char * str)
 	{
 		if (str[index] != ' ')
 		{
+			if ((str[index] > '9') || (str[index] < '0'))
+			{
+				return 0; // random characters in string, return 0
+			}
 			tempint = str[index] - '0'; // current value as int
 			FinalNumber += powl(10,place)*tempint; // Add to uint128 with place value factor
 			place--; // decrement place value
@@ -30,7 +34,10 @@ char * u128ToString(uint128 value) // ensure string can be added big to lower in
 	char *String;
 	uint128 value2;
 	value2 = value;
-	
+	if (value2 == 0)
+	{
+		length = 1; // if intitially 0, length is 1
+	}
 	while(value2 > 0)
 	{
 		length++;
@@ -43,7 +50,7 @@ char * u128ToString(uint128 value) // ensure string can be added big to lower in
 	{
 		Temp = value % 10; // gets lowest value
 		String[length - index] = '0' + Temp; // stores in string
-		printf("String[%i] = %c\n",length-index,String[length-index]);
+		//printf("String[%i] = %c\n",length-index,String[length-index]);
 		value = value / 10; // decrements place value of uint128
 	}
 	String[length + 1] = '\0'; // null terminated
@@ -51,16 +58,21 @@ char * u128ToString(uint128 value) // ensure string can be added big to lower in
 	return String;
 }
 
-//int primalityTestParallel(uint128 value, int n_threads)
-//{
-///**
- //* Test if 'value' is prime.
- //* 'n_threads' is the number of threads that will be created to complete 
- //* this computation.
- //* Return TRUE or FALSE.
- //* 
- //* LEAK NO MEMORY.
- //*
- //* Good luck!
- //*/
-//}
+int primalityTestParallel(uint128 value, int n_threads)
+{//Test if 'value' is prime.
+	uint128 index = 2, max;
+    if ((value % 2 == 0) && (value != 2))
+    {
+       return 0;
+    }
+    max = sqrt(value);
+    for (index = 1; index <= max; index++) 
+    {
+		if ((value % ((2 * index) + 1) == 0) && ((2*index+1) != value))
+		{
+			return 0;
+		}
+    }	
+    return 1;
+
+}
