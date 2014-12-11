@@ -11,13 +11,18 @@ uint128 alphaTou128(const char * str)
 	uint128 FinalNumber = 0;
 	place = strlen(str) - 1; // minus one since place should end at 0
 	
+	if ((str[index] > '9') || (str[index] < '0') && (str[index] != ' '))
+			{
+				return 0; // random characters start string, return 0
+			}
+			
 	for (index = 0; index < strlen(str); index++)
 	{
 		if (str[index] != ' ')
 		{
 			if ((str[index] > '9') || (str[index] < '0'))
 			{
-				return 0; // random characters in string, return 0
+				return FinalNumber; // random characters in string, return final number
 			}
 			tempint = str[index] - '0'; // current value as int
 			FinalNumber += powl(10,place)*tempint; // Add to uint128 with place value factor
