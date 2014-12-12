@@ -120,7 +120,7 @@ int primalityTestParallel(uint128 value, int n_threads)
     
     for (index = 0; index < n_threads; index++) // Page 348
     {
-		Info[index].Max = Interval * (index+1);
+		Info[index].Max = Interval * (index+1)+1;
 		Info[index].Min = Interval * index;
 		Info[index].ReturnVal = 1;
 		Info[index].Value = value;
