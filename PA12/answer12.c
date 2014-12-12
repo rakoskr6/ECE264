@@ -3,15 +3,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
-#include <pthread_t>
+#include <pthread.h>
 #include "answer12.h"
 
-typedef struct ThreadInfo{
+typedef struct ThreadInfo{ // info to pass to thread
 	uint128 Max;
 	uint128 Min;
+	uint128 Value;
 	//int ThreadNum;
 	//uint128 Interval;
 }ThreadInfo;
+
+void *checkPrime(void *Info)
+{
+	uint128 max = (uint128*)Info->Max;
+	uint128 index = (uint128*)Info->Min;
+	uint128 value = (uint128*)Info->Value;
+	
+	for (index = 1; index <= max; index++) 
+    {
+		if ((value % ((2 * index) + 1) == 0) && ((2*index+1) != value))
+		{
+			return (void *) 0;
+		}
+    }	
+    return (void *) 1;
+}
 
 uint128 alphaTou128(const char * str) // code from PA02
 {
@@ -84,19 +101,35 @@ char * u128ToString(uint128 value) // ensure string can be added big to lower in
 
 int primalityTestParallel(uint128 value, int n_threads)
 {//Test if 'value' is prime.
-	uint128 index = 2, max;
-    if ((value % 2 == 0) && (value != 2))
+	uint128 index = 0, max, Interval;
+	pthread_t thread[n_threads];
+	int rtv, FinalReturn = 1;
+	void *ExitStatus;
+	
+    if ((value % 2 == 0) && (value != 2)) // initial check to ensure not 2
     {
        return 0;
     }
     max = sqrt(value);
-    for (index = 1; index <= max; index++) 
+    ThreadInfo Info;
+    
+    Interval = max / n_threads;
+    Info.Value = value;
+    
+    for (index = 0; index < n_threads; index++) // Page 348
     {
-		if ((value % ((2 * index) + 1) == 0) && ((2*index+1) != value))
-		{
-			return 0;
-		}
-    }	
-    return 1;
+		Info.Max = Interval * (index+1) + 1;
+		Info.Min = Interval * index;
+		rtv = pthread_create(&thread[index],NULL,checkPrime,(void *) &Info);
+		
+	}
+	
+	for (index = 0; index < n_threads; index++)
+	{
+		pthread_join(thread[index],&ExitStatus);
+		FinalReturn = FinalReturn * (*(int*)ExitStatus);
+	}
+    
+	return FinalReturn;
 
 }
