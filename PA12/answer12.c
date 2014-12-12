@@ -11,8 +11,6 @@ typedef struct ThreadInfo{ // info to pass to thread
 	uint128 Min;
 	uint128 Value;
 	int ReturnVal;
-	//int ThreadNum;
-	//uint128 Interval;
 }ThreadInfo;
 
 void *checkPrime(void *Info)
@@ -106,16 +104,15 @@ int primalityTestParallel(uint128 value, int n_threads)
 {//Test if 'value' is prime.
 	uint128 max, Interval;
 	int index = 0;
-	pthread_t thread[n_threads-1];
+	pthread_t thread[n_threads];
 	int FinalReturn = 1;
-	void *ExitStatus;
 	
     if ((value % 2 == 0) && (value != 2)) // initial check to ensure not 2
     {
        return 0;
     }
     max = sqrt(value);
-    ThreadInfo Info[n_threads-1];
+    ThreadInfo Info[n_threads];
     
     Interval = max / n_threads;
     
@@ -133,7 +130,7 @@ int primalityTestParallel(uint128 value, int n_threads)
 	
 	for (index = 0; index < n_threads; index++)
 	{
-		pthread_join(thread[index],&ExitStatus);
+		pthread_join(thread[index],NULL);
 		
 		FinalReturn = Info[index].ReturnVal * FinalReturn;
 	}
