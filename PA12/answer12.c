@@ -19,9 +19,9 @@ void *checkPrime(void *Info)
 	uint128 index = ((ThreadInfo*) Info)->Min;
 	uint128 value = ((ThreadInfo*) Info)->Value;
 	
-	for (index = 1; index <= max; index++) 
+	for (index = 1; index <= (1+max/2); index++) 
     {
-		if ((value % ((2 * index) + 1) == 0) && ((2*index+1) != value))
+		if ((value % ((2 * index) + 1) == 0) && ((2*index+1) != value))//over 2
 		{
 			((ThreadInfo*)Info)->ReturnVal = ((ThreadInfo*)Info)->ReturnVal * 0;
 			return NULL;
@@ -120,7 +120,7 @@ int primalityTestParallel(uint128 value, int n_threads)
     
     for (index = 0; index < n_threads; index++) // Page 348
     {
-		Info[index].Max = Interval * (index+1)+1;
+		Info[index].Max = (Interval * (index+1))+1;
 		Info[index].Min = Interval * index;
 		Info[index].ReturnVal = 1;
 		Info[index].Value = value;
