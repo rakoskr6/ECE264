@@ -27,7 +27,7 @@ void *checkPrime(void *Info)
 			return NULL;
 		}
     }	
-    ((ThreadInfo*)Info)->ReturnVal = ((ThreadInfo*)Info)->ReturnVal * 1;
+    //((ThreadInfo*)Info)->ReturnVal = ((ThreadInfo*)Info)->ReturnVal * 1;
     return NULL;
 }
 
@@ -103,20 +103,22 @@ char * u128ToString(uint128 value) // ensure string can be added big to lower in
 int primalityTestParallel(uint128 value, int n_threads)
 {//Test if 'value' is prime.
 	uint128 max, Interval;
-	int index = 0;
+	int index = 0, FinalReturn = 1;
 	pthread_t thread[n_threads];
-	int FinalReturn = 1;
+	ThreadInfo Info[n_threads];
+	
+	while(index < (3000000000/(n_threads)))
+	{
+		index++;
+	}
 	
     if ((value % 2 == 0) && (value != 2)) // initial check to ensure not 2
     {
        return 0;
     }
+    
     max = sqrt(value);
-    ThreadInfo Info[n_threads];
-    
     Interval = max / n_threads;
-    
-    
     
     for (index = 0; index < n_threads; index++) // Page 348
     {
@@ -124,7 +126,7 @@ int primalityTestParallel(uint128 value, int n_threads)
 		Info[index].Min = Interval * index;
 		Info[index].ReturnVal = 1;
 		Info[index].Value = value;
-		pthread_create(&thread[index],NULL,checkPrime,(void *) &Info[index]);
+		pthread_create(&thread[index], NULL,(void *) &checkPrime, (void *) &Info[index]);
 		
 	}
 	
@@ -136,5 +138,4 @@ int primalityTestParallel(uint128 value, int n_threads)
 	}
     
 	return FinalReturn;
-
 }
