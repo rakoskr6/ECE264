@@ -3,7 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
+#include <pthread_t>
 #include "answer12.h"
+
+typedef struct ThreadInfo{
+	uint128 Max;
+	uint128 Min;
+	//int ThreadNum;
+	//uint128 Interval;
+}ThreadInfo;
 
 uint128 alphaTou128(const char * str) // code from PA02
 {
