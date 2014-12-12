@@ -10,24 +10,27 @@ typedef struct ThreadInfo{ // info to pass to thread
 	uint128 Max;
 	uint128 Min;
 	uint128 Value;
+	int ReturnVal;
 	//int ThreadNum;
 	//uint128 Interval;
 }ThreadInfo;
 
 void *checkPrime(void *Info)
 {
-	uint128 max = (uint128*)Info->Max;
-	uint128 index = (uint128*)Info->Min;
-	uint128 value = (uint128*)Info->Value;
+	uint128 max = ((ThreadInfo*) Info)->Max;
+	uint128 index = ((ThreadInfo*) Info)->Min;
+	uint128 value = ((ThreadInfo*) Info)->Value;
 	
 	for (index = 1; index <= max; index++) 
     {
 		if ((value % ((2 * index) + 1) == 0) && ((2*index+1) != value))
 		{
-			return (void *) 0;
+			((ThreadInfo*)Info)->ReturnVal = ((ThreadInfo*)Info)->ReturnVal * 0;
+			return NULL;
 		}
     }	
-    return (void *) 1;
+    ((ThreadInfo*)Info)->ReturnVal = ((ThreadInfo*)Info)->ReturnVal * 1;
+    return NULL;
 }
 
 uint128 alphaTou128(const char * str) // code from PA02
@@ -101,9 +104,10 @@ char * u128ToString(uint128 value) // ensure string can be added big to lower in
 
 int primalityTestParallel(uint128 value, int n_threads)
 {//Test if 'value' is prime.
-	uint128 index = 0, max, Interval;
-	pthread_t thread[n_threads];
-	int rtv, FinalReturn = 1;
+	uint128 max, Interval;
+	int index = 0;
+	pthread_t thread[n_threads-1];
+	int FinalReturn = 1;
 	void *ExitStatus;
 	
     if ((value % 2 == 0) && (value != 2)) // initial check to ensure not 2
@@ -111,23 +115,27 @@ int primalityTestParallel(uint128 value, int n_threads)
        return 0;
     }
     max = sqrt(value);
-    ThreadInfo Info;
+    ThreadInfo Info[n_threads-1];
     
     Interval = max / n_threads;
-    Info.Value = value;
+    
+    
     
     for (index = 0; index < n_threads; index++) // Page 348
     {
-		Info.Max = Interval * (index+1) + 1;
-		Info.Min = Interval * index;
-		rtv = pthread_create(&thread[index],NULL,checkPrime,(void *) &Info);
+		Info[index].Max = Interval * (index+1);
+		Info[index].Min = Interval * index;
+		Info[index].ReturnVal = 1;
+		Info[index].Value = value;
+		pthread_create(&thread[index],NULL,checkPrime,(void *) &Info[index]);
 		
 	}
 	
 	for (index = 0; index < n_threads; index++)
 	{
 		pthread_join(thread[index],&ExitStatus);
-		FinalReturn = FinalReturn * (*(int*)ExitStatus);
+		
+		FinalReturn = Info[index].ReturnVal * FinalReturn;
 	}
     
 	return FinalReturn;
